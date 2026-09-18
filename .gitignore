@@ -1,0 +1,11 @@
+/build/
+/dist/
+/.tools/
+/_deps/
+*.user
+*.pdb
+*.dmp
+*.log
+*.chordcanvas.json
+!Tests/Fixtures/*.json
+/engineering/private/
