@@ -1,0 +1,774 @@
+{
+  "date": "2026-09-18",
+  "version": "0.1.3",
+  "sourceCommit": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+  "environment": "Windows 11 Home 10.0.26200.9168 x64; Ableton Live 12 Suite 12.4.5; 44.1 kHz / 256 frames / 120 BPM / 4/4",
+  "scope": "Actual installed GUI and host input; private diagnostic parser comparisons are observation evidence, not simulated UI",
+  "moduleOrigin": "Verified global installed VST3 module loaded by actual Live process",
+  "freshState": {
+    "bars": 8,
+    "blocks": 0,
+    "key": "C Major",
+    "sound": "Piano",
+    "volumeDb": -12,
+    "padOctaves": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "padInversions": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "optionalControlsHidden": true,
+    "repeat": false,
+    "sync": false
+  },
+  "about": {
+    "version": "0.1.3",
+    "currentChangesCount": 5,
+    "exactCurrentReleaseChangesReviewed": true,
+    "olderChangesAbsent": true
+  },
+  "audition": {
+    "notes": [
+      64,
+      67,
+      71
+    ],
+    "repeatReleaseRemainsLatched": true,
+    "editorHiddenRepeatContinues": true,
+    "trackAndMainPeakDb": -15.3,
+    "repeatOffClearsPreview": true,
+    "comprehensiveAllFourSounds": "NOT RUN"
+  },
+  "snapshots": [
+    {
+      "revision": 1,
+      "bars": 8,
+      "blocks": [
+        {
+          "id": 1,
+          "start": 0,
+          "end": 3840
+        }
+      ],
+      "resolvedNotes": [
+        {
+          "id": 1,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        }
+      ]
+    },
+    {
+      "revision": 2,
+      "bars": 8,
+      "blocks": [
+        {
+          "id": 1,
+          "start": 0,
+          "end": 3840
+        },
+        {
+          "id": 2,
+          "start": 7680,
+          "end": 11520
+        }
+      ],
+      "resolvedNotes": [
+        {
+          "id": 1,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        },
+        {
+          "id": 2,
+          "notes": [
+            62,
+            65,
+            69
+          ],
+          "label": "Dm"
+        }
+      ]
+    },
+    {
+      "revision": 3,
+      "bars": 8,
+      "blocks": [
+        {
+          "id": 1,
+          "start": 3840,
+          "end": 7680
+        },
+        {
+          "id": 2,
+          "start": 7680,
+          "end": 11520
+        }
+      ],
+      "resolvedNotes": [
+        {
+          "id": 1,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        },
+        {
+          "id": 2,
+          "notes": [
+            62,
+            65,
+            69
+          ],
+          "label": "Dm"
+        }
+      ]
+    },
+    {
+      "revision": 4,
+      "bars": 8,
+      "blocks": [
+        {
+          "id": 1,
+          "start": 3840,
+          "end": 6720
+        },
+        {
+          "id": 2,
+          "start": 7680,
+          "end": 11520
+        }
+      ],
+      "resolvedNotes": [
+        {
+          "id": 1,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        },
+        {
+          "id": 2,
+          "notes": [
+            62,
+            65,
+            69
+          ],
+          "label": "Dm"
+        }
+      ]
+    },
+    {
+      "revision": 5,
+      "bars": 8,
+      "blocks": [
+        {
+          "id": 1,
+          "start": 4800,
+          "end": 6720
+        },
+        {
+          "id": 2,
+          "start": 7680,
+          "end": 11520
+        }
+      ],
+      "resolvedNotes": [
+        {
+          "id": 1,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        },
+        {
+          "id": 2,
+          "notes": [
+            62,
+            65,
+            69
+          ],
+          "label": "Dm"
+        }
+      ]
+    },
+    {
+      "revision": 6,
+      "bars": 8,
+      "blocks": [
+        {
+          "id": 1,
+          "start": 4800,
+          "end": 7680
+        },
+        {
+          "id": 2,
+          "start": 7680,
+          "end": 11520
+        }
+      ],
+      "resolvedNotes": [
+        {
+          "id": 1,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        },
+        {
+          "id": 2,
+          "notes": [
+            62,
+            65,
+            69
+          ],
+          "label": "Dm"
+        }
+      ]
+    },
+    {
+      "revision": 7,
+      "bars": 8,
+      "blocks": [
+        {
+          "id": 1,
+          "start": 3840,
+          "end": 7680
+        },
+        {
+          "id": 2,
+          "start": 7680,
+          "end": 11520
+        }
+      ],
+      "resolvedNotes": [
+        {
+          "id": 1,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        },
+        {
+          "id": 2,
+          "notes": [
+            62,
+            65,
+            69
+          ],
+          "label": "Dm"
+        }
+      ]
+    },
+    {
+      "revision": 8,
+      "bars": 8,
+      "blocks": [
+        {
+          "id": 3,
+          "start": 3840,
+          "end": 5760
+        },
+        {
+          "id": 4,
+          "start": 5760,
+          "end": 7680
+        },
+        {
+          "id": 2,
+          "start": 7680,
+          "end": 11520
+        }
+      ],
+      "resolvedNotes": [
+        {
+          "id": 3,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        },
+        {
+          "id": 4,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        },
+        {
+          "id": 2,
+          "notes": [
+            62,
+            65,
+            69
+          ],
+          "label": "Dm"
+        }
+      ]
+    },
+    {
+      "revision": 9,
+      "bars": 8,
+      "blocks": [
+        {
+          "id": 1,
+          "start": 3840,
+          "end": 7680
+        },
+        {
+          "id": 2,
+          "start": 7680,
+          "end": 11520
+        }
+      ],
+      "resolvedNotes": [
+        {
+          "id": 1,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        },
+        {
+          "id": 2,
+          "notes": [
+            62,
+            65,
+            69
+          ],
+          "label": "Dm"
+        }
+      ]
+    },
+    {
+      "revision": 10,
+      "bars": 8,
+      "blocks": [
+        {
+          "id": 1,
+          "start": 0,
+          "end": 3840
+        },
+        {
+          "id": 2,
+          "start": 7680,
+          "end": 11520
+        }
+      ],
+      "resolvedNotes": [
+        {
+          "id": 1,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        },
+        {
+          "id": 2,
+          "notes": [
+            62,
+            65,
+            69
+          ],
+          "label": "Dm"
+        }
+      ]
+    },
+    {
+      "revision": 11,
+      "bars": 8,
+      "blocks": [
+        {
+          "id": 5,
+          "start": 0,
+          "end": 1920
+        },
+        {
+          "id": 6,
+          "start": 1920,
+          "end": 3840
+        },
+        {
+          "id": 2,
+          "start": 7680,
+          "end": 11520
+        }
+      ],
+      "resolvedNotes": [
+        {
+          "id": 5,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        },
+        {
+          "id": 6,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        },
+        {
+          "id": 2,
+          "notes": [
+            62,
+            65,
+            69
+          ],
+          "label": "Dm"
+        }
+      ]
+    },
+    {
+      "revision": 12,
+      "bars": 8,
+      "blocks": [
+        {
+          "id": 1,
+          "start": 0,
+          "end": 3840
+        },
+        {
+          "id": 2,
+          "start": 7680,
+          "end": 11520
+        }
+      ],
+      "resolvedNotes": [
+        {
+          "id": 1,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        },
+        {
+          "id": 2,
+          "notes": [
+            62,
+            65,
+            69
+          ],
+          "label": "Dm"
+        }
+      ]
+    },
+    {
+      "revision": 13,
+      "bars": 8,
+      "blocks": [
+        {
+          "id": 1,
+          "start": 0,
+          "end": 3840
+        },
+        {
+          "id": 2,
+          "start": 7680,
+          "end": 11520
+        },
+        {
+          "id": 7,
+          "start": 11520,
+          "end": 15360
+        }
+      ],
+      "resolvedNotes": [
+        {
+          "id": 1,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        },
+        {
+          "id": 2,
+          "notes": [
+            62,
+            65,
+            69
+          ],
+          "label": "Dm"
+        },
+        {
+          "id": 7,
+          "notes": [
+            60,
+            64,
+            67
+          ],
+          "label": "C"
+        }
+      ]
+    }
+  ],
+  "exactSliceUndoComparison": "PASS, revision 10 equals revision 12 in every progression field",
+  "export": {
+    "parser": "mido 1.3.3",
+    "status": "PASS",
+    "sha256": "a9891ff9979f49b4e295b1086b0914c3d494ae273de15b7885087ceeb715ba2f",
+    "bytes": 103,
+    "type": 0,
+    "ppq": 960,
+    "tracks": 1,
+    "noteOn": [
+      [
+        0,
+        60
+      ],
+      [
+        0,
+        64
+      ],
+      [
+        0,
+        67
+      ],
+      [
+        7680,
+        62
+      ],
+      [
+        7680,
+        65
+      ],
+      [
+        7680,
+        69
+      ],
+      [
+        11520,
+        60
+      ],
+      [
+        11520,
+        64
+      ],
+      [
+        11520,
+        67
+      ]
+    ],
+    "noteOff": [
+      [
+        3840,
+        60
+      ],
+      [
+        3840,
+        64
+      ],
+      [
+        3840,
+        67
+      ],
+      [
+        11520,
+        62
+      ],
+      [
+        11520,
+        65
+      ],
+      [
+        11520,
+        69
+      ],
+      [
+        15360,
+        60
+      ],
+      [
+        15360,
+        64
+      ],
+      [
+        15360,
+        67
+      ]
+    ],
+    "endOfTrackTick": 30720,
+    "paddingOrOtherEvents": false
+  },
+  "hostImport": {
+    "sessionSlotImport": "PASS",
+    "start": "1.1.1",
+    "end": "5.1.1",
+    "loopPosition": "1.1.1",
+    "loopLength": "4.0.0",
+    "fullEightBarExtent": "FAIL",
+    "sourceInstanceReopenedWithOriginalThreeBlocks": true,
+    "destinationInstance": "Live creates a second fresh instance on the destination track; its empty timeline is separate from the intact source"
+  },
+  "limits": [
+    "Not a complete GUI/DPI/dense/lifecycle review",
+    "Trailing rests still truncated by actual updated Live import",
+    "Host saving/exporting still deactivated",
+    "No raw logs, screenshots or private paths included"
+  ],
+  "minimumDurationResize": {
+    "attemptedUnder960Ticks": true,
+    "observedStart": 0,
+    "observedEnd": 960,
+    "notes": [
+      60,
+      64,
+      67
+    ],
+    "exactUndoRestoresOriginal": true
+  },
+  "denseReview": {
+    "bars": 32,
+    "blocks": 128,
+    "durationPerBlock": 960,
+    "lastBlockId": 128,
+    "lastBlockLabel": "Dm7",
+    "minimumBlockControlsWithinBoundsReviewed": true,
+    "anchoredPopoverOnScreen": true,
+    "onlyChangedFields": [
+      {
+        "block": 128,
+        "property": "octave",
+        "before": 4,
+        "after": 3
+      }
+    ],
+    "selectionUnchanged": [
+      1
+    ],
+    "exactShortenUndo": "PASS: revision 16 equals 18 in every progression field",
+    "exactBlockEditUndo": "PASS: revision 18 equals 20 in every progression field",
+    "shortenedBars": 31,
+    "shortenedBlocks": 124,
+    "denseNativeDrag": "PASS into second distinct Session slot",
+    "independentMidi": {
+      "status": "PASS",
+      "parser": "mido 1.3.3",
+      "sha256": "e96a9c84ef0fd6095c2fa2ac82559732d3568a76a2f05a9827870f47001d8535",
+      "bytes": 4250,
+      "type": 0,
+      "tracks": 1,
+      "ppq": 960,
+      "blocks": 128,
+      "noteOnCount": 512,
+      "noteOffCount": 512,
+      "endOfTrackTick": 122880,
+      "offBeforeOn": true,
+      "otherEvents": false,
+      "lastBlockNotes": [
+        74,
+        77,
+        81,
+        84
+      ]
+    },
+    "hostImportStart": "1.1.1",
+    "hostImportEnd": "33.1.1",
+    "hostLoopLength": "32.0.0",
+    "playbackInstrument": "Live built-in Analog, default patch; ordinary routing produces nonzero track/Main meters",
+    "fullGuiDpiAndGestureCoverage": "NOT RUN",
+    "playbackObservations": [
+      {
+        "utc": "2026-09-18 18:20:26 UTC",
+        "arrangementPosition": "1.1.2",
+        "clipLoopCountDisplayed": 1
+      },
+      {
+        "utc": "2026-09-18 18:20:38 UTC",
+        "arrangementPosition": "7.1.2",
+        "clipLoopCountDisplayed": 1
+      },
+      {
+        "utc": "2026-09-18 18:21:10 UTC",
+        "arrangementPosition": "23.1.1",
+        "clipLoopCountDisplayed": 1
+      },
+      {
+        "utc": "2026-09-18 18:21:57 UTC",
+        "arrangementPosition": "46.4.1",
+        "clipLoopCountDisplayed": 2
+      }
+    ],
+    "observedPlayback": "At 120 BPM actual full32-bar clip plays beyond first64-second cycle. Track2/Main meters active in second cycle. Normal host Stop subsequently observed at65.1.1, displayed loop count3; no MIDI duration change."
+  },
+  "toolLimitations": [
+    "Native tool text entry produced repeated digits instead of requested Operator; UIA set_value reported uncached read-only property. Cleared search normally and selected actual visible built-in Analog row; no product defect inferred.",
+    "Host root capture restores a smaller host region while editor remains larger. Moved only disposable editor using observed title-bar drags to expose controls and destinations. Full related editor captures reviewed; no fabricated screenshots."
+  ],
+  "optionalPopoverReview": {
+    "enabled": [
+      "Seventh",
+      "Sus2",
+      "Sus4"
+    ],
+    "allControlsOnScreen": true,
+    "associatedBlock": 128,
+    "selection": [
+      128
+    ],
+    "sus2Notes": [
+      74,
+      76,
+      81,
+      84
+    ],
+    "sus2Label": "D7sus2",
+    "sus4Notes": [
+      74,
+      79,
+      81,
+      84
+    ],
+    "sus4Label": "D7sus4",
+    "other127BlocksUnchanged": true,
+    "twoUndoExactRestoration": true,
+    "closeButtonWorks": true
+  }
+}

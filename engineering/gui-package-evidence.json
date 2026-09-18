@@ -4,7 +4,7 @@
   "version": "0.1.3",
   "buildNumber": 4,
   "sourceDirty": false,
-  "scope": "Genuine compiled candidates; actual successful 0.1.3 update/recovery/uninstall/reinstall recorded separately; complete host acceptance pending",
+  "scope": "Genuine compiled candidates; actual 0.1.3 Windows lifecycle and installed Live 12.4.5 interaction evidence recorded separately; full acceptance incomplete",
   "build": {
     "command": "Scripts/build-plugin.ps1 -BuildDirectory build/plugin-reviewed -VisualStudioLicenseConfirmed",
     "exitCode": 0,
@@ -28,7 +28,6 @@
     "stableRelease": "NOT RUN / NOT ACCEPTED"
   },
   "pendingGates": [
-    "Actual updated Live reload (host automatic update temporarily blocks startup)",
     "Full trailing/empty imported clip extent unresolved",
     "Host saving/exporting deactivated",
     "Complete installed GUI/DPI/dense/gesture/sound review",
@@ -55,5 +54,6 @@
     "manualOwnerConsent": "No automated UAC consent",
     "successfulUpgrade": "NOT RUN"
   },
-  "installedRuntimeEvidence": "engineering/installed-013-evidence.json"
+  "installedRuntimeEvidence": "engineering/installed-013-evidence.json",
+  "installedHostEvidence": "engineering/installed-live-013-evidence.json"
 }
