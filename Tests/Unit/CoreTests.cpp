@@ -3,6 +3,7 @@
 #include "Export/Midi.h"
 #include "Audio/Engine.h"
 #include "Persistence/Progression.h"
+#include "Model/Session.h"
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
@@ -12,6 +13,7 @@
 #include <set>
 #include <thread>
 #include <filesystem>
+#include <climits>
 
 using namespace cc;
 int assertions=0;
@@ -35,10 +37,12 @@ void theory() {
     constexpr int fifths[2][7]={{7,7,7,7,7,7,6},{7,6,7,7,7,7,7}};
     constexpr int sevenths[2][7]={{11,10,10,11,10,10,10},{10,10,11,10,10,11,10}};
     constexpr int tonicClasses[7]={0,2,4,5,7,9,11};
+    const std::string seventhNames[2][7]={{"maj7","m7","m7","maj7","7","m7","m7♭5"},{"m7","m7♭5","maj7","m7","m7","maj7","7"}};
     int combinations=0,minNote=127,maxNote=0;
     for(auto k:inventory)for(int d=0;d<7;++d)for(int o=1;o<=5;++o)for(int sus=0;sus<3;++sus)for(int seventh=0;seventh<2;++seventh)for(int inv=0;inv<(seventh ? 4 : 3);++inv) {
         Chord chord{k,d,o,inv,seventh!=0,static_cast<Suspension>(sus)};auto r=resolve(chord);
         int m=k.mode==Mode::minor ? 1 : 0;
+        if(seventh && !sus)check(r.label==r.rootLabel+seventhNames[m][d],"independent degree seventh quality names");
         int tonic=(tonicClasses[k.letter]+k.accidental+12)%12;
         int base=60+tonic+rootClasses[m][d]+12*(o-3);
         std::vector<int> oracle {base,base+(sus==1 ? 2 : sus==2 ? 5 : thirds[m][d]),base+(sus ? 7 : fifths[m][d])};
@@ -53,17 +57,21 @@ void theory() {
 }
 void timeline() {
     Document d;check(d.state().bars==8,"initial eight bars");check(d.add({},0),"add A");check(d.add({},bar),"adjacent B");
+    check(!intersects(d.state().blocks[0],d.state().blocks[1]),"shared endpoint has no overlap");
+    check(intersects({1,0,3840,{}},{2,3839,7680,{}}),"positive one-tick overlap");
     auto original=d.state();check(d.add({},2880),"replace intersections");check(d.state().blocks.size()==1 && d.state().blocks[0].end==6720,"whole victims original length");check(d.undo() && d.state()==original,"atomic undo");
     check(d.move({original.blocks[0].id},960),"self collision exclusion");check(d.state().blocks.size()==1,"other overlap removed");
     Document gaps;gaps.add({},0);gaps.add({},7680);auto copied=gaps.copy({gaps.state().blocks[0].id,gaps.state().blocks[1].id});gaps.add({},3840);
     check(gaps.paste(copied,0),"paste group");check(gaps.state().blocks.size()==3,"gap destination survives");
     check(gaps.paste(copied,120960),"partial paste");check(gaps.state().blocks.back().end==hardEnd && gaps.state().blocks.back().start==120960,"crossing clipboard clipped");
     auto stable=gaps.state();check(!gaps.paste(copied,hardEnd-240,240) && gaps.state()==stable,"subminimum paste no-op");
+    auto bad=stable;bad.blocks[0].end=bad.blocks[0].start;check(!gaps.load(bad) && gaps.state()==stable,"failed document validation leaves old snapshot intact");
     Document trim;trim.length(16);trim.insert({{0,28800,32640,{}},{0,34560,38400,{}}});auto before=trim.state();check(trim.length(8),"shorten");check(trim.state().blocks.size()==1 && trim.state().blocks[0].end==30720,"destructive trim");trim.length(16);check(trim.state().blocks[0].end==30720,"extension never resurrects");trim.undo();trim.undo();check(trim.state()==before,"undo restores trim");
     Document cut;cut.add({},0);uint64_t id=cut.state().blocks[0].id;check(!cut.slice(id,480,240),"slice minimum");check(cut.slice(id,1920),"slice halves");check(cut.state().blocks.size()==2 && cut.state().blocks[0].end==1920,"slice geometry");cut.undo();check(cut.state().blocks.size()==1,"slice undo");
     Document history;for(int i=0;i<21;++i)check(history.add({},i*bar),"history edits");check(history.undoCount()==20,"history cap");for(int i=0;i<20;++i)check(history.undo(),"history undo");check(!history.undo() && history.state().blocks.size()==1,"oldest transaction unavailable");history.add({},0);check(!history.redo(),"redo branch invalidation");
     std::mt19937 random(20260918);Document fuzz;
     for(int i=0;i<20000;++i) {
+        auto old=fuzz.state();
         int op=static_cast<int>(random()%9),pos=static_cast<int>(random()%(hardEnd+3840));
         std::vector<uint64_t> ids;for(auto& b:fuzz.state().blocks)if(random()%3==0)ids.push_back(b.id);
         if(op==0)fuzz.add({{},static_cast<int>(random()%7)},pos,240);
@@ -75,6 +83,11 @@ void timeline() {
         if(op==6)fuzz.erase(ids);
         if(op==7)fuzz.undo();if(op==8)fuzz.redo();
         check(validate(fuzz.state()),"fuzz invariant");
+        for(auto& b:fuzz.state().blocks){auto pitches=resolve(b.chord);for(int n=0;n<pitches.count;++n)check(pitches.notes[n]>=0 && pitches.notes[n]<=127,"fuzz note range");}
+        if(op<7 && old!=fuzz.state()) {
+            auto changed=fuzz.state();check(fuzz.undo() && fuzz.state()==old,"fuzz undo restores complete old snapshot");
+            check(fuzz.redo() && fuzz.state()==changed,"fuzz redo restores complete new snapshot");
+        }
     }
     std::cout<<"Timeline: 20,000 deterministic random commands\n";
 }
@@ -95,6 +108,25 @@ void persistence() {
     }
     auto overlap=d.state();overlap.blocks[1].start=1920;bool rejected=false;try{saveProgression(overlap);}catch(const std::invalid_argument&){rejected=true;}check(rejected,"invalid document save rejected");
 }
+void session() {
+    Session s;Engine e;e.prepare(48000);s.publish=[&](const AudioFrame& f){e.input.publish(f);};float left[256],right[256];
+    auto process=[&]{e.process(left,right,256,{120,false});};
+    check(s.key==Key{} && s.document.state()==Timeline{} && s.pads[0].octave==3 && !s.repeats && !s.sync,"fresh session defaults");
+    s.pressPad(0,true);process();check(s.activePad()==0 && e.status().overrideActive,"keyboard hold");auto count=e.articulations();s.pressPad(0,true);process();check(e.articulations()==count,"suppress OS repeats");
+    s.pressPad(1,true);s.releasePad(0,true);process();check(s.activePad()==1,"older key release preserves newest owner");s.loseFocus();process();check(!e.status().overrideActive,"focus releases momentary");
+    s.setRepeats(true);s.pressPad(0);process();s.releasePad(0);check(s.repeatLatched(),"mouse up retains repeat");s.loseFocus();check(s.repeatLatched(),"focus retains latch");
+    auto ownerBefore=e.articulations();s.pressPad(0);s.pressPad(0);process();check(e.articulations()>ownerBefore,"coalesced stop-start rearticulates");
+    s.edit([&](auto& d){return d.add(s.pads[0],0);});auto block=s.document.state().blocks[0];s.changeKey({3,0,Mode::minor});check(s.document.state().blocks[0]==block && s.pads[0].origin==s.key,"key changes preserve block snapshot");
+    s.play();process();check(!s.repeatLatched() && e.status().running && !e.status().overrideActive,"local play clears preview latch");
+    s.selectAll();s.copy();s.paste(7680);check(s.selected.size()==1 && s.document.find(s.selected[0])->start==7680,"paste selects incoming");
+    auto live=s.document.state();s.receiveHostState(Session::hostState());check(s.document.state()==live,"host state never erases live work");Session fresh;fresh.receiveHostState(Session::hostState());check(fresh.document.state()==Timeline{},"host restoration starts fresh");
+    s.pressBlock(s.selected[0]);s.removeSelected();process();check(s.activeBlock()==0,"deleting preview owner releases source");
+    AudioFrame f;f.preview=noteSet({});f.previewOwner=1;f.repeating=true;e.input.publish(f);process();e.process(left,right,256,{120,false},true);process();check(!e.status().overrideActive && e.status().voices==0,"bypass clears stale latch");
+    auto stable=s.document.state();check(!s.document.add({},0,0) && s.document.state()==stable,"invalid grid no-op");check(!s.document.insert({{0,0,INT_MIN,{}}}),"malformed negative interval rejected");
+    check(!validate({8,{{1,1,INT_MIN,{}}}}),"malformed interval rejected before signed subtraction");
+    check(!validate({8,{{UINT64_MAX,0,ppq,{}}}}),"maximum identifier cannot wrap allocator");
+    check(!s.document.slice(s.document.state().blocks[0].id,INT_MIN),"extreme slice position rejected before subtraction");
+}
 void audio(const std::filesystem::path& output) {
     float left[256],right[256];
     for(auto sound:{Sound::piano,Sound::guitar,Sound::strings,Sound::pad}) {
@@ -114,8 +146,9 @@ void audio(const std::filesystem::path& output) {
 }
 int main(int argc,char** argv) {
     std::filesystem::path out=argc>1 ? argv[1] : ".";
-    theory();timeline();mailbox();persistence();audio(out);
+    theory();timeline();mailbox();persistence();session();audio(out);
     Document d;d.add({},bar);Chord c;c.inversion=1;d.insert({{0,2*bar,3*bar,c}});
-    for(auto pair:std::initializer_list<std::pair<std::string,Timeline>>{{"chords.mid",d.state()},{"empty.mid",Timeline{}}}){auto data=midi(pair.second);std::ofstream file(out/pair.first,std::ios::binary);file.write(reinterpret_cast<const char*>(data.data()),static_cast<std::streamsize>(data.size()));check(file.good(),"MIDI fixture write");}
+    Document extent;extent.add({},bar);extent.insert({{0,3*bar,4*bar,c}});
+    for(auto pair:std::initializer_list<std::pair<std::string,Timeline>>{{"chords.mid",d.state()},{"empty.mid",Timeline{}},{"extent-gate.mid",extent.state()}}){auto data=midi(pair.second);std::ofstream file(out/pair.first,std::ios::binary);file.write(reinterpret_cast<const char*>(data.data()),static_cast<std::streamsize>(data.size()));check(file.good(),"MIDI fixture write");}
     std::cout<<"PASS: "<<assertions<<" assertions\n";
 }

@@ -1,17 +1,23 @@
 #include "Timeline.h"
 #include <algorithm>
 #include <cmath>
+#include <limits>
 #include <set>
 
 namespace cc {
 bool intersects(const Block& a,const Block& b) { return a.start<b.end && b.start<a.end; }
-int snap(int t,int grid) { return grid>0 ? static_cast<int>(std::floor(static_cast<double>(t)/grid+0.5))*grid : t; }
+namespace { bool gridValid(int grid) { return grid==240 || grid==480 || grid==960 || grid==1920 || grid==3840; } }
+int snap(int t,int grid) {
+    if(!gridValid(grid))return t;
+    auto result=static_cast<int64_t>(std::floor(static_cast<double>(t)/grid+0.5))*grid;
+    return static_cast<int>(std::clamp(result,static_cast<int64_t>(std::numeric_limits<int>::min()),static_cast<int64_t>(std::numeric_limits<int>::max())));
+}
 bool validate(const Timeline& t) {
     if(t.bars<1 || t.bars>32 || t.blocks.size()>512) return false;
     std::set<uint64_t> ids;
     for(size_t i=0;i<t.blocks.size();++i) {
         auto& b=t.blocks[i];
-        if(!b.id || !ids.insert(b.id).second || b.start<0 || b.end>t.bars*bar || b.end-b.start<ppq || !valid(b.chord)) return false;
+        if(!b.id || b.id==std::numeric_limits<uint64_t>::max() || !ids.insert(b.id).second || b.start<0 || b.end<=b.start || b.end>t.bars*bar || b.end-b.start<ppq || !valid(b.chord)) return false;
         for(size_t j=0;j<i;++j) if(intersects(b,t.blocks[j])) return false;
     }
     return true;
@@ -30,6 +36,7 @@ bool Document::commit(Timeline next,std::string name) {
 }
 bool Document::insert(std::vector<Block> incoming,const std::vector<uint64_t>& removed,std::string name) {
     if(incoming.empty()) return false;
+    for(auto& b:incoming) if(b.start<0 || b.start>=hardEnd || b.end<=b.start || b.end>hardEnd || b.end-b.start<ppq || !valid(b.chord) || b.id==std::numeric_limits<uint64_t>::max()) return false;
     Timeline next=current;
     std::erase_if(next.blocks,[&](const Block& b){
         return std::find(removed.begin(),removed.end(),b.id)!=removed.end()
@@ -39,11 +46,13 @@ bool Document::insert(std::vector<Block> incoming,const std::vector<uint64_t>& r
     return commit(std::move(next),std::move(name));
 }
 bool Document::add(const Chord& c,int start,int grid) {
+    if(!gridValid(grid) || start<0 || start>=hardEnd || !valid(c))return false;
     start=snap(start,grid);
     if(start<0 || start>=hardEnd || hardEnd-start<ppq) return false;
     return insert({{0,start,std::min(hardEnd,start+bar),c}}, {},"Add chord");
 }
 bool Document::append(const Chord& c,int grid) {
+    if(!gridValid(grid))return false;
     int end=0; for(auto& b:current.blocks) end=std::max(end,b.end);
     return add(c,((end+grid-1)/grid)*grid,grid);
 }
@@ -54,10 +63,11 @@ std::vector<Block> Document::copy(const std::vector<uint64_t>& ids) const {
     return result;
 }
 bool Document::paste(const std::vector<Block>& copied,int playhead,int grid) {
+    if(!gridValid(grid) || playhead<0 || playhead>=hardEnd)return false;
     int anchor=snap(playhead,grid); if(anchor<0 || anchor>=hardEnd) return false;
     std::vector<Block> result;
     for(auto b:copied) {
-        if(b.start<0 || b.end-b.start<ppq || b.end>hardEnd || !valid(b.chord)) return false;
+        if(b.start<0 || b.start>=hardEnd || b.end<=b.start || b.end>hardEnd || b.end-b.start<ppq || !valid(b.chord)) return false;
         b.id=0; b.start+=anchor; b.end=std::min(hardEnd,b.end+anchor);
         if(b.start<hardEnd && b.end-b.start>=ppq) result.push_back(b);
     }
@@ -68,6 +78,7 @@ bool Document::duplicate(const std::vector<uint64_t>& ids,int grid) {
     return paste(copy(ids),end,grid);
 }
 bool Document::move(const std::vector<uint64_t>& ids,int candidate,int grid) {
+    if(!gridValid(grid))return false;
     std::vector<Block> group; for(auto id:ids) if(auto b=find(id)) group.push_back(*b);
     if(group.empty()) return false;
     int first=hardEnd,last=0; for(auto& b:group){first=std::min(first,b.start);last=std::max(last,b.end);}
@@ -77,6 +88,7 @@ bool Document::move(const std::vector<uint64_t>& ids,int candidate,int grid) {
     return insert(std::move(group),ids,"Move");
 }
 bool Document::resize(uint64_t id,bool left,int tick,int grid) {
+    if(!gridValid(grid))return false;
     auto ptr=find(id); if(!ptr) return false;
     Block b=*ptr;
     if(left) b.start=std::clamp(snap(tick,grid),0,((b.end-ppq)/grid)*grid);
@@ -84,9 +96,10 @@ bool Document::resize(uint64_t id,bool left,int tick,int grid) {
     return insert({b},{id},left ? "Resize start" : "Resize end");
 }
 bool Document::slice(uint64_t id,int tick,int grid) {
+    if(!gridValid(grid))return false;
     auto ptr=find(id); if(!ptr) return false;
     Block a=*ptr,b=*ptr; tick=snap(tick,grid);
-    if(tick-a.start<ppq || a.end-tick<ppq) return false;
+    if(tick<=a.start || tick>=a.end || tick-a.start<ppq || a.end-tick<ppq) return false;
     a.id=0;b.id=0;a.end=tick;b.start=tick;
     return insert({a,b},{id},"Slice");
 }

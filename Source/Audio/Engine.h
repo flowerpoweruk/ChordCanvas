@@ -1,5 +1,6 @@
 #pragma once
 #include "Model/Model.h"
+#include "Diagnostics/Log.h"
 #include <atomic>
 #include <array>
 #include <cstdint>
@@ -43,6 +44,8 @@ struct EngineStatus { double tick=0,bpm=120;uint64_t block=0;bool running=false,
 class Engine {
 public:
     FrameMailbox input;
+    AudioEventSink* diagnostics=nullptr; // Attach before processing; sink outlives engine.
+    uint64_t diagnosticInstance=0;
     void prepare(double sampleRate) noexcept;
     void reset() noexcept;
     void process(float* left,float* right,int count,HostClock clock,bool bypass=false) noexcept;

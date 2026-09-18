@@ -9,3 +9,8 @@
 *.chordcanvas.json
 !Tests/Fixtures/*.json
 /engineering/private/
+/log-tests-*/
+/*.f32
+/chords.mid
+/empty.mid
+/extent-gate.mid

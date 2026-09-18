@@ -1,0 +1,51 @@
+{
+  "date": "2026-09-18",
+  "environment": {
+    "windows": "Windows 11 Home 10.0.26200 x64",
+    "live": "Ableton Live 12 Suite 12.4.3",
+    "compiler": "LLVM-MinGW 20260908 UCRT x86_64 / Clang 23.1.1",
+    "cmake": "4.4.3",
+    "juce": "not downloaded; licence route pending",
+    "sdk": "10.0.26100.0 available; not used by the MinGW core build"
+  },
+  "scope": "Actual Live import feasibility through Live browser file drag; plug-in native file drag and audible playback not executed",
+  "savingExporting": "Live visibly reports Saving and exporting are deactivated; no activation attempted",
+  "observations": [
+    {
+      "fixture": "chords.mid",
+      "fileEndTick": 30720,
+      "lastNoteOffTick": 11520,
+      "destinations": [
+        "Session",
+        "Arrangement"
+      ],
+      "observed": "Clip Start/Loop Start 1.1.1, Clip End/Loop End 4.1.1, length 3.0.0",
+      "status": "FAIL"
+    },
+    {
+      "fixture": "extent-gate.mid",
+      "fileEndTick": 30720,
+      "lastNoteOffTick": 15360,
+      "destinations": [
+        "Session",
+        "Arrangement"
+      ],
+      "observed": "Clip Start/Loop Start 1.1.1, Clip End/Loop End 5.1.1, length 4.0.0; Arrangement Editor reports selected timeline 1 to 5",
+      "expected": "Clip End/Loop End 9.1.1, length 8.0.0",
+      "status": "FAIL"
+    },
+    {
+      "fixture": "empty.mid",
+      "fileEndTick": 30720,
+      "noteEvents": 0,
+      "destinations": [
+        "Session empty slot"
+      ],
+      "observed": "Destination remained empty; previous clip inspector unchanged",
+      "expected": "Eight-bar silent clip",
+      "status": "FAIL"
+    }
+  ],
+  "privateEvidence": "Live screenshots/accessibility were inspected through authorised native Computer Use; raw host screenshots are not published",
+  "defect": "Live 12.4.3 clips imported files at final note endpoint and did not create the empty silent clip. No dummy notes, manual-resize workaround or scope change applied. Native plug-in drag remains untested."
+}

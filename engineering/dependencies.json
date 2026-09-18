@@ -1,7 +1,7 @@
 {
-  "projectLicense": "UNRESOLVED: no licence grant inferred from public visibility",
+  "projectLicense": "AGPL-3.0-only: explicitly authorised by owner 2026-09-18",
   "runtimeAssets": "Original native additive synthesis; no third-party samples or fonts bundled",
-  "framework": {"name": "JUCE", "revision": null, "licenseRoute": "UNRESOLVED", "downloaded": false},
+  "framework": {"name": "JUCE", "version": "9.0.2", "revision": "72782788ce18c2d4d760b28e0921d6ffc6431102", "url": "https://github.com/juce-framework/JUCE/releases/tag/9.0.2", "licenseRoute": "AGPL-3.0-only", "downloaded": true, "transitiveNotices": "Review pinned JUCE.spdx.json and compiled dependencies before binary distribution"},
   "development": [
     {"name": "LLVM-MinGW", "version": "20260908-ucrt-x86_64", "compiler": "Clang 23.1.1", "url": "https://github.com/mstorsjo/llvm-mingw/releases/tag/20260908", "archiveSha256": "1bcf74d06b724aeecaa6412ca85f5b26fb1da770e7cdcefa9263c9c5c3ad34b6", "rights": "Compiler tools used for development; inspect bundled notices before distributing runtime code"},
     {"name": "CMake", "version": "4.4.3", "url": "https://github.com/Kitware/CMake/releases/tag/v4.4.3", "archiveSha256": "4d52ebab7193a698651639ed80d8d04fd903358843572cf44c7fd234cb7c26ab", "shipped": false},

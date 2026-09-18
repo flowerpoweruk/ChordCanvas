@@ -1,0 +1,94 @@
+{
+  "scope": "Development core/integration executables; not installed VST3 or release packages",
+  "version": "0.1.0-development",
+  "source": "1a35c74dc8b866376ebec3b13fa8db39ad46f828+dirty",
+  "date": "2026-09-18",
+  "environment": {
+    "windows": "Windows 11 Home 10.0.26200 x64",
+    "live": "Ableton Live 12 Suite 12.4.3",
+    "compiler": "LLVM-MinGW 20260908 UCRT x86_64 / Clang 23.1.1",
+    "cmake": "4.4.3",
+    "juce": "not downloaded; licence route pending",
+    "sdk": "10.0.26100.0 available; not used by the MinGW core build"
+  },
+  "testCommands": [
+    "Scripts/build-core.ps1",
+    "Scripts/verify-logs.py build/core/log-tests-22312",
+    "Scripts/verify-midi.py build/core",
+    "Scripts/verify-theory.py build/core/theory_probe.exe"
+  ],
+  "ctest": {
+    "status": "PASS",
+    "coreSeconds": 14.0,
+    "diagnosticsSeconds": 1.77,
+    "totalSeconds": 15.83
+  },
+  "coreOutput": [
+    "Theory: 30870 combinations; MIDI 36..125",
+    "Timeline: 20,000 deterministic random commands",
+    "Mailbox: 30,000 concurrent publications",
+    "Sound 0: RMS 0.0373431, peak 0.169964",
+    "Sound 1: RMS 0.0174645, peak 0.155925",
+    "Sound 2: RMS 0.0279154, peak 0.0924241",
+    "Sound 3: RMS 0.0326126, peak 0.10709",
+    "PASS: 790078 assertions",
+    "PASS: five-session rotation, active-session preservation, bounded compaction/queues, storage failure and four-producer audio ring"
+  ],
+  "diagnosticParser": {
+    "status": "PASS",
+    "syntheticFiles": 12,
+    "checks": [
+      "strict UTF-8 and JSON Lines",
+      "strictly increasing seq and nondecreasing mono_ms",
+      "newest five ordinals 1..5 retained after six sessions",
+      "five active files preserved and sixth memory trail admitted after a slot opens",
+      "16 KiB reduced storage cap with snapshot/truncation markers",
+      "replace -> resize -> undo -> actual file-open error correlated to unchanged revision"
+    ]
+  },
+  "theoryOracle": {
+    "status": "PASS",
+    "library": "music21 10.5.0",
+    "combinations": 30870,
+    "writtenScales": 42
+  },
+  "midiParser": {
+    "status": "PASS",
+    "library": "mido 1.3.3",
+    "fixtures": [
+      {
+        "file": "chords.mid",
+        "sha256": "89ede9b0c7ee3bdd8be78786d2806d015d2516be39903acdc58cf016aae3b0d8",
+        "endTick": 30720,
+        "noteEvents": 12
+      },
+      {
+        "file": "empty.mid",
+        "sha256": "7c784bcf7121262c206810f5247f819612fc1d36950dd7c9fd79fd75e2d6a858",
+        "endTick": 30720,
+        "noteEvents": 0
+      },
+      {
+        "file": "extent-gate.mid",
+        "sha256": "9a4c3346c80ffbd6cb58bab88a015f93d2700e5f164c289430df44b423c65171",
+        "endTick": 30720,
+        "noteEvents": 12
+      }
+    ]
+  },
+  "testExecutables": [
+    {
+      "file": "core_tests.exe",
+      "sha256": "569ef0530ac8f57ec40040e761b6038d12af487d2ebc0ed94d9d55bdde42702f"
+    },
+    {
+      "file": "log_tests.exe",
+      "sha256": "b14e5789ff2cfe24cd1da2689504f0ce282e31a8710b49144f8dac062ddb1ebd"
+    },
+    {
+      "file": "theory_probe.exe",
+      "sha256": "7640239087d71bf42519d0df3f7a268e2da72b70af5796ddf8a23c9370d2a372"
+    }
+  ],
+  "architectureInspection": "llvm-readobj --file-headers core_tests.exe: COFF-x86-64, IMAGE_FILE_MACHINE_AMD64, 64-bit"
+}

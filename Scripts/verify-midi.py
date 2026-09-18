@@ -6,7 +6,7 @@ import mido
 
 root = Path(sys.argv[1])
 results = []
-for filename in ('chords.mid', 'empty.mid'):
+for filename in ('chords.mid', 'empty.mid', 'extent-gate.mid'):
     file = mido.MidiFile(root / filename, clip=False)
     assert file.type == 0 and file.ticks_per_beat == 960 and len(file.tracks) == 1
     tick = 0
@@ -34,11 +34,12 @@ for filename in ('chords.mid', 'empty.mid'):
             notes.append((tick, message.type, message.note))
         at_tick.append(message.type)
         previous = tick
-    if filename == 'chords.mid':
+    if filename != 'empty.mid':
+        start, end = (7680, 11520) if filename == 'chords.mid' else (11520, 15360)
         expected = [(3840, 'note_on', n) for n in (60,64,67)]
         expected += [(7680, 'note_off', n) for n in (60,64,67)]
-        expected += [(7680, 'note_on', n) for n in (64,67,72)]
-        expected += [(11520, 'note_off', n) for n in (64,67,72)]
+        expected += [(start, 'note_on', n) for n in (64,67,72)]
+        expected += [(end, 'note_off', n) for n in (64,67,72)]
         assert notes == expected, (notes, expected)
     else:
         assert notes == []
