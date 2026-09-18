@@ -20,15 +20,15 @@
     "expected": "Discover and record actual Windows architecture/build, Live 12 build, JUCE revision, compiler, SDK and CMake version. Verify x64 output rather than inferring it from the machine name.",
     "requiredLayers": "W, R",
     "procedure": "Inspect actual Windows/Live/toolchain/dependency versions and generated DLL architecture",
-    "observed": "Actual pinned JUCE VST3 built with recorded Microsoft compiler/SDK; DLL inspected as AMD64 PE32+. Toolchain licence verification separately pending.",
+    "observed": "Actual pinned JUCE VST3 built with recorded Microsoft compiler/SDK; installed DLL inspected as AMD64 PE32+. Free Community/AGPL route and static Release runtime distribution clearance established.",
     "defect": null
   },
   {
     "id": "ENV-02",
     "status": "PASS",
-    "version": "0.1.0-development",
-    "evidence": "engineering/native-review-evidence.json",
-    "source": "a492b65cddae7b50f654171b6c61b0d5d32511c2",
+    "version": "0.1.0-installed-candidate",
+    "evidence": "engineering/product-package-evidence.json",
+    "source": "6ba737c53deb257bdb07bd97878f4e4ea0388f76",
     "date": "2026-09-18",
     "environment": {
       "windows": "Windows 11 Home 10.0.26200.9168 x64",
@@ -43,8 +43,8 @@
     },
     "expected": "A minimal ChordCanvas VST3 instrument scans, appears and opens in the installed Live 12. Its audio reaches the track/master through ordinary host routing. No Max for Live component or external sound-bank download is needed.",
     "requiredLayers": "H",
-    "procedure": "Scan separate clean development Release bundle; load actual VST3 in Live; double-click C pad while host stopped",
-    "observed": "Actual editor opened at 120 BPM, exactly one C block inserted and pad audio visibly reached track/Main meters. Installed release tests remain open.",
+    "procedure": "Execute genuine Setup, scan system VST3 folder, load a separate disposable installed test instrument, inspect actual loaded module path and audition meters",
+    "observed": "Setup exit 0; complete installed payload/hash and validator/probe pass; actual installed VST3 loaded in Live 12.4.3, fresh defaults, exactly one C block on double-click; repeating D-minor audition visibly reaches track/Main meters and stops with Repeat off.",
     "defect": null
   },
   {

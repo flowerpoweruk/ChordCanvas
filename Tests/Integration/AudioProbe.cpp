@@ -1,4 +1,7 @@
 #include "Audio/Engine.h"
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include <windows.h>
 #include <malloc.h>
 #include <chrono>

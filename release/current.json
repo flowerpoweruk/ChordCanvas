@@ -1,9 +1,9 @@
 {
-  "version": "0.1.0",
-  "buildNumber": 1,
+  "version": "0.1.1",
+  "buildNumber": 2,
   "channel": "development",
   "date": "2026-09-18",
-  "changes": ["Chord palette, editable timeline and four original preview sounds.", "Fresh live sessions, manual progression files and bounded local diagnostics.", "VST3 editor and native MIDI drag under development; acceptance and packaging incomplete."],
+  "changes": ["Keyboard navigation for pad voicing, transport and editing controls.", "Correct chord symbols and VST3 program-list handling.", "Development build: full Live clip extent and release acceptance remain open."],
   "installerId": "{EE56A5B5-24E6-4F83-B3AF-1C73BCD93594}",
   "manufacturerCode": "ChCv",
   "pluginCode": "Cc01",

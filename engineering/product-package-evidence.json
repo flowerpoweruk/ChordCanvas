@@ -1,6 +1,6 @@
 {
   "date": "2026-09-18",
-  "status": "BUILT; actual installation awaiting owner Windows UAC",
+  "status": "BUILT AND INSTALLED; full acceptance incomplete",
   "scope": "Genuine product executables containing complete native VST3 and offline payload; acceptance incomplete",
   "sourceCommit": "6ba737c53deb257bdb07bd97878f4e4ea0388f76",
   "version": "0.1.0",
@@ -33,8 +33,28 @@
       "signature": "NotSigned"
     }
   ],
-  "installation": "NOT RUN; actual Setup started, Windows consent process observed pending; no automatic consent",
-  "updater": "Compiled self-contained full-payload product Updater; actual installed execution NOT RUN",
+  "installation": {
+    "exitCode": 0,
+    "runtimeLogResult": "Installation process succeeded; no restart",
+    "payloadValidation": "PASS; 16 owned files",
+    "pluginHashMatchesPackage": true,
+    "helperHashMatchesPackage": true,
+    "registration": "One fixed HKLM64 product uninstall identity; version 0.1.0",
+    "installedValidator": "47 PASS / 0 FAIL / exit 0",
+    "installedProcessingProbe": "PASS / exit 0",
+    "live": "12.4.3; system VST3 folders enabled, development custom folder disabled; verified installed module actually loaded",
+    "freshDefaults": "C Major, seven default pads, slot 3, empty eight bars, Piano, -12 dB, Repeat/Sync off",
+    "doubleClick": "Exactly one one-bar C block",
+    "audition": "D-minor repeating audition visibly reaches track/Main meters; persists when editor hidden; Repeat off stops it",
+    "limits": "No clean-machine, network-disabled, comprehensive GUI/DPI or complete lifecycle pass inferred"
+  },
+  "updater": {
+    "sameVersionLaunchExit": 2,
+    "runtimeLogCreated": false,
+    "installedPluginHashUnchanged": true,
+    "observed": "Launch ended before elevated runtime acceptance; not an already-up-to-date pass",
+    "newerVersionUpdate": "NOT RUN"
+  },
   "hostLimits": [
     "Live 12.4.3 actual development import truncates trailing rests despite correct eight-bar End-of-Track",
     "Live saving/exporting deactivated",

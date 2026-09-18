@@ -37,6 +37,8 @@ public:
         auto r=b.getLocalBounds().toFloat().reduced(.5f);
         g.setColour(down || b.getToggleState() ? ui::raised.brighter(.12f) : hover ? ui::raised : ui::surface);g.fillRoundedRectangle(r,2);
         g.setColour(b.getToggleState() || b.hasKeyboardFocus(false) ? ui::text : ui::line);g.drawRoundedRectangle(r,2,b.getToggleState() ? 1.5f : 1);
+        // An inset ring remains distinct even on an already selected button.
+        if(b.hasKeyboardFocus(false)){g.setColour(ui::text);g.drawRoundedRectangle(r.reduced(2),2,1);}
     }
     void drawComboBox(juce::Graphics& g,int w,int h,bool,int,int,int,int,juce::ComboBox& c) override {
         g.setColour(ui::surface);g.fillRect(0,0,w,h);g.setColour(c.hasKeyboardFocus(false) ? ui::text : ui::line);g.drawRect(0,0,w,h);
@@ -63,13 +65,13 @@ public:
 class Voicing final : public juce::Component {
 public:
     Voicing(Editor& e,std::function<Chord()> read,std::function<void(Chord)> write) : editor(e),get(std::move(read)),set(std::move(write)) {
-        for(auto* b:{&previous,&next,&seventh,&sus2,&sus4}){addAndMakeVisible(b);b->setWantsKeyboardFocus(false);}
+        for(auto* b:{&previous,&next,&seventh,&sus2,&sus4}){addAndMakeVisible(b);b->setWantsKeyboardFocus(true);}
         previous.onClick=[this]{mutate([](Chord& c){c.inversion=std::max(0,c.inversion-1);});};
         next.onClick=[this]{mutate([](Chord& c){c.inversion=std::min(c.seventh ? 3 : 2,c.inversion+1);});};
         seventh.onClick=[this]{mutate([](Chord& c){setSeventh(c,!c.seventh);});};
         sus2.onClick=[this]{mutate([](Chord& c){c.suspension=c.suspension==Suspension::sus2 ? Suspension::none : Suspension::sus2;});};
         sus4.onClick=[this]{mutate([](Chord& c){c.suspension=c.suspension==Suspension::sus4 ? Suspension::none : Suspension::sus4;});};
-        for(int o=0;o<5;++o){addAndMakeVisible(octaves[o]);octaves[o].setButtonText(juce::String(o+1));octaves[o].setWantsKeyboardFocus(false);octaves[o].onClick=[this,o]{mutate([o](Chord& c){c.octave=o+1;});};}
+        for(int o=0;o<5;++o){addAndMakeVisible(octaves[o]);octaves[o].setButtonText(juce::String(o+1));octaves[o].setWantsKeyboardFocus(true);octaves[o].onClick=[this,o]{mutate([o](Chord& c){c.octave=o+1;});};}
         refresh();
     }
     void mutate(const std::function<void(Chord&)>& op) { auto c=get();op(c);set(c);editor.changed(); }
@@ -94,7 +96,7 @@ private:
 class Pad final : public juce::Component {
 public:
     Pad(Editor& e,int d) : editor(e),degree(d),voicing(e,[this]{return editor.processor.session.pads[degree];},[this](Chord c){editor.processor.session.changePad(degree,c);}) {
-        addAndMakeVisible(voicing);addAndMakeVisible(reset);reset.setWantsKeyboardFocus(false);reset.setTooltip("Reset this pad to its key's default chord");reset.onClick=[this]{editor.processor.session.resetPad(degree);editor.changed();};
+        addAndMakeVisible(voicing);addAndMakeVisible(reset);reset.setWantsKeyboardFocus(true);reset.setTooltip("Reset this pad to its key's default chord");reset.onClick=[this]{editor.processor.session.resetPad(degree);editor.changed();};
     }
     void resized() override { int height=ui::optional(editor.processor.session) ? 80 : 52;voicing.setBounds(8,getHeight()-height-12,getWidth()-16,height);reset.setBounds(getWidth()-52,8,44,24); }
     void refresh() { voicing.refresh();resized();repaint(); }
@@ -257,7 +259,7 @@ Editor::Editor(Processor& p) : AudioProcessorEditor(p),processor(p),skin(std::ma
     setLookAndFeel(skin.get());setWantsKeyboardFocus(true);processor.interactive();
     for(auto* c:std::initializer_list<juce::Component*>{&key,&sound,&rate,&volume,&length,&repeats,&settings,&play,&stop,&start,&sync,&select,&razor,&undo,&redo,&minus,&plus,&zoomMinus,&zoomPlus,&fit,&save,&load,&logs,&back,&seventh,&sus2,&sus4,&editGrid,&sliceGrid,&status,&about,&logging,&scrollbar,canvas.get(),exporter.get(),&closePopover,&popoverTitle})addAndMakeVisible(c);
     for(int d=0;d<7;++d){pads[d]=std::make_unique<Pad>(*this,d);addAndMakeVisible(*pads[d]);}
-    for(auto* b:std::initializer_list<juce::Button*>{&repeats,&settings,&play,&stop,&start,&sync,&select,&razor,&undo,&redo,&minus,&plus,&zoomMinus,&zoomPlus,&fit,&save,&load,&logs,&back,&seventh,&sus2,&sus4,&closePopover})b->setWantsKeyboardFocus(false);
+    for(auto* b:std::initializer_list<juce::Button*>{&repeats,&settings,&play,&stop,&start,&sync,&select,&razor,&undo,&redo,&minus,&plus,&zoomMinus,&zoomPlus,&fit,&save,&load,&logs,&back,&seventh,&sus2,&sus4,&closePopover})b->setWantsKeyboardFocus(true);
     auto inventory=keys();for(size_t i=0;i<inventory.size();++i)key.addItem(juce::String(keyLabel(inventory[i])),static_cast<int>(i+1));key.onChange=[this,inventory]{if(key.getSelectedId()>0){processor.session.changeKey(inventory[static_cast<size_t>(key.getSelectedId()-1)]);changed();}};
     sound.addItemList({"Piano","Guitar","Strings","Pad"},1);sound.onChange=[this]{processor.session.sound=static_cast<Sound>(sound.getSelectedId()-1);processor.session.send();processor.event("sound.change");};
     rate.addItemList({"1/8 note","1/4 note","1/2 note","1 bar","2 bars"},1);rate.onChange=[this]{constexpr int ticks[] {480,960,1920,3840,7680};if(rate.getSelectedId()>0)processor.session.setRepeatRate(ticks[rate.getSelectedId()-1]);};
@@ -269,7 +271,7 @@ Editor::Editor(Processor& p) : AudioProcessorEditor(p),processor(p),skin(std::ma
     zoomMinus.onClick=[this]{canvas->zoom(1/1.2,canvas->x(static_cast<int>(processor.engine.uiTick.load())));};zoomPlus.onClick=[this]{canvas->zoom(1.2,canvas->x(static_cast<int>(processor.engine.uiTick.load())));};fit.onClick=[this]{canvas->fit();};
     length.setFont(ui::font(14));length.setInputRestrictions(8);length.setSelectAllWhenFocused(true);length.onReturnKey=[this]{applyLength();};length.onFocusLost=[this]{applyLength();};
     save.onClick=[this]{manualFile(true);};load.onClick=[this]{manualFile(false);};
-    addAndMakeVisible(editSelected);editSelected.setWantsKeyboardFocus(false);editSelected.onClick=[this]{if(processor.session.selected.size()==1)popover(processor.session.selected.front());};
+    addAndMakeVisible(editSelected);editSelected.setWantsKeyboardFocus(true);editSelected.onClick=[this]{if(processor.session.selected.size()==1)popover(processor.session.selected.front());};
     logs.onClick=[this]{try{auto path=logsFolder();std::filesystem::create_directories(path);if(!juce::File(juce::String(path.wstring().c_str())).startAsProcess())throw std::runtime_error("Explorer failed");}catch(const std::exception&){fail("open_logs","Couldn't open Logs Folder. Check folder permissions and try again.");}};
     auto features=[this]{processor.session.settings.showSeventh=seventh.getToggleState();processor.session.settings.showSus2=sus2.getToggleState();processor.session.settings.showSus4=sus4.getToggleState();processor.snapshot();changed();};seventh.onClick=features;sus2.onClick=features;sus4.onClick=features;
     for(auto* c:{&editGrid,&sliceGrid})c->addItemList({"1/16 note","1/8 note","1/4 note","1/2 note","1 bar"},1);

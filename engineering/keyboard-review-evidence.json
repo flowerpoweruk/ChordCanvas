@@ -1,0 +1,21 @@
+{
+  "date": "2026-09-18",
+  "source": "84fc3a43da10024131a4749f7c88774830138567+dirty",
+  "version": "0.1.1-development",
+  "buildNumber": 2,
+  "scope": "Actual native development HWND review; does not substitute required Live UI acceptance",
+  "build": "13/13 CTest PASS / exit 0 / 48.02 seconds before inset focus-ring follow-up",
+  "focusedRebuild": "Actual VST3 rebuild PASS; official validator 47 PASS / 0 FAIL / exit 0",
+  "processingProbe": "PASS / exit 0",
+  "keyboard": "Click selected C octave 3: inset focus ring visible; Tab visibly focuses octave 4; Return activates octave 4. Space does not activate the pinned JUCE button; native JUCE uses Return.",
+  "audioProbeCompile": "First MSVC compile failed due Windows max macro; explicit NOMINMAX corrected it; rebuild exit 0",
+  "msvcAudioMeasurements": {
+    "cases": 72,
+    "signalAndAllocationChecks": "PASS",
+    "maxCpuFraction": 0.371346941,
+    "maxCallbackDeadlineFraction": 1.2897,
+    "limits": "Offline measurements; one worst measured call exceeded its buffer deadline. No Live callback or listening acceptance claimed."
+  },
+  "manualProgressionUi": "NOT RUN: native Load dialog cancelled without changes after available UI tool could not enter its filename; set_value refused uncached read-only property",
+  "remaining": "Full Live keyboard/focus, dense progression, all DPI scales, installed newer updater and complete handover acceptance remain open"
+}
