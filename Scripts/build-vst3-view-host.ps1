@@ -9,4 +9,4 @@ $ccOutput=Join-Path $ccRoot 'build/vst3_view_host.exe'
 [IO.Directory]::CreateDirectory((Split-Path $ccOutput -Parent)) | Out-Null
 & $ccCompiler -std=c++20 -O2 -g -static -municode -D_WIN32_WINNT=0x0A00 -D_M_AMD64=100 -DNOMINMAX -DWIN32_LEAN_AND_MEAN ('-I'+$ccSdk) (Join-Path $ccRoot 'Tests/Integration/Vst3ViewHost.cpp') -o $ccOutput -lole32 -luser32
 if($LASTEXITCODE){throw 'Development VST3 view host compilation failed'}
-Write-Output 'Compiled development-only VST3 view host. Supply an explicit native module; no audio processing, Live identity or host acceptance is provided.'
+Write-Output 'Compiled development-only VST3 host. Supply an explicit native module for editor review, or add --probe-processing for isolated bus/lifecycle/MIDI-ignore checks. Neither mode establishes Live acceptance.'

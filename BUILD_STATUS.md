@@ -2,6 +2,18 @@
 
 ## Current execution record — 18 September 2026
 
+### Iteration 13 — native ABI processing probe and free Community acquisition
+
+Iteration 12 committed/pushed as **fb1c46bf08f2661681d0d5708fe12492623c76bc**; actual remote main matched. The owner renewed the instruction to proceed through delivery after the free Community licensing route was explained. Proceeded with the necessary free Microsoft-signed Community prerequisite under that end-to-end authority; no paid commitment. Rechecked the exact bootstrapper SHA256 and valid Microsoft signature, then launched `--passive --wait --norestart` with native C++/Windows 11 SDK components. Actual Windows consent process is waiting for the owner's UAC approval; no consent automation, installation success or licence acquisition completion is assumed. Private launch/result records remain ignored.
+
+Extended the development-only native VST3 host with `--probe-processing`: actual bus inspection, stereo activation, float processing lifecycle at 44.1/48/96 kHz and zero/1/17/127/256/1024-frame calls. It supplies a clearly synthetic later host position/tempo and incoming note event to check that a fresh instance stays silent and ignores incoming MIDI. It opens no audio device and does not replace Live acceptance.
+
+Actual LLVM harness compile **PASS**, script parser **PASS**; 16 upstream SDK pragma-pack warnings, no project diagnostic. Existing older DLL initializes the component/controller/connections, then correctly fails the required event-input-bus precondition, **exit 1**. This independently reproduces the previously observed actual Live failure. Missing explicit module refusal **exit 1 PASS**. Corrected native bus/lifecycle/MIDI-ignore checks remain **NOT RUN**, rather than being inferred from the added probe. Sanitized hashes/procedure/results: `engineering/native-processing-evidence.json`; raw outputs stay private/ignored.
+
+Community bootstrapper actually completed **exit 0**. `vswhere` independently confirms complete Community **18.10.12210.168**, C++ workload present and no reboot required. The free OSI route is now acquired. Build selection prefers an installed Community/Professional/Enterprise edition rather than standalone Build Tools. Added a standard public-repository `windows-2025` native compilation workflow with pinned checkout/CMake and read-only permissions; YAML/embedded PowerShell validation PASS. It uploads no binary/private logs and claims no host acceptance. Actual CI run NOT RUN. Installer API probe now tests Windows Server refusal in hosted CI, preserving the shipping Win11 restriction; actual local native DLL probe **1/1 PASS, .09 s**. Server branch NOT RUN locally. Initial workflow parser dependency was absent; installed isolated PyYAML 6.0.3 and then validated successfully.
+
+Next: rebuild clean committed inputs in a separate directory, retest editor creation/processing and actual Live/GUI, then build and execute genuine VST3 packages. Owner-safe Live closure, full trailing/empty MIDI clip extent, disabled host saving, clean-machine/installed package/runtime/release gates remain open. **No accepted Setup.exe/Updater.exe or stable release exists.**
+
 ### Iteration 12 — actual native editor-creation failure and initialization correction
 
 Iteration 11 committed/pushed as **d9116af28d1135309af09a782f7c4e0df3bf021a**; actual remote main matched. Community installation authority/UAC remains pending. No further Microsoft project compilation, owner Live closure or binary distribution.

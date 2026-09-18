@@ -1,6 +1,8 @@
 // Development-only native VST3 view host. No audio device, MIDI import, fake host
 // transport or Live identity. This permits real rendering/gesture inspection of
 // an explicitly identified existing binary; it is not Ableton acceptance.
+// The optional processing probe exercises the actual ABI without an audio
+// device or rendered editor; its host clock is explicitly synthetic.
 #include <windows.h>
 #include <objbase.h>
 #include "pluginterfaces/base/ipluginbase.h"
@@ -8,6 +10,10 @@
 #include "pluginterfaces/vst/ivsteditcontroller.h"
 #include "pluginterfaces/vst/ivsthostapplication.h"
 #include "pluginterfaces/gui/iplugview.h"
+#include "pluginterfaces/vst/ivstaudioprocessor.h"
+#include "pluginterfaces/vst/ivstevents.h"
+#include <array>
+#include <cmath>
 #include <algorithm>
 #include <cstring>
 #include <filesystem>
@@ -17,6 +23,54 @@ using namespace Steinberg;
 using namespace Steinberg::Vst;
 namespace {
 void require(bool result,const char* message){std::cout<<(result ? "OK: " : "FAIL: ")<<message<<std::endl;if(!result)throw std::runtime_error(message);}
+struct InputEvents final: IEventList {
+    Event note{};uint32 references=1;
+    InputEvents(){note.type=Event::kNoteOnEvent;note.noteOn.pitch=60;note.noteOn.velocity=1;note.noteOn.noteId=-1;}
+    tresult PLUGIN_API queryInterface(const TUID id,void** result) override {
+        if(!result)return kInvalidArgument;*result=nullptr;
+        if(std::memcmp(id,IEventList_iid,16) && std::memcmp(id,FUnknown_iid,16))return kNoInterface;
+        *result=static_cast<IEventList*>(this);addRef();return kResultOk;
+    }
+    uint32 PLUGIN_API addRef() override{return ++references;}
+    uint32 PLUGIN_API release() override{return --references;}
+    int32 PLUGIN_API getEventCount() override{return 1;}
+    tresult PLUGIN_API getEvent(int32 index,Event& event) override{if(index!=0)return kInvalidArgument;event=note;return kResultOk;}
+    tresult PLUGIN_API addEvent(Event&) override{return kNotImplemented;}
+};
+void probeProcessing(IComponent* component){
+    require(component->getBusCount(kAudio,kInput)==0,"Instrument has no audio input");
+    require(component->getBusCount(kAudio,kOutput)==1,"Instrument has one audio output bus");
+    require(component->getBusCount(kEvent,kInput)==1,"Instrument exposes the Live-required event input bus");
+    require(component->getBusCount(kEvent,kOutput)==0,"Instrument emits no MIDI events");
+    BusInfo bus{};require(component->getBusInfo(kAudio,kOutput,0,bus)==kResultOk && bus.channelCount==2,"Native output bus is stereo");
+    require(component->getBusInfo(kEvent,kInput,0,bus)==kResultOk && bus.channelCount>=1,"Native event input has valid channels");
+    IAudioProcessor* audio=nullptr;
+    require(component->queryInterface(IAudioProcessor_iid,reinterpret_cast<void**>(&audio))==kResultOk && audio,"Native audio processing interface");
+    require(audio->canProcessSampleSize(kSample32)==kResultOk,"Native processor supports float audio");
+    SpeakerArrangement output=SpeakerArr::kStereo;
+    require(audio->setBusArrangements(nullptr,0,&output,1)==kResultOk,"Native stereo bus arrangement accepted");
+    require(component->activateBus(kAudio,kOutput,0,true)==kResultOk && component->activateBus(kEvent,kInput,0,true)==kResultOk,"Native output and event buses activate");
+    InputEvents events;
+    for(double rate:{44100.,48000.,96000.}){
+        ProcessSetup setup{kRealtime,kSample32,1024,rate};
+        require(audio->setupProcessing(setup)==kResultOk && component->setActive(true)==kResultOk && audio->setProcessing(true)==kResultOk,"Native processing lifecycle activates");
+        std::array<float,1024> left{},right{};float* channels[]{left.data(),right.data()};
+        AudioBusBuffers buffers;buffers.numChannels=2;buffers.channelBuffers32=channels;
+        ProcessContext context{};context.sampleRate=rate;context.tempo=137.25;context.timeSigNumerator=4;context.timeSigDenominator=4;
+        context.state=ProcessContext::kTempoValid|ProcessContext::kTimeSigValid|ProcessContext::kPlaying|ProcessContext::kProjectTimeMusicValid;
+        context.projectTimeMusic=1234;context.projectTimeSamples=static_cast<int64>(rate*500);
+        ProcessData data;data.numOutputs=1;data.outputs=&buffers;data.inputEvents=&events;data.processContext=&context;
+        bool silent=true;
+        for(int count:{0,1,17,127,256,1024}){
+            data.numSamples=count;std::fill(left.begin(),left.end(),1.f);std::fill(right.begin(),right.end(),1.f);
+            require(audio->process(data)==kResultOk,"Native process accepts prepared buffer size");
+            for(int n=0;n<count;++n)silent=silent && std::isfinite(left[n]) && left[n]==0 && std::isfinite(right[n]) && right[n]==0;
+        }
+        require(silent,"Fresh processor stays silent despite incoming MIDI and later host position");
+        require(audio->setProcessing(false)==kResultOk && component->setActive(false)==kResultOk,"Native processing lifecycle deactivates");
+    }
+    audio->release();require(events.references==1,"Native processing retains no input event list");
+}
 struct Host final: IHostApplication,IPlugFrame,IComponentHandler {
     HWND window=nullptr;
     IPlugView* view=nullptr;
@@ -53,7 +107,8 @@ LRESULT CALLBACK procedure(HWND window,UINT message,WPARAM first,LPARAM second){
 }
 }
 int wmain(int count,wchar_t** arguments){try{
-    require(count==2,"Supply an explicit development VST3 module");auto path=std::filesystem::absolute(arguments[1]);
+    bool processing=count==3 && !std::wcscmp(arguments[2],L"--probe-processing");
+    require(count==2 || processing,"Supply an explicit development VST3 module and optional --probe-processing");auto path=std::filesystem::absolute(arguments[1]);
     require(path.filename()==L"ChordCanvas.vst3" && std::filesystem::is_regular_file(path),"Expected existing ChordCanvas development VST3 module");
     SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);CoInitializeEx(nullptr,COINIT_APARTMENTTHREADED);
     auto image=LoadLibraryExW(path.c_str(),nullptr,LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR|LOAD_LIBRARY_SEARCH_SYSTEM32);require(image!=nullptr,"Native VST3 module load");
@@ -67,6 +122,9 @@ int wmain(int count,wchar_t** arguments){try{
     require(component->queryInterface(IConnectionPoint_iid,reinterpret_cast<void**>(&componentPoint))==kResultOk && controller->queryInterface(IConnectionPoint_iid,reinterpret_cast<void**>(&controllerPoint))==kResultOk,"Native component/controller connection points");
     require(componentPoint->connect(controllerPoint)==kResultOk && controllerPoint->connect(componentPoint)==kResultOk,"Connect native component/controller");
     require(controller->setComponentHandler(static_cast<IComponentHandler*>(&host))==kResultOk,"Set native host component handler");
+    if(processing){
+        probeProcessing(component);
+    }else{
     host.view=controller->createView("editor");require(host.view && host.view->isPlatformTypeSupported(kPlatformTypeHWND)==kResultOk,"Create native HWND view");host.view->setFrame(&host);
     WNDCLASSW definition{};definition.lpfnWndProc=procedure;definition.hInstance=GetModuleHandleW(nullptr);definition.lpszClassName=L"ChordCanvasDevelopmentVst3View";definition.hCursor=LoadCursorW(nullptr,IDC_ARROW);require(RegisterClassW(&definition)!=0,"Register own development window");
     // The parent is created before attachment; resize callbacks cannot route
@@ -75,6 +133,8 @@ int wmain(int count,wchar_t** arguments){try{
     require(host.view->attached(window,kPlatformTypeHWND)==kResultOk,"Attach actual native VST3 editor");ViewRect size{};require(host.view->getSize(&size)==kResultOk,"Read actual editor dimensions");host.resizeView(host.view,&size);ShowWindow(window,SW_SHOW);UpdateWindow(window);
     std::cout<<"Actual native VST3 view attached: "<<size.getWidth()<<'x'<<size.getHeight()<<" physical pixels; no audio processing or Live claim\n"<<std::flush;
     MSG message{};while(GetMessageW(&message,nullptr,0,0)>0){TranslateMessage(&message);DispatchMessageW(&message);}
-    host.view->removed();host.view->setFrame(nullptr);host.view->release();host.view=nullptr;componentPoint->disconnect(controllerPoint);controllerPoint->disconnect(componentPoint);componentPoint->release();controllerPoint->release();controller->setComponentHandler(nullptr);controller->terminate();controller->release();component->terminate();component->release();factory->release();if(exit)exit();FreeLibrary(image);CoUninitialize();
-    std::cout<<"Development view closed normally\n";return 0;
+    host.view->removed();host.view->setFrame(nullptr);host.view->release();host.view=nullptr;
+    }
+    componentPoint->disconnect(controllerPoint);controllerPoint->disconnect(componentPoint);componentPoint->release();controllerPoint->release();controller->setComponentHandler(nullptr);controller->terminate();controller->release();component->terminate();component->release();factory->release();if(exit)exit();FreeLibrary(image);CoUninitialize();
+    std::cout<<(processing ? "Development processing probe closed normally\n" : "Development view closed normally\n");return 0;
 }catch(const std::exception& error){std::cerr<<"FAIL: "<<error.what()<<'\n';return 1;}}

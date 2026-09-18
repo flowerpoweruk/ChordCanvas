@@ -9,7 +9,7 @@ $ccBefore=@(& git -C $ccRoot status --porcelain --untracked-files=normal)
 if($LASTEXITCODE){throw 'Cannot establish source state before build'}
 $ccVswhere=Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
 if(!(Test-Path -LiteralPath $ccVswhere)){throw 'Microsoft C++ Build Tools is required. JUCE 9 does not support MinGW.'}
-$ccInstallations=& $ccVswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -format json | ConvertFrom-Json
+$ccInstallations=& $ccVswhere -latest -products Microsoft.VisualStudio.Product.Community Microsoft.VisualStudio.Product.Professional Microsoft.VisualStudio.Product.Enterprise -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -format json | ConvertFrom-Json
 if($LASTEXITCODE -or !$ccInstallations){throw 'No supported Microsoft x64 C++ toolchain was detected.'}
 $ccInstallation=$ccInstallations | Select-Object -First 1
 $ccMajor=[int]($ccInstallation.installationVersion.Split('.')[0])

@@ -1,0 +1,26 @@
+{
+  "date": "2026-09-18",
+  "source": "fb1c46bf08f2661681d0d5708fe12492623c76bc+dirty",
+  "scope": "Development-only native ABI probe; synthetic host context. No actual Live/audio-device/product installer acceptance.",
+  "harness": {
+    "buildCommand": "Scripts/build-vst3-view-host.ps1",
+    "build": "PASS",
+    "sha256": "419010de7a0c22cbe670a4d364902a8b977a011227418ff0d53b1e0e4788d352",
+    "powerShellParser": "PASS",
+    "warnings": "16 upstream SDK pragma-pack diagnostics; no project diagnostic"
+  },
+  "oldPlugin": {
+    "sha256": "f41e1987a81c2b2422b32f7941c43644a00f66ae4296e0caa938b42efedab17d",
+    "numericVersion": "0.1.0.0",
+    "procedure": "Initialize real factory/component/controller and connections, then inspect native buses via --probe-processing",
+    "exitCode": 1,
+    "observed": "Audio input absent and one output bus verified; required event input bus absent. Expected negative reproduction of the prior real Live load failure."
+  },
+  "absentModule": {
+    "exitCode": 1,
+    "observed": "Refused missing explicit module before native loading"
+  },
+  "correctedBinary": "NOT RUN; source event-bus correction remains uncompiled",
+  "processingLifecycleAndMidiIgnore": "NOT RUN; old binary refuses bus precondition before processing",
+  "limits": "No claim of actual Live loading, audible output, pad/timeline interaction, full MIDI drag extent, clean-machine or shipping acceptance"
+}

@@ -1,0 +1,39 @@
+name: Windows native development build
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    runs-on: windows-2025
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Verify hosted Visual Studio and pinned CMake
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:GITHUB_ACTIONS -ne 'true' -or $env:RUNNER_ENVIRONMENT -ne 'github-hosted') { throw 'Requires the standard GitHub hosted runner' }
+          $ccRepo = Invoke-RestMethod "https://api.github.com/repos/$env:GITHUB_REPOSITORY"
+          if (!$ccRepo.private -and $ccRepo.visibility -eq 'public') { Write-Output 'Standard public-repository hosted build; no paid runner' } else { throw 'This workflow is restricted to the authorised public repository' }
+          $ccVswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'
+          $ccVs = & $ccVswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -format json | ConvertFrom-Json
+          if ($LASTEXITCODE -or !$ccVs -or $ccVs[0].productId -ne 'Microsoft.VisualStudio.Product.Enterprise') { throw 'Expected the Visual Studio Enterprise supplied by the hosted image' }
+          $ccVs | Select-Object productId,installationVersion,isComplete,isPrerelease | ConvertTo-Json
+          $ccTools = Join-Path $env:RUNNER_TEMP 'ChordCanvasTools'
+          New-Item -ItemType Directory -Path $ccTools | Out-Null
+          $ccArchive = Join-Path $ccTools 'cmake.zip'
+          Invoke-WebRequest 'https://github.com/Kitware/CMake/releases/download/v4.4.3/cmake-4.4.3-windows-x86_64.zip' -OutFile $ccArchive
+          if ((Get-FileHash $ccArchive).Hash.ToLowerInvariant() -cne '4d52ebab7193a698651639ed80d8d04fd903358843572cf44c7fd234cb7c26ab') { throw 'Pinned CMake integrity mismatch' }
+          Expand-Archive -LiteralPath $ccArchive -DestinationPath $ccTools
+          "CC_CI_TOOLS=$ccTools" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+      - name: Compile native VST3 and execute automated tests
+        shell: pwsh
+        run: ./Scripts/build-plugin.ps1 -ToolsRoot $env:CC_CI_TOOLS -BuildDirectory build/plugin-ci -VisualStudioLicenseConfirmed
+      - name: Report limited evidence
+        shell: pwsh
+        run: |
+          Get-Content build/plugin-ci/build-inputs.json
+          'Native compilation and automated tests only. Actual Windows 11, Live, rendered GUI and shipping package acceptance require separate execution.' | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
