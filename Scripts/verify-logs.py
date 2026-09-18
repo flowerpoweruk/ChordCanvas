@@ -5,7 +5,8 @@ from datetime import datetime
 from pathlib import Path
 
 root = Path(sys.argv[1])
-version = json.loads((Path(__file__).resolve().parents[1] / 'release/current.json').read_text())['version']
+release = json.loads((Path(__file__).resolve().parents[1] / 'release/current.json').read_text(encoding='utf-8'))
+version, build_number = release['version'], release['buildNumber']
 files = sorted(root.rglob('ChordCanvas_*.txt'))
 assert len(list(root.glob('ChordCanvas_*.txt'))) == 5
 assert len(list((root / 'concurrent').glob('ChordCanvas_*.txt'))) == 5
@@ -19,6 +20,12 @@ for path in files:
     header, *events = [json.loads(line) for line in lines[1:]]
     assert header['schema'] == 1 and header['event'] == 'session.header'
     assert header['version'] == version and header['source'] != 'unknown'
+    assert header['build_number'] == build_number and header['build_configuration'] in ('Release', 'Debug', 'RelWithDebInfo', 'MinSizeRel')
+    assert header['build_id'] == f'{version}.{build_number}@' + header['source']
+    assert header['theory_schema'] == 1 and header['windows_version'].startswith('10.0.')
+    assert header['native_architecture'] == 'x64'
+    assert header['host_version'] == 'unknown' and header['host_version_source'] == 'unavailable'
+    assert 'C:\\' not in json.dumps(header) and 'C:/' not in json.dumps(header)
     previous_seq, previous_ms = 0, 0
     for event in events:
         assert event['schema'] == 1 and event['session'] == header['session']
@@ -75,9 +82,26 @@ assert len(errors) == 1 and errors[0]['level'] == 'error'
 assert errors[0]['details']['transaction'] == 4
 assert errors[0]['details']['revision'] == snapshots[-1]['revision']
 assert errors[0]['details']['state_changed'] is False
+clocks = [event for event in correlation if event['event'] == 'audio.clock']
+assert len(clocks) == 5
+assert all(event['thread_role'] == 'audio-summary' for event in clocks)
+for event in clocks:
+    details = event['details']
+    assert details['sample_rate_hz'] == 48000 and details['buffer_frames'] == 64
+    assert details['fallback_120_bpm'] == (not details['tempo_ever_known'])
+assert clocks[0]['details']['tempo_bpm'] == 120 and clocks[0]['details']['tempo_available'] is False
+assert clocks[0]['details']['fallback_120_bpm'] is True
+assert clocks[1]['details']['tempo_bpm'] == 91.125 and clocks[1]['details']['tempo_available'] is True
+assert clocks[1]['details']['host_playing'] is True
+assert clocks[2]['details']['tempo_bpm'] == 91.125 and clocks[2]['details']['tempo_available'] is False
+assert clocks[2]['details']['fallback_120_bpm'] is False
+assert clocks[3]['details']['tempo_bpm'] == 112.875 and clocks[3]['details']['meter_numerator'] == 3 and clocks[3]['details']['meter_denominator'] == 8
+assert clocks[3]['details']['host_playing'] is False
+assert clocks[4]['details']['bypassed'] is True
 print(json.dumps({
     'parser': 'Python standard JSON/UTF-8 parser', 'status': 'PASS',
     'synthetic_files': len(files), 'sequence': 'strictly increasing',
     'monotonic_time': 'nondecreasing',
+    'clock_changes': len(clocks), 'quiet_callbacks_coalesced': True,
     'correlation': 'replace -> resize -> undo -> actual file-open error, unchanged document',
 }, indent=2))

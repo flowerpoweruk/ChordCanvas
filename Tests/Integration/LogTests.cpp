@@ -2,6 +2,7 @@
 #include "Commands/Timeline.h"
 #include "Persistence/Progression.h"
 #include "OwnedWorkspace.h"
+#include "Audio/Engine.h"
 #include <windows.h>
 #include <fstream>
 #include <iostream>
@@ -41,7 +42,7 @@ int main(int argc,char** argv) {
     {LogService denied(deny);std::this_thread::sleep_for(std::chrono::milliseconds(100));require(!denied.status().available,"unwritable storage stays safe");}
     // Exercise actual model operations and an actual owned file-I/O failure.
     // This is an integration harness, not a rendered plug-in/error-popup test.
-    {LogService service(root/L"correlation",32*1024*1024,"synthetic-test-host");waitReady(service);
+    {LogService service(root/L"correlation",32*1024*1024,"synthetic-test-host","synthetic-core-harness");waitReady(service);
      Document document;document.add({},0);document.add({},bar);uint64_t transaction=0;
      auto record=[&](const char* event,uint64_t before){
          service.post(1,event,"{\"transaction\":"+std::to_string(++transaction)+",\"revision_before\":"+std::to_string(before)+",\"revision_after\":"+std::to_string(document.revision())+"}");
@@ -53,10 +54,15 @@ int main(int argc,char** argv) {
      auto valid=document.state();std::ofstream output(deny/L"export.mid",std::ios::binary);require(!output,"actual export destination is not a directory");
      service.post(1,"export.error","{\"transaction\":"+std::to_string(++transaction)+",\"revision\":"+std::to_string(document.revision())+",\"operation\":\"write_midi\",\"error_kind\":\"file_open_failed\",\"state_changed\":false}");
      require(document.state()==valid,"file error preserves valid document");
+     Engine engine;engine.prepare(48000);engine.diagnostics=&service;engine.diagnosticInstance=1;float left[64]{},right[64]{};
+     engine.process(left,right,64,{0,false});for(int i=0;i<10;++i)engine.process(left,right,64,{0,false});
+     engine.process(left,right,64,{91.125,true});engine.process(left,right,64,{0,true});engine.process(left,right,64,{112.875,false,3,8});
+     engine.process(left,right,64,{112.875,false,3,8},true);
     }
     AudioLogQueue queue;std::atomic<bool> done=false;std::atomic<int> successes=0;
-    std::vector<std::thread> producers;for(int n=0;n<4;++n)producers.emplace_back([&,n]{for(int i=0;i<10000;++i)if(queue.push({1,static_cast<uint64_t>(n+1),static_cast<uint64_t>(i),static_cast<uint64_t>(i),i,i}))++successes;});
-    int received=0;std::thread consumer([&]{AudioLogEvent event;while(!done){if(queue.pop(event)){require(event.revision==event.owner && event.tick==event.value,"untorn MPMC audio diagnostics");++received;}}while(queue.pop(event))++received;});
+    std::vector<std::thread> producers;for(int n=0;n<4;++n)producers.emplace_back([&,n]{for(int i=0;i<10000;++i){AudioLogEvent event{3,static_cast<uint64_t>(n+1),static_cast<uint64_t>(i),static_cast<uint64_t>(i),i,i};event.tempo=i+.5;event.sampleRate=(n+1)*1000;event.bufferFrames=i+1;event.tempoAvailable=i%2==0;event.hostPlaying=n%2==0;if(queue.push(event))++successes;}});
+    auto untorn=[&](const AudioLogEvent& event){require(event.revision==event.owner && event.tick==event.value && event.tempo==event.tick+.5 && event.sampleRate==event.instance*1000 && event.bufferFrames==event.tick+1 && event.tempoAvailable==(event.tick%2==0) && event.hostPlaying==(event.instance%2==1),"untorn MPMC clock doubles/integers/flags and ownership");};
+    int received=0;std::thread consumer([&]{AudioLogEvent event;while(!done){if(queue.pop(event)){untorn(event);++received;}}while(queue.pop(event)){untorn(event);++received;}});
     for(auto& p:producers)p.join();done=true;consumer.join();require(received==successes,"no duplicated or lost admitted events");
     std::cout<<"PASS: five-session rotation, active-session preservation, bounded compaction/queues, storage failure and four-producer audio ring\n";
     std::cout<<"Synthetic evidence directory: "<<root.filename().string()<<'\n';

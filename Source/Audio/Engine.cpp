@@ -92,9 +92,12 @@ float Engine::sample(Voice& v) noexcept {
 }
 void Engine::process(float* left,float* right,int count,HostClock host,bool bypass) noexcept {
     if(count<=0)return;
-    if(bypass){AudioFrame discarded;input.consume(discarded);reset();std::fill_n(left,count,0.0f);std::fill_n(right,count,0.0f);uiRunning=false;uiOverride=false;uiBlock=0;return;}
-    if(std::isfinite(host.bpm) && host.bpm>0 && host.bpm<1000){bpm=host.bpm;knownTempo=true;}
+    bool validTempo=std::isfinite(host.bpm) && host.bpm>0 && host.bpm<1000;
+    bool becameKnown=validTempo && !knownTempo;
+    if(validTempo){bpm=host.bpm;knownTempo=true;}
     meterValid=host.numerator==4 && host.denominator==4;
+    uiTempoAvailable=validTempo;uiTempo=bpm;uiTempoKnown=knownTempo;uiMeter=meterValid;
+    if(bypass){reportClock(host,count,true);AudioFrame discarded;input.consume(discarded);reset();std::fill_n(left,count,0.0f);std::fill_n(right,count,0.0f);uiRunning=false;uiOverride=false;uiBlock=0;return;}
     AudioFrame latest;
     if(input.consume(latest)) {
         bool transport=latest.transportSerial!=frame.transportSerial;
@@ -111,9 +114,10 @@ void Engine::process(float* left,float* right,int count,HostClock host,bool bypa
         if(repeatReset)repeatPhase=0;
         if(soundChanged)trigger(sounding,source);
     }
-    if(frame.sync && host.playing!=lastHost){running=host.playing;if(running)tick=0;}
+    if(frame.sync && (host.playing!=lastHost || becameKnown)){running=host.playing;if(running)tick=0;}
     lastHost=host.playing;
-    if(!meterValid)running=false;
+    if(!meterValid || !knownTempo)running=false; // Initial 120 BPM fallback is preview-only.
+    reportClock(host,count,false);
     double step=bpm*ppq/(60*rate);
     for(int i=0;i<count;++i) {
         NoteSet desired;uint64_t owner=0;bool retrigger=false;
@@ -136,6 +140,17 @@ void Engine::process(float* left,float* right,int count,HostClock host,bool bypa
     }
     auto b=running ? blockAt(tick) : nullptr;
     uiTick=tick;uiTempo=bpm;uiBlock=b ? b->id : 0;uiRunning=running;uiOverride=frame.previewOwner!=0;uiMeter=meterValid;uiTempoKnown=knownTempo;
+}
+void Engine::reportClock(HostClock clock,int count,bool bypass) noexcept {
+    auto* sink=diagnostics.load(std::memory_order_acquire);
+    if(!sink){reportedSink=nullptr;return;}
+    AudioLogEvent event;event.kind=3;event.instance=diagnosticInstance.load(std::memory_order_relaxed);event.revision=frame.revision;event.tick=static_cast<int>(tick);
+    event.tempo=bpm;event.sampleRate=rate;event.bufferFrames=count;event.numerator=clock.numerator;event.denominator=clock.denominator;
+    event.tempoAvailable=std::isfinite(clock.bpm) && clock.bpm>0 && clock.bpm<1000;event.tempoEverKnown=knownTempo;event.hostPlaying=clock.playing;event.bypassed=bypass;
+    if(reportedSink==sink && reportedClock.tempo==event.tempo && reportedClock.sampleRate==event.sampleRate && reportedClock.bufferFrames==event.bufferFrames && reportedClock.numerator==event.numerator && reportedClock.denominator==event.denominator && reportedClock.tempoAvailable==event.tempoAvailable && reportedClock.tempoEverKnown==event.tempoEverKnown && reportedClock.hostPlaying==event.hostPlaying && reportedClock.bypassed==event.bypassed)return;
+    // A refused bounded queue admission is counted by the sink. Coalesce the
+    // observation anyway so an overflow never creates a per-callback retry storm.
+    sink->audioEvent(event);reportedSink=sink;reportedClock=event;
 }
 EngineStatus Engine::status() const noexcept { auto b=running ? blockAt(tick) : nullptr;return {tick,bpm,b ? b->id : 0,running,frame.previewOwner!=0,meterValid,knownTempo,activeVoices}; }
 }

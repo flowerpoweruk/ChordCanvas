@@ -45,6 +45,11 @@ private:
     std::unique_ptr<juce::FileChooser> chooser;
     bool settingsOpen=false;
     std::array<bool,7> heldKeys {};
+    int environmentPoll=0,reportedWidth=0,reportedHeight=0;
+    float reportedTransformScale=0;
+    double reportedPlatformScale=-1;
+    juce::String reportedRenderer;
+    void recordEnvironment();
     void timerCallback() override;
     void handleAsyncUpdate() override;
     void manualFile(bool saving);

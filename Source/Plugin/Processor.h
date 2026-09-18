@@ -38,6 +38,9 @@ public:
     std::atomic<bool> bypassPreviewCleanup {false};
     juce::String loggingFailure;
 private:
+    std::atomic<int> lifecycle {0},preparedFrames {0};
+    std::atomic<double> preparedRate {0};
+    void environment(const char* event);
     HostClock clock() const noexcept;
     void handleAsyncUpdate() override;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Processor)

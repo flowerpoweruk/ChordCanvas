@@ -1,6 +1,7 @@
 #include "Log.h"
 #include <windows.h>
 #include <shlobj.h>
+#include <winver.h>
 #include <algorithm>
 #include <chrono>
 #include <cstdio>
@@ -10,6 +11,8 @@
 #include <iomanip>
 #include <sstream>
 #include <vector>
+#include <charconv>
+#include <cmath>
 
 namespace cc {
 AudioLogQueue::AudioLogQueue() { for(size_t i=0;i<slots.size();++i)slots[i].sequence=i; }
@@ -44,6 +47,23 @@ std::string jsonQuote(std::string_view text) {
     result+='"';return result;
 }
 namespace {
+std::string number(double value){if(!std::isfinite(value))return "null";std::array<char,64> buffer{};auto result=std::to_chars(buffer.data(),buffer.data()+buffer.size(),value);return result.ec==std::errc() ? std::string(buffer.data(),result.ptr) : "null";}
+std::string nativeArchitecture(){SYSTEM_INFO info{};GetNativeSystemInfo(&info);switch(info.wProcessorArchitecture){case PROCESSOR_ARCHITECTURE_AMD64:return "x64";case PROCESSOR_ARCHITECTURE_ARM64:return "arm64";case PROCESSOR_ARCHITECTURE_INTEL:return "x86";default:return "unknown";}}
+std::string windowsVersion(){auto dll=GetModuleHandleW(L"ntdll.dll");if(!dll)return "unknown";using Query=LONG(WINAPI*)(OSVERSIONINFOEXW*);auto query=reinterpret_cast<Query>(GetProcAddress(dll,"RtlGetVersion"));OSVERSIONINFOEXW info{};info.dwOSVersionInfoSize=sizeof(info);if(!query || query(&info)!=0)return "unknown";return std::to_string(info.dwMajorVersion)+'.'+std::to_string(info.dwMinorVersion)+'.'+std::to_string(info.dwBuildNumber);}
+std::string hostBinaryVersion(){
+    // Read only the current host executable's fixed version resource. Its path
+    // is a local API input, never part of the header or diagnostic payload.
+    std::wstring path(32768,L'\0');auto length=GetModuleFileNameW(nullptr,path.data(),static_cast<DWORD>(path.size()));if(!length || length>=path.size())return "unknown";path.resize(length);
+    DWORD ignored=0;auto bytes=GetFileVersionInfoSizeW(path.c_str(),&ignored);if(!bytes || bytes>4*1024*1024)return "unknown";std::vector<BYTE> resource(bytes);
+    if(!GetFileVersionInfoW(path.c_str(),0,bytes,resource.data()))return "unknown";VS_FIXEDFILEINFO* info=nullptr;UINT size=0;
+    if(!VerQueryValueW(resource.data(),L"\\",reinterpret_cast<void**>(&info),&size) || size<sizeof(*info) || !info || info->dwSignature!=0xfeef04bd)return "unknown";
+    return std::to_string(HIWORD(info->dwProductVersionMS))+'.'+std::to_string(LOWORD(info->dwProductVersionMS))+'.'+std::to_string(HIWORD(info->dwProductVersionLS))+'.'+std::to_string(LOWORD(info->dwProductVersionLS));
+}
+std::string audioDetails(const AudioLogEvent& event){
+    auto result="{\"kind\":"+std::to_string(event.kind)+",\"revision\":"+std::to_string(event.revision)+",\"owner\":"+std::to_string(event.owner)+",\"tick\":"+std::to_string(event.tick)+",\"value\":"+std::to_string(event.value);
+    if(event.kind==3)result+=",\"tempo_bpm\":"+number(event.tempo)+",\"sample_rate_hz\":"+number(event.sampleRate)+",\"buffer_frames\":"+std::to_string(event.bufferFrames)+",\"meter_numerator\":"+std::to_string(event.numerator)+",\"meter_denominator\":"+std::to_string(event.denominator)+",\"tempo_available\":"+(event.tempoAvailable ? "true" : "false")+",\"tempo_ever_known\":"+(event.tempoEverKnown ? "true" : "false")+",\"fallback_120_bpm\":"+(!event.tempoEverKnown ? "true" : "false")+",\"host_playing\":"+(event.hostPlaying ? "true" : "false")+",\"bypassed\":"+(event.bypassed ? "true" : "false");
+    return result+'}';
+}
 struct Handle {
     HANDLE h=INVALID_HANDLE_VALUE;
     ~Handle(){close();}
@@ -67,11 +87,11 @@ std::string readTail(const std::filesystem::path& file) {
     return {std::istreambuf_iterator<char>(input),std::istreambuf_iterator<char>()};
 }
 }
-LogService::LogService(std::filesystem::path folder,size_t storageCap,std::string hostName)
-    :root(std::move(folder)),cap(std::max<size_t>(storageCap,16384)),host(std::move(hostName)),worker([this]{run();}){}
+LogService::LogService(std::filesystem::path folder,size_t storageCap,std::string hostName,std::string pluginFormat)
+    :root(std::move(folder)),cap(std::max<size_t>(storageCap,16384)),host(std::move(hostName)),format(std::move(pluginFormat)),worker([this]{run();}){}
 LogService::~LogService(){stopping=true;wake.notify_all();if(worker.joinable())worker.join();}
-std::shared_ptr<LogService> LogService::interactive() {
-    static auto service=std::make_shared<LogService>();return service;
+std::shared_ptr<LogService> LogService::interactive(std::string host,std::string format) {
+    static auto service=std::make_shared<LogService>(logsFolder(),32*1024*1024,std::move(host),std::move(format));return service;
 }
 void LogService::post(uint64_t instance,std::string event,std::string details) {
     if(details.size()>256*1024 || event.size()>96){++dropped;return;}
@@ -85,6 +105,7 @@ void LogService::post(uint64_t instance,std::string event,std::string details) {
 bool LogService::audioEvent(AudioLogEvent event) noexcept { if(audio.push(event))return true;++dropped;return false; }
 LogStatus LogService::status() const { std::lock_guard guard(mutex);auto value=report;value.dropped=dropped.load();return value; }
 void LogService::run() noexcept {
+    try {
     using namespace std::chrono;
     Handle lease,file,rotation;
     auto started=steady_clock::now();uint64_t seq=0,lostSeen=0;
@@ -94,7 +115,8 @@ void LogService::run() noexcept {
     std::string session=utc(true)+"_"+std::to_string(GetCurrentProcessId())+"_"+std::to_string(guid.Data1);
     auto path=root/("ChordCanvas_"+session+".txt");auto lockPath=path;lockPath+=L".lock";
     std::string header="ChordCanvas diagnostic session; UTF-8 JSON Lines; schema 1\n";
-    header+="{\"schema\":1,\"event\":\"session.header\",\"session\":"+jsonQuote(session)+",\"version\":"+jsonQuote(CC_VERSION)+",\"host\":"+jsonQuote(host)+",\"source\":"+jsonQuote(CC_SOURCE_COMMIT)+"}\n";
+    auto binaryVersion=hostBinaryVersion();
+    header+="{\"schema\":1,\"event\":\"session.header\",\"session\":"+jsonQuote(session)+",\"version\":"+jsonQuote(CC_VERSION)+",\"host\":"+jsonQuote(host)+",\"host_version\":"+jsonQuote(binaryVersion)+",\"host_version_source\":"+jsonQuote(binaryVersion=="unknown" ? "unavailable" : "process executable fixed product version resource")+",\"plugin_format\":"+jsonQuote(format)+",\"source\":"+jsonQuote(CC_SOURCE_COMMIT)+",\"build_number\":"+std::to_string(CC_BUILD_NUMBER)+",\"build_configuration\":"+jsonQuote(CC_BUILD_CONFIGURATION)+",\"build_id\":"+jsonQuote(std::string(CC_VERSION)+'.'+std::to_string(CC_BUILD_NUMBER)+'@'+CC_SOURCE_COMMIT)+",\"theory_schema\":1,\"windows_version\":"+jsonQuote(windowsVersion())+",\"native_architecture\":"+jsonQuote(nativeArchitecture())+"}\n";
     auto status=[&](bool ok,const char* reason){std::lock_guard guard(mutex);report.available=ok;report.reason=reason;};
     auto admit=[&]() {
         std::filesystem::create_directories(root);
@@ -169,17 +191,22 @@ void LogService::run() noexcept {
             std::deque<Record> work;
             {std::unique_lock guard(mutex);wake.wait_for(guard,milliseconds(50),[&]{return stopping.load() || !pending.empty();});work.swap(pending);}
             for(auto& record:work){auto text=line(record);if(record.event=="state.snapshot")snapshot=text;emit(text);}
-            AudioLogEvent event;for(int budget=0;budget<256 && audio.pop(event);++budget){emit(line({event.instance,"audio.transition","{\"kind\":"+std::to_string(event.kind)+",\"revision\":"+std::to_string(event.revision)+",\"owner\":"+std::to_string(event.owner)+",\"tick\":"+std::to_string(event.tick)+",\"value\":"+std::to_string(event.value)+"}"},"audio-summary"));}
+            AudioLogEvent event;for(int budget=0;budget<256 && audio.pop(event);++budget){emit(line({event.instance,event.kind==3 ? "audio.clock" : "audio.transition",audioDetails(event)},"audio-summary"));}
             auto loss=dropped.load();if(loss!=lostSeen){emit(line({0,"log.events_dropped","{\"count\":"+std::to_string(loss-lostSeen)+"}"},"worker"));lostSeen=loss;}
             if(file.h!=INVALID_HANDLE_VALUE && steady_clock::now()-lastFlush>=seconds(1)){FlushFileBuffers(file.h);lastFlush=steady_clock::now();}
         }
         std::deque<Record> work;{std::lock_guard guard(mutex);work.swap(pending);}for(auto& record:work){auto text=line(record);if(record.event=="state.snapshot")snapshot=text;emit(text);}
-        AudioLogEvent event;while(audio.pop(event))emit(line({event.instance,"audio.transition","{\"kind\":"+std::to_string(event.kind)+",\"revision\":"+std::to_string(event.revision)+",\"owner\":"+std::to_string(event.owner)+",\"tick\":"+std::to_string(event.tick)+",\"value\":"+std::to_string(event.value)+"}"},"audio-summary"));
+        AudioLogEvent event;while(audio.pop(event))emit(line({event.instance,event.kind==3 ? "audio.clock" : "audio.transition",audioDetails(event)},"audio-summary"));
         auto finalLoss=dropped.load();if(finalLoss!=lostSeen)emit(line({0,"log.events_dropped","{\"count\":"+std::to_string(finalLoss-lostSeen)+"}"},"worker"));
         // Reserve room before assigning the terminal record's sequence. A
         // compaction marker must never follow the orderly session.end record.
         if(file.h!=INVALID_HANDLE_VALUE && total+1024>cap)emit(line({0,"session.closing","{}"},"worker"),true);
         emit(line({0,"session.end","{\"termination\":\"orderly\"}"},"worker"));if(file.h!=INVALID_HANDLE_VALUE)FlushFileBuffers(file.h);
     }catch(...){status(false,"Diagnostic storage unavailable; no host fault attribution");}
+    }catch(...){
+        // Header/resource initialization is also outside the audio thread and
+        // must not escape a noexcept worker into the shared host process.
+        try{std::lock_guard guard(mutex);report.available=false;report.reason="Diagnostic initialization unavailable";}catch(...){ }
+    }
 }
 }

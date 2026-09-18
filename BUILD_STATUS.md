@@ -2,6 +2,22 @@
 
 ## Current execution record — 18 September 2026
 
+### Iteration 9 — explicit tempo availability and bounded runtime metadata
+
+Iteration 8 committed/pushed as **d10607ecbbd172e135fca23a825f5838aa109b0c**; actual remote main matched. Microsoft entitlement and safe Live closure remain pending; Live still holds the old failed-load DLL. No further Microsoft project build, owner-work closure or binary distribution.
+
+Added primitive bounded audio clock observations for exact tempo, current availability, ever-valid status, host playing, explicit meter, prepared sample rate, actual callback buffer size and bypass. Unchanged callbacks remain quiet; a refused admission is counted without a per-block retry storm. All JSON formatting/resource reads/writes stay on worker/message threads. Four-producer stress now checks the larger double/integer/boolean payload for tearing.
+
+The initial 120 BPM fallback is **preview-only**; timeline waits for a valid host tempo. First valid tempo during an already-playing Sync starts at local zero; later missing/nonfinite timing retains the last valid tempo and phase. Actual clock integration PASS, including **20,000 unchanged callbacks** and queue-full coalescing. Existing direct-equation audio fidelity remains PASS.
+
+Session header records compiled build number/configuration/source/build ID, theory schema, actual native Windows build/architecture, supplied wrapper format/host classification and host executable fixed product version when available, with explicit provenance/unknown values and no executable paths. Guarded header initialization as well as the existing worker storage operations. Synthetic core executables have no version resource; that unknown branch is tested. Successful Live host-version discovery remains unrun.
+
+**Native JUCE source only, not compiled/host-tested:** Processor forwards actual JUCE classification/format and reports prepare/release/bus metadata on message thread. Editor reports unavailable/retained tempo, disables timeline Play before any valid tempo/under unsupported meter, and coalesces dimensions/transform scale/peer platform scale/renderer observations. Actual missing peer stays unknown. These changes do not constitute GUI/host acceptance.
+
+Latest `Scripts/build-core.ps1` **12/12 PASS, 17.93 s / 790,327 assertions**. Independent log parser **12 synthetic files / five actual clock changes PASS**, including exact fractional tempo/fallback/retention/meter/bypass, header metadata and existing rotation/compaction/error correlation. Re-measured all **72 offline audio cases PASS**: worst average CPU fraction **0.275020213**, worst call/deadline **0.5292**, zero guarded C++ allocations/deallocations. Normal-priority offline observations, not a host timing guarantee or full CRT/JUCE allocation proof. Receipts/current hashes and full measurement rows in `engineering/clock-evidence.json` and `engineering/core-evidence.json`.
+
+Corrected VST3/native GUI, actual packages and all outstanding host/release gates remain open. No accepted Setup.exe, Updater.exe, stable tag or binary release. Next: complete further independent semantic diagnostic coverage, then licensed clean native build and actual installed host/package acceptance when pending external constraints are resolved.
+
 ### Iteration 8 — production uninstall metadata and native offline package integration
 
 Iteration 7 committed/pushed as **bbd4a277a22207d61b611354f72bc97ad8616033**; actual remote main matched. Owner-safe Live closure and Visual Studio entitlement remain pending. Live still runs; no force-close, further Microsoft project compilation or binary distribution.

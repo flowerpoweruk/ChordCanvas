@@ -1,6 +1,8 @@
 #include "Processor.h"
 #include "Editor.h"
 #include "Persistence/Progression.h"
+#include <algorithm>
+#include <cmath>
 
 namespace cc {
 Processor::Processor() : AudioProcessor(BusesProperties().withOutput("Output",juce::AudioChannelSet::stereo(),true)) {
@@ -19,9 +21,9 @@ Processor::~Processor() { cancelPendingUpdate();if(logs)event("instance.destroy"
 bool Processor::isBusesLayoutSupported(const BusesLayout& layout) const {
     return layout.getMainInputChannelSet().isDisabled() && layout.getMainOutputChannelSet()==juce::AudioChannelSet::stereo();
 }
-void Processor::prepareToPlay(double rate,int) { engine.prepare(rate);triggerAsyncUpdate(); }
-void Processor::releaseResources() { engine.reset();triggerAsyncUpdate(); }
-void Processor::handleAsyncUpdate() { session.cancelPreview(); }
+void Processor::prepareToPlay(double rate,int frames) { engine.prepare(rate);preparedRate.store(std::isfinite(rate) && rate>=8000 ? rate : 0);preparedFrames.store(std::max(0,frames));lifecycle.store(1);triggerAsyncUpdate(); }
+void Processor::releaseResources() { engine.reset();lifecycle.store(2);triggerAsyncUpdate(); }
+void Processor::handleAsyncUpdate() { session.cancelPreview();auto phase=lifecycle.exchange(0);if(phase)environment(phase==1 ? "audio.prepare" : "audio.release"); }
 HostClock Processor::clock() const noexcept {
     HostClock result;
     if(auto* playhead=getPlayHead())if(auto position=playhead->getPosition()) {
@@ -49,12 +51,21 @@ void Processor::setStateInformation(const void*,int) {} // Fresh processor alrea
 juce::AudioProcessorEditor* Processor::createEditor() { return new Editor(*this); }
 void Processor::interactive() {
     if(logs)return;
-    try { logs=LogService::interactive(); }
+    try { logs=LogService::interactive(juce::PluginHostType().getHostDescription(),juce::AudioProcessor::getWrapperTypeDescription(wrapperType)); }
     catch(const std::exception&) { loggingFailure="Local diagnostics unavailable";return; }
     instance=logs->instanceId();
     engine.diagnosticInstance.store(instance,std::memory_order_relaxed);
     engine.diagnostics.store(logs.get(),std::memory_order_release);
-    event("instance.interactive");snapshot();
+    event("instance.interactive");environment("instance.environment");snapshot();
+}
+void Processor::environment(const char* name) {
+    if(!logs)return;
+    auto* data=new juce::DynamicObject;
+    data->setProperty("juce_revision",CC_JUCE_REVISION);
+    data->setProperty("sample_rate_requested_hz",preparedRate.load());data->setProperty("maximum_buffer_requested_frames",preparedFrames.load());
+    data->setProperty("audio_input_channels",getTotalNumInputChannels());data->setProperty("audio_output_channels",getTotalNumOutputChannels());
+    data->setProperty("event_input_declared",true);data->setProperty("incoming_midi_policy","ignored");
+    event(name,juce::var(data));
 }
 void Processor::event(const char* name,juce::var details) {
     if(logs)logs->post(instance,name,details.isVoid() ? "{}" : juce::JSON::toString(details,true).toStdString());

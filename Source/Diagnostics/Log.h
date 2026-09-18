@@ -11,7 +11,12 @@
 #include <thread>
 
 namespace cc {
-struct AudioLogEvent { uint32_t kind=0;uint64_t instance=0,revision=0,owner=0;int tick=0,value=0; };
+struct AudioLogEvent {
+    uint32_t kind=0;uint64_t instance=0,revision=0,owner=0;int tick=0,value=0;
+    // Kind 3: coalesced callback clock/format observation; no JSON/audio I/O.
+    double tempo=0,sampleRate=0;int bufferFrames=0,numerator=0,denominator=0;
+    bool tempoAvailable=false,tempoEverKnown=false,hostPlaying=false,bypassed=false;
+};
 class AudioEventSink {
 public:
     virtual ~AudioEventSink()=default;
@@ -33,11 +38,11 @@ std::string jsonQuote(std::string_view text);
 struct LogStatus { bool available=false;std::string reason;uint64_t dropped=0; };
 class LogService final : public AudioEventSink {
 public:
-    explicit LogService(std::filesystem::path root=logsFolder(),size_t storageCap=32*1024*1024,std::string host="unknown");
+    explicit LogService(std::filesystem::path root=logsFolder(),size_t storageCap=32*1024*1024,std::string host="unknown",std::string format="unknown");
     ~LogService();
     LogService(const LogService&)=delete;
     LogService& operator=(const LogService&)=delete;
-    static std::shared_ptr<LogService> interactive(); // Called on actual interactive editor use, never during scan.
+    static std::shared_ptr<LogService> interactive(std::string host="unknown",std::string format="unknown"); // Actual interactive use, never scan.
     void post(uint64_t instance,std::string event,std::string details="{}"); // Non-real-time only.
     bool audioEvent(AudioLogEvent event) noexcept override;
     LogStatus status() const;
@@ -46,7 +51,7 @@ private:
     struct Record {uint64_t instance;std::string event,details;};
     std::filesystem::path root;
     size_t cap;
-    std::string host;
+    std::string host,format;
     mutable std::mutex mutex;
     std::condition_variable wake;
     std::deque<Record> pending;

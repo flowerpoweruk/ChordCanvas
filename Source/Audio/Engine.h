@@ -53,6 +53,7 @@ public:
     std::atomic<double> uiTick {0},uiTempo {120};
     std::atomic<uint64_t> uiBlock {0};
     std::atomic<bool> uiRunning {false},uiOverride {false},uiMeter {true},uiTempoKnown {false};
+    std::atomic<bool> uiTempoAvailable {false};
     uint64_t articulations() const noexcept { return articulationCount; }
 private:
     struct Voice {
@@ -73,6 +74,9 @@ private:
     bool waveReady=false;
     bool running=false,lastHost=false,knownTempo=false,meterValid=true;
     int activeVoices=0;
+    AudioEventSink* reportedSink=nullptr;
+    AudioLogEvent reportedClock;
+    void reportClock(HostClock clock,int bufferFrames,bool bypass) noexcept;
     void release() noexcept;
     void trigger(NoteSet notes,uint64_t owner) noexcept;
     float sample(Voice& v) noexcept;

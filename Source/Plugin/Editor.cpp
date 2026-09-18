@@ -322,8 +322,23 @@ void Editor::resized() {
 void Editor::timerCallback() {
     if(processor.bypassPreviewCleanup.exchange(false,std::memory_order_relaxed))processor.session.cancelPreview();
     bool playing=processor.engine.uiRunning.load(),preview=processor.engine.uiOverride.load();juce::String state=preview ? processor.session.repeatLatched() ? "Repeating" : "Preview" : playing ? "Playing" : processor.session.sync ? "Sync armed" : "Stopped";
-    if(!processor.engine.uiMeter.load())state="4/4 required";status.setText(state+"\n"+juce::String(processor.engine.uiTempo.load(),1)+" BPM",juce::dontSendNotification);canvas->repaint();for(auto& pad:pads)pad->repaint();
+    bool meter=processor.engine.uiMeter.load();if(!meter)state="4/4 required";
+    bool tempoKnown=processor.engine.uiTempoKnown.load(),tempoAvailable=processor.engine.uiTempoAvailable.load();
+    play.setEnabled(!processor.session.sync && meter && tempoKnown);
+    auto tempo=tempoKnown ? juce::String(processor.engine.uiTempo.load(),1)+" BPM"+(tempoAvailable ? "" : " (last)") : juce::String("Tempo unavailable");
+    status.setText(state+"\n"+tempo,juce::dontSendNotification);
+    status.setTooltip(!tempoKnown ? "Host tempo unavailable. Preview uses 120 BPM until the host supplies a tempo." : !tempoAvailable ? "Host tempo unavailable. Using the last valid host tempo." : "Tempo follows the host.");
+    if(environmentPoll++%15==0)recordEnvironment();
+    canvas->repaint();for(auto& pad:pads)pad->repaint();
     if(settingsOpen){if(processor.logs){auto report=processor.logs->status();logging.setText(report.available ? "Logging active" : juce::String(report.reason),juce::dontSendNotification);}else logging.setText(processor.loggingFailure,juce::dontSendNotification);}
+}
+void Editor::recordEnvironment() {
+    auto transform=juce::Component::getApproximateScaleFactorForComponent(this);double platform=-1;juce::String renderer="unknown";
+    if(auto* peer=getPeer()){platform=peer->getPlatformScaleFactor();auto names=peer->getAvailableRenderingEngines();auto current=peer->getCurrentRenderingEngine();if(juce::isPositiveAndBelow(current,names.size()))renderer=names[current];}
+    if(reportedWidth==getWidth() && reportedHeight==getHeight() && reportedTransformScale==transform && reportedPlatformScale==platform && reportedRenderer==renderer)return;
+    reportedWidth=getWidth();reportedHeight=getHeight();reportedTransformScale=transform;reportedPlatformScale=platform;reportedRenderer=renderer;
+    auto* data=new juce::DynamicObject;data->setProperty("width_logical_px",getWidth());data->setProperty("height_logical_px",getHeight());data->setProperty("component_transform_scale",transform);data->setProperty("peer_platform_scale",platform<0 ? juce::var() : juce::var(platform));data->setProperty("renderer",renderer);
+    processor.event("editor.environment",juce::var(data));
 }
 void Editor::popover(uint64_t id) {
     popup.reset();popupBackground.reset();popupOwner=id;closePopover.setVisible(id!=0);popoverTitle.setVisible(id!=0);
