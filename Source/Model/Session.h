@@ -25,8 +25,13 @@ public:
     std::vector<Block> clipboard;
     std::function<void(const AudioFrame&)> publish;
     std::function<void(const std::string&,const Timeline&,uint64_t)> actionEvent;
+    // Message-thread semantic observations; diagnostic failure cannot undo or
+    // interrupt a valid musical operation. No raw unrelated keyboard input.
+    std::function<void(const char*,int,uint64_t,bool)> semanticEvent;
+    uint64_t diagnosticCallbackFailures() const noexcept { return observationFailures; }
     bool edit(const std::function<bool(Document&)>& operation);
     void select(uint64_t id,bool toggle);
+    void setSelection(std::vector<uint64_t> ids);
     void selectAll();
     bool removeSelected();
     void copy();
@@ -59,6 +64,8 @@ private:
     uint64_t previewSerial=0;
     int seekTick=0;
     std::array<bool,7> heldKeys {};
+    uint64_t observationFailures=0;
+    void observe(const char* name,int degree=-1,uint64_t block=0,bool keyboard=false) noexcept;
     void reconcile();
     void selectNew(const std::vector<uint64_t>& old);
 };

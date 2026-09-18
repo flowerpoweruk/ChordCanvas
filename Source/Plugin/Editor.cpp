@@ -70,7 +70,7 @@ public:
         for(int o=0;o<5;++o){addAndMakeVisible(octaves[o]);octaves[o].setButtonText(juce::String(o+1));octaves[o].setWantsKeyboardFocus(false);octaves[o].onClick=[this,o]{mutate([o](Chord& c){c.octave=o+1;});};}
         refresh();
     }
-    void mutate(const std::function<void(Chord&)>& op) { auto c=get();op(c);set(c);editor.processor.snapshot();editor.changed(); }
+    void mutate(const std::function<void(Chord&)>& op) { auto c=get();op(c);set(c);editor.changed(); }
     void refresh() {
         auto c=get();previous.setEnabled(c.inversion>0);next.setEnabled(c.inversion<(c.seventh ? 3 : 2));
         for(int o=0;o<5;++o)octaves[o].setToggleState(c.octave==o+1,juce::dontSendNotification);
@@ -189,8 +189,8 @@ public:
     void mouseUp(const juce::MouseEvent& e) override {
         auto& s=editor.processor.session;
         if(mode==Mode::marquee) {
-            if(dragging){s.selected=e.mods.isShiftDown() ? originalSelection : std::vector<uint64_t>{};for(auto& b:s.document.state().blocks)if(marquee.intersects(rectangle(b)) && std::find(s.selected.begin(),s.selected.end(),b.id)==s.selected.end())s.selected.push_back(b.id);}
-            else{s.selected.clear();s.seek(tick(e.position.x));}
+            if(dragging){auto chosen=e.mods.isShiftDown() ? originalSelection : std::vector<uint64_t>{};for(auto& b:s.document.state().blocks)if(marquee.intersects(rectangle(b)) && std::find(chosen.begin(),chosen.end(),b.id)==chosen.end())chosen.push_back(b.id);s.setSelection(std::move(chosen));}
+            else{s.setSelection({});s.seek(tick(e.position.x));}
         }else if(dragging && validPreview)commitGesture();else if(mode==Mode::move)s.select(owner,false);
         if(mode==Mode::move && s.activeBlock()==owner)s.releaseMomentary();clearGesture();editor.changed();
     }
@@ -256,7 +256,7 @@ Editor::Editor(Processor& p) : AudioProcessorEditor(p),processor(p),skin(std::ma
     for(auto* c:std::initializer_list<juce::Component*>{&key,&sound,&rate,&volume,&length,&repeats,&settings,&play,&stop,&start,&sync,&select,&razor,&undo,&redo,&minus,&plus,&zoomMinus,&zoomPlus,&fit,&save,&load,&logs,&back,&seventh,&sus2,&sus4,&editGrid,&sliceGrid,&status,&about,&logging,&scrollbar,canvas.get(),exporter.get(),&closePopover,&popoverTitle})addAndMakeVisible(c);
     for(int d=0;d<7;++d){pads[d]=std::make_unique<Pad>(*this,d);addAndMakeVisible(*pads[d]);}
     for(auto* b:std::initializer_list<juce::Button*>{&repeats,&settings,&play,&stop,&start,&sync,&select,&razor,&undo,&redo,&minus,&plus,&zoomMinus,&zoomPlus,&fit,&save,&load,&logs,&back,&seventh,&sus2,&sus4,&closePopover})b->setWantsKeyboardFocus(false);
-    auto inventory=keys();for(size_t i=0;i<inventory.size();++i)key.addItem(juce::String(keyLabel(inventory[i])),static_cast<int>(i+1));key.onChange=[this,inventory]{if(key.getSelectedId()>0){processor.session.changeKey(inventory[static_cast<size_t>(key.getSelectedId()-1)]);processor.event("key.change");processor.snapshot();changed();}};
+    auto inventory=keys();for(size_t i=0;i<inventory.size();++i)key.addItem(juce::String(keyLabel(inventory[i])),static_cast<int>(i+1));key.onChange=[this,inventory]{if(key.getSelectedId()>0){processor.session.changeKey(inventory[static_cast<size_t>(key.getSelectedId()-1)]);changed();}};
     sound.addItemList({"Piano","Guitar","Strings","Pad"},1);sound.onChange=[this]{processor.session.sound=static_cast<Sound>(sound.getSelectedId()-1);processor.session.send();processor.event("sound.change");};
     rate.addItemList({"1/8 note","1/4 note","1/2 note","1 bar","2 bars"},1);rate.onChange=[this]{constexpr int ticks[] {480,960,1920,3840,7680};if(rate.getSelectedId()>0)processor.session.setRepeatRate(ticks[rate.getSelectedId()-1]);};
     volume.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);volume.setTextBoxStyle(juce::Slider::TextBoxBelow,false,54,18);volume.setRange(-60,0,.1);volume.setTextValueSuffix(" dB");volume.onValueChange=[this]{processor.session.gain=volume.getValue()<=-60 ? 0 : static_cast<float>(std::pow(10.0,volume.getValue()/20));processor.session.send();};

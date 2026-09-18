@@ -21,7 +21,7 @@ $ccAllowedRoot=[IO.Path]::GetFullPath((Join-Path $ccRoot 'build'))+[IO.Path]::Di
 if(!$ccBuild.StartsWith($ccAllowedRoot,[StringComparison]::OrdinalIgnoreCase)){throw 'BuildDirectory must be inside the ignored workspace build folder'}
 & $ccCmake -S $ccRoot -B $ccBuild -G $ccGenerator -A x64 "-DCMAKE_GENERATOR_INSTANCE=$($ccInstallation.installationPath)" '-DCMAKE_SYSTEM_VERSION=10.0.26100.0' '-DCHORDCANVAS_BUILD_PLUGIN=ON'
 if($LASTEXITCODE){throw 'VST3 configure failed'}
-& $ccCmake --build $ccBuild --config $Configuration --target ChordCanvas_VST3 chordcanvas_install installer_api_probe payload_inspect clock_tests core_tests audio_fidelity_tests log_tests theory_probe export_cache_tests package_version_tests payload_tests transaction_tests registry_tests participant_tests install_metadata_tests --parallel 3
+& $ccCmake --build $ccBuild --config $Configuration --target ChordCanvas_VST3 chordcanvas_install installer_api_probe payload_inspect clock_tests session_events_tests core_tests audio_fidelity_tests log_tests theory_probe export_cache_tests package_version_tests payload_tests transaction_tests registry_tests participant_tests install_metadata_tests --parallel 3
 if($LASTEXITCODE){throw 'VST3 build failed'}
 & $ccCmake --build $ccBuild --config $Configuration --target RUN_TESTS
 if($LASTEXITCODE){throw 'Microsoft-toolchain tests failed'}

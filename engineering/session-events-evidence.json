@@ -1,0 +1,54 @@
+{
+  "date": "2026-09-18",
+  "source": "d624b97585a540e77e3d4827e93f07d5cf001082+dirty",
+  "scope": "Compiled core session semantic observation and exception isolation; native JUCE formatter/UI wiring is source only, not compiled/host tested.",
+  "suite": {
+    "command": "Scripts/build-core.ps1",
+    "status": "PASS",
+    "tests": 13,
+    "seconds": 17.87,
+    "coreAssertions": 792535
+  },
+  "sessionEvents": {
+    "status": "PASS",
+    "command": "CTest session_events",
+    "seconds": 0.04,
+    "tested": [
+      "Keyboard OS-repeat suppressed without duplicate semantic press",
+      "Older release reports target and preserves newer active source",
+      "Owning release publishes cleanup before observation",
+      "Repeat press/release/rate distinguishes continuing/stopped latch",
+      "Selection removes invalid/duplicate IDs; post-paste observation captures actual newly selected IDs",
+      "Block audition identifies stored target; snapped seek/local play/sync reflect published frame",
+      "Host-owned local Play produces no fake command",
+      "Throwing semantic callbacks cannot interrupt release/model/audio publication",
+      "Throwing timeline diagnostic callback cannot falsely fail an already committed musical edit"
+    ]
+  },
+  "parser": {
+    "command": "Scripts/verify-logs.py build/core/log-tests-23292-CC439381-B71A-42E6-994B-FF244E91EF7E",
+    "status": "PASS",
+    "syntheticFiles": 12,
+    "actualClockChanges": 5
+  },
+  "nativeSourceOnly": [
+    "Light semantic records identify target/active pad and block, keyboard ownership, resolved chord pitches/modifications, old/new key, revision, repeats and transport/seek serials, selection and cumulative callback failures",
+    "Selection-inserted snapshot follows actual paste/duplicate selection; marquee and empty selection use validated observable API",
+    "Pad/key snapshots centralised rather than duplicated by UI handlers; feature visibility included in snapshots"
+  ],
+  "remaining": [
+    "Native clean licensed compile/link and owner-safe Live restart",
+    "Actual semantic text/GUI/editor/rendered review in Live, not merely core callback observations",
+    "Gesture/file failure details and any further diagnostics deficiencies found during native review",
+    "Actual installed Setup/Updater/offline update/cancellation/recovery/uninstall tests",
+    "All outstanding host/native MIDI drag/fresh-state/listening/DPI acceptance and release/licensing gates"
+  ],
+  "delivery": "No accepted Setup.exe, Updater.exe, stable tag or binary release.",
+  "reviewFollowup": {
+    "scope": "Bounded selection review, preserve-before-validation, native formatter RAII source only",
+    "status": "PASS",
+    "tests": 2,
+    "seconds": 2.53,
+    "coreAssertions": 791979
+  }
+}

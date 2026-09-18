@@ -6,7 +6,9 @@
 
 namespace cc {
 Processor::Processor() : AudioProcessor(BusesProperties().withOutput("Output",juce::AudioChannelSet::stereo(),true)) {
-    session.publish=[this](const AudioFrame& frame){engine.input.publish(frame);};
+    observedKey=juce::String(keyLabel(session.key));
+    session.publish=[this](const AudioFrame& frame){engine.input.publish(frame);published={frame.revision,frame.previewOwner,frame.transportSerial,frame.seekSerial,frame.seekTick,frame.localRun};};
+    session.semanticEvent=[this](const char* name,int degree,uint64_t block,bool keyboard){semantic(name,degree,block,keyboard);};
     session.actionEvent=[this](const std::string& action,const Timeline&,uint64_t revision){
         auto* details=new juce::DynamicObject;
         details->setProperty("action",juce::String(action));
@@ -16,6 +18,22 @@ Processor::Processor() : AudioProcessor(BusesProperties().withOutput("Output",ju
         event("timeline.commit",juce::var(details));snapshot();
     };
     session.send();
+}
+void Processor::semantic(const char* name,int degree,uint64_t block,bool keyboard) {
+    auto currentKey=juce::String(keyLabel(session.key)),previousKey=observedKey;observedKey=currentKey;
+    if(!logs)return;
+    juce::ReferenceCountedObjectPtr<juce::DynamicObject> data(new juce::DynamicObject);
+    data->setProperty("revision",static_cast<juce::int64>(session.document.revision()));data->setProperty("old_key",previousKey);data->setProperty("key",currentKey);
+    data->setProperty("target_pad_degree_index",degree<0 ? juce::var() : juce::var(degree));data->setProperty("target_block",static_cast<juce::int64>(block));data->setProperty("keyboard_input",keyboard);
+    data->setProperty("preview_pad_degree_index",session.activePad()<0 ? juce::var() : juce::var(session.activePad()));data->setProperty("preview_block",static_cast<juce::int64>(session.activeBlock()));data->setProperty("preview_owner",static_cast<juce::int64>(published.previewOwner));
+    data->setProperty("repeat_mode",session.repeats);data->setProperty("repeat_latched",session.repeatLatched());data->setProperty("repeat_ticks",session.repeatTicks);
+    data->setProperty("local_run_requested",published.localRun);data->setProperty("sync",session.sync);data->setProperty("transport_serial",static_cast<juce::int64>(published.transportSerial));data->setProperty("seek_serial",static_cast<juce::int64>(published.seekSerial));data->setProperty("seek_tick",published.seekTick);
+    data->setProperty("diagnostic_callback_failures",static_cast<juce::int64>(session.diagnosticCallbackFailures()));data->setProperty("clipboard_blocks",static_cast<int>(session.clipboard.size()));
+    juce::Array<juce::var> selected;for(auto id:session.selected)selected.add(static_cast<juce::int64>(id));data->setProperty("selected",juce::var(selected));
+    const Chord* chord=degree>=0 && degree<7 ? &session.pads[degree] : nullptr;if(block)if(auto* found=session.document.find(block))chord=&found->chord;
+    if(chord){auto resolved=resolve(*chord);juce::Array<juce::var> notes;for(int n=0;n<resolved.count;++n)notes.add(resolved.notes[n]);data->setProperty("notes",juce::var(notes));data->setProperty("label",juce::String(resolved.label));data->setProperty("octave",chord->octave);data->setProperty("inversion",chord->inversion);data->setProperty("seventh",chord->seventh);data->setProperty("suspension",static_cast<int>(chord->suspension));}
+    event((std::string("session.")+name).c_str(),juce::var(data.get()));
+    auto action=std::string_view(name);if(action.starts_with("selection.") || action.starts_with("key.") || action=="pad.voicing" || action=="pad.reset")snapshot();
 }
 Processor::~Processor() { cancelPendingUpdate();if(logs)event("instance.destroy"); }
 bool Processor::isBusesLayoutSupported(const BusesLayout& layout) const {
@@ -79,6 +97,7 @@ void Processor::snapshot() {
     data->setProperty("sound",static_cast<int>(session.sound));data->setProperty("gain",session.gain);
     data->setProperty("repeat",session.repeats);data->setProperty("repeat_ticks",session.repeatTicks);data->setProperty("sync",session.sync);
     data->setProperty("edit_grid",session.settings.editGrid);data->setProperty("slice_grid",session.settings.razorGrid);
+    data->setProperty("show_seventh",session.settings.showSeventh);data->setProperty("show_sus2",session.settings.showSus2);data->setProperty("show_sus4",session.settings.showSus4);
     juce::Array<juce::var> selected,blocks,pads;
     for(auto id:session.selected)selected.add(static_cast<juce::int64>(id));data->setProperty("selected",juce::var(selected));
     for(auto& block:session.document.state().blocks) {

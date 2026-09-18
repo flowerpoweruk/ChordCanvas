@@ -2,6 +2,22 @@
 
 ## Current execution record — 18 September 2026
 
+### Iteration 10 — semantic audition/selection diagnostics and failure isolation
+
+Iteration 9 committed/pushed as **d624b97585a540e77e3d4827e93f07d5cf001082**; actual remote main matched. Pending Microsoft entitlement and owner-safe Live closure still prevent corrected native compilation/load. No owner work dismissed, Microsoft project build executed or binary distributed.
+
+Added message-thread semantic observations after valid session operations: pad/block press/release, source ownership, repeats/rate, key/voicing reset/change, local Play/Stop/seek/Sync, selection and clipboard. Suppressed OS repeat produces no fake press. Post-paste/duplicate selection emits after new IDs are selected rather than leaving the diagnostic snapshot at the preceding selection. Added a validated selection API for marquee/empty selection.
+
+Diagnostic callback exceptions are isolated after publication/commit, counted and cannot interrupt owning release or falsely report an already committed musical edit as failed. Actual new integration test PASS for callback failures, earlier/newer source ownership, held/latching modes, transport, clipboard and final selection. Core behaviour and existing musical/transaction tests remain passing.
+
+**Native JUCE source only, uncompiled:** formatter records targets/active sources, keyboard ownership, resolved notes/modifications, old/new key, revision, requested transport/seek serials, repeat latch/rate, selected IDs and callback-failure count. Major selection/pad/key changes emit coherent snapshots; duplicate UI snapshots removed. Feature visibility now appears in snapshots. Actual native semantic log/GUI review is still required; these are not host/UX passes.
+
+`Scripts/build-core.ps1` **13/13 PASS, 17.87 s / 792,535 assertions**; new session_events **.04 s PASS**. Independent parser **12 synthetic files / five clock changes PASS**; build-script PowerShell parser PASS. Current executable hashes and scope in `engineering/core-evidence.json` and `engineering/session-events-evidence.json`. Historical measured audio rows remain in `engineering/clock-evidence.json`; no new performance run was needed for these message-only observer changes.
+
+Review bounded selection inputs at 512, validates into a temporary before replacement and preserves the old selection on refusal. Focused follow-up core/session_events **2/2 PASS, 2.53 s**; formatter ownership uses RAII for diagnostic exception safety (native source uncompiled).
+
+Next dependent work: establish the pending valid Visual Studio route, safely release Live's old failed DLL, compile/link the corrected native instrument/helper, review actual GUI/diagnostics, then execute real packages and installed host acceptance. Further deficiencies found during native review, trailing/empty MIDI import, disabled Live saving and package/release-runtime gates remain open. **No accepted Setup.exe or Updater.exe, stable tag or binary release exists.**
+
 ### Iteration 9 — explicit tempo availability and bounded runtime metadata
 
 Iteration 8 committed/pushed as **d10607ecbbd172e135fca23a825f5838aa109b0c**; actual remote main matched. Microsoft entitlement and safe Live closure remain pending; Live still holds the old failed-load DLL. No further Microsoft project build, owner-work closure or binary distribution.

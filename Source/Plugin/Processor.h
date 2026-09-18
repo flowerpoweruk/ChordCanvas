@@ -38,6 +38,9 @@ public:
     std::atomic<bool> bypassPreviewCleanup {false};
     juce::String loggingFailure;
 private:
+    struct PublishedState {uint64_t revision=0,previewOwner=0,transportSerial=0,seekSerial=0;int seekTick=0;bool localRun=false;} published;
+    juce::String observedKey;
+    void semantic(const char*,int degree,uint64_t block,bool keyboard);
     std::atomic<int> lifecycle {0},preparedFrames {0};
     std::atomic<double> preparedRate {0};
     void environment(const char* event);
