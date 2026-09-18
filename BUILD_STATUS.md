@@ -3,6 +3,17 @@
 ## Current execution record — 18 September 2026
 
 
+### Iteration 28 — genuine installed 0.1.5 update and Windows lifecycle proof
+
+Owner confirmed Live closed; actual main host process absence verified. Hash-checked genuine `build/run-meter-015-updater.ps1`: **exit0**, native runtime reports installation succeeded. Installed all **16 payload hashes/helper match**, numeric **0.1.5.6**, one fixed uninstall identity/display0.1.5. Saved synthetic progression and all **five log names/hashes unchanged**. Installed official validator **47PASS/0FAIL/exit0**, native processing **PASS/exit0**, payload inspector **complete-owned-AMD64 PASS/exit0**.
+
+Actual genuine same-version Updater **exit7/already up to date**, plugin/saved progression/logs preserved. Registered genuine ordinary uninstaller **exit0**: owned bundle/application directory/registration absent, saved progression/all five logs preserved. Genuine absent-installation Updater **exit7/Run Setup.exe first**, installation remains absent/user files preserved. Genuine fresh Setup reinstall **exit0**: all16 payload/helper hashes exact, one registration0.1.5, numeric0.1.5.6, saved progression/all five logs preserved. **Two other-vendor file names/SHA256 unchanged** across lifecycle. Reinstalled official validator **47PASS/0FAIL/exit0**, native processing **PASS/exit0**, payload inspector **16-filePASS/exit0**. Actual older0.1.3 Updater against installed0.1.5 **exit7/newer-installed downgrade refusal**, installed DLL/saved progression/all five logs unchanged. Exit7 is actual PrepareToInstall refusal, not installation success. No manual directory purge or security-prompt automation.
+
+Commands: ignored `build/run-installed-015-{same-version-updater,ordinary-uninstall,absent-install-updater,fresh-reinstall-setup,downgrade-updater}.ps1`, actual installed native validator/view-host/payload-inspector, manifest/hash/registry/vendor-preservation checks. Private results/runtime logs remain ignored. Sanitized actual facts: `engineering/installed-015-evidence.json`. Product immutable source remains5579500498b3595c34d9be3e32808f0b61ec8eaf; original candidates unchanged.
+
+Normal Live launch now refuses startup with **its own automatic-update-in-progress notice**; normal OK dismissed. Executable reports **12.4.6**, not proof of successful startup or latest host acceptance. Leave Live updater alone and retry normally after independent work. Latest installed meter/Play/audio/About retests remain NOT RUN. Catalogue unchanged **46PASS/5FAIL/95NOTRUN/2BLOCKED**; no acceptance expectation changed. Full trailing/empty MIDI clip extent, host saving, GUI/scaling/audio/clipboard, package failure/offline/clean-machine and accepted stable publication gates remain open.
+
+
 ### Iteration 27 — genuine clean 0.1.5 packages; native GUI and licensing-gate proof
 
 Iteration 26 committed/pushed as **5579500498b3595c34d9be3e32808f0b61ec8eaf**, actual remote main matched. Actual matching clean `Scripts/build-plugin.ps1 -BuildDirectory build/plugin-shortcuts -VisualStudioLicenseConfirmed`: **exit0/13of13 PASS/46.32s**, sourceDirty false. Product SHA256 **56826c997d9534697da160ab6e1cb3c46e74468b349ebb22863341cba6769498**, helper **38b9a9b009fc5d7aa42e21c5cb88f8e5daf79f0361d3235fc5a93c9ef8da5dae**. Clean official native validator **47PASS/0FAIL/exit0**, processing **PASS/exit0**. Actual genuine package command with clean matching inputs/pinned compiler/licence/distribution rights **exit0**, complete owned payload inspector **16-filePASS/exit0**.

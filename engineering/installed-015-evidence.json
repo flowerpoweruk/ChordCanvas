@@ -1,0 +1,108 @@
+{
+  "date": "2026-09-18",
+  "version": "0.1.5",
+  "fileVersion": "0.1.5.6",
+  "sourceCommit": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
+  "environment": "Windows 11 Home 10.0.26200.9168 x64",
+  "scope": "Actual genuine Windows updater, version refusal, ordinary uninstall and fresh Setup reinstall; latest Live acceptance pending",
+  "setupSha256": "a7739889742763aa169e534fd6e7cface958c9d3c67a0cc64fdbe286bcd6d9c6",
+  "updaterSha256": "2ea9ed8abd2d7ac0cf2ae98a4cf2d8285060afcd17f17e7301a16ce86b129161",
+  "upgrade": {
+    "fromVersion": "0.1.3",
+    "toVersion": "0.1.5",
+    "procedure": "Owner confirmed Live closed; main Live process absence verified; genuine hash-checked Updater launched normally with private logging and Windows consent only",
+    "observed": {
+      "exitCode": 0,
+      "runtimeLogCreated": true,
+      "pluginHashUnchanged": false,
+      "savedProgressionHashUnchanged": true,
+      "allFiveLogHashesUnchanged": true,
+      "nativeLogCount": 5
+    },
+    "runtimeResult": "Installation process succeeded",
+    "installedValidator": "47 PASS / 0 FAIL / exit 0",
+    "installedProcessing": "PASS / exit 0"
+  },
+  "sameVersion": {
+    "observed": {
+      "exitCode": 7,
+      "runtimeLogCreated": true,
+      "pluginHashUnchanged": true,
+      "savedProgressionHashUnchanged": true,
+      "allFiveLogHashesUnchanged": true,
+      "nativeLogCount": 5
+    },
+    "runtimeResult": "Already up to date; PrepareToInstall refusal"
+  },
+  "ordinaryUninstall": {
+    "observed": {
+      "exitCode": 0,
+      "pluginBundleAbsent": true,
+      "applicationDirectoryAbsent": true,
+      "uninstallEntryAbsent": true,
+      "savedProgressionHashUnchanged": true,
+      "allFiveLogHashesUnchanged": true,
+      "nativeLogCount": 5
+    },
+    "procedure": "Registered genuine uninstaller; no manual bundle or app-directory deletion"
+  },
+  "absentInstallationUpdater": {
+    "observed": {
+      "exitCode": 7,
+      "runtimeLogCreated": true,
+      "pluginRemainsAbsent": true,
+      "savedProgressionHashUnchanged": true,
+      "allFiveLogHashesUnchanged": true,
+      "nativeLogCount": 5
+    },
+    "runtimeResult": "Not installed; Run Setup.exe first; PrepareToInstall refusal"
+  },
+  "freshSetup": {
+    "observed": {
+      "exitCode": 0,
+      "runtimeLogCreated": true,
+      "installedPluginMatches": true,
+      "savedProgressionHashUnchanged": true,
+      "allFiveLogHashesUnchanged": true,
+      "nativeLogCount": 5
+    },
+    "integrity": {
+      "allPayloadHashesMatch": true,
+      "payloadCount": 16,
+      "helperHashMatches": true,
+      "otherVendorFileCount": 2,
+      "otherVendorNamesAndHashesUnchanged": true,
+      "uninstallEntryCount": 1,
+      "displayVersion": "0.1.5",
+      "fileVersion": "0.1.5.6",
+      "productVersion": "0.1.5"
+    },
+    "installedValidator": "47 PASS / 0 FAIL / exit 0",
+    "installedProcessing": "PASS / exit 0",
+    "payloadInspector": "PASS / exit 0; complete owned AMD64 payload, 16 files"
+  },
+  "downgrade": {
+    "packageVersion": "0.1.3",
+    "observed": {
+      "exitCode": 7,
+      "runtimeLogCreated": true,
+      "pluginHashUnchanged": true,
+      "savedProgressionHashUnchanged": true,
+      "allFiveLogHashesUnchanged": true,
+      "nativeLogCount": 5
+    },
+    "runtimeResult": "Newer version installed; cannot downgrade; PrepareToInstall refusal"
+  },
+  "hostStartup": {
+    "status": "NOT RUN against installed 0.1.5",
+    "observed": "Normal launch exposes Live automatic-update-in-progress notice; normal OK dismissed. Host executable now reports 12.4.6; no successful latest startup inferred."
+  },
+  "limitations": [
+    "Candidate remains unaccepted; immutable manifest records package-time status.",
+    "Exit 7 records actual non-destructive PrepareToInstall refusal, not successful installation.",
+    "No network-disabled or clean-machine execution established.",
+    "Latest corrected 3/4 host scenario, full MIDI clip extent, host saving and remaining GUI/audio/package failure acceptance remain open.",
+    "Both executable candidates remain NotSigned.",
+    "Private runtime logs, real user paths, vendor file paths and preservation fixtures remain ignored."
+  ]
+}
