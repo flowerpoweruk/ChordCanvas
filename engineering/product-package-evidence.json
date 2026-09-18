@@ -1,0 +1,50 @@
+{
+  "date": "2026-09-18",
+  "status": "BUILT; actual installation awaiting owner Windows UAC",
+  "scope": "Genuine product executables containing complete native VST3 and offline payload; acceptance incomplete",
+  "sourceCommit": "6ba737c53deb257bdb07bd97878f4e4ea0388f76",
+  "version": "0.1.0",
+  "fileVersion": "0.1.0.1",
+  "configuration": "Release",
+  "sourceDirty": false,
+  "buildCommand": "Scripts/build-plugin.ps1 -BuildDirectory build/plugin-reviewed -VisualStudioLicenseConfirmed",
+  "buildExit": 0,
+  "tests": "13/13 CTest PASS",
+  "testSeconds": 48.11,
+  "pluginSha256": "54305aaddf3a022f2b2ee36dda97bdb887d9c3e178791797e2e64a430b4d1230",
+  "helperSha256": "fd7541d2984a0bf86050d026162b330a39653885ad67530fc1ca942d2c0fbb56",
+  "officialValidator": "47 passed, 0 failed, exit 0",
+  "nativeProcessingProbe": "PASS, exit 0",
+  "packageCommand": "Scripts/package-windows.ps1 with matching reviewed bundle/helper/receipt, pinned Inno licence, native payload inspector and established distribution rights",
+  "packageExit": 0,
+  "payloadValidation": "PASS; 16 complete hash-verified files; native AMD64",
+  "runtimeImports": "Windows OS DLLs only; no separate VC runtime DLL prerequisite",
+  "artifacts": [
+    {
+      "file": "Setup.exe",
+      "bytes": 5605902,
+      "sha256": "81a6da0009561bbf9067d071d073d235cc15d6add106a6222ea4a48c4d953402",
+      "signature": "NotSigned"
+    },
+    {
+      "file": "Updater.exe",
+      "bytes": 5605906,
+      "sha256": "b3f2c6d2e5fd9f302cfcea4f5113c9be8bfe044ca6c70c918ffbbd6ce6068149",
+      "signature": "NotSigned"
+    }
+  ],
+  "installation": "NOT RUN; actual Setup started, Windows consent process observed pending; no automatic consent",
+  "updater": "Compiled self-contained full-payload product Updater; actual installed execution NOT RUN",
+  "hostLimits": [
+    "Live 12.4.3 actual development import truncates trailing rests despite correct eight-bar End-of-Track",
+    "Live saving/exporting deactivated",
+    "Full installed GUI/DPI/update/clean-machine acceptance remains open"
+  ],
+  "hostedCI": {
+    "source": "6717f55f5c3a05ef0aacb67b4db2e319add318dc",
+    "runId": 35370004042,
+    "jobId": 105681468728,
+    "conclusion": "success",
+    "scope": "GitHub Windows Server 2025 hosted native build/test workflow; does not substitute Windows 11 or Live testing"
+  }
+}
