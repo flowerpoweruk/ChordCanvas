@@ -165,7 +165,70 @@
       "releaseMetadataSha256": "b92e8d21da52f3382f28c92ad56e82b42c609b6b7ef709e26312c839c7172aaf"
     },
     "actualValidation": "13/13 PASS/47.71s/exit0; official validator47PASS/0FAIL/exit0; native processingPASS/exit0",
-    "cleanBuildAndPackages": "NOT RUN",
-    "installedHostRetest": "NOT RUN; safe owner Live closure pending"
+    "cleanBuildAndPackages": "PASS for candidate build, native validation, package compilation and integrity; installed acceptance NOT RUN",
+    "installedHostRetest": "NOT RUN; safe owner Live closure pending",
+    "cleanBuild": {
+      "sourceCommit": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
+      "sourceDirty": false,
+      "version": "0.1.5",
+      "buildNumber": 6,
+      "configuration": "Release",
+      "tests": "PASS",
+      "visualStudioVersion": "18.10.12210.168",
+      "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+      "pluginSha256": "56826c997d9534697da160ab6e1cb3c46e74468b349ebb22863341cba6769498",
+      "moduleInfoSha256": "bd60406b8d422bdde586ad5ecbfbceafaef2358715d2ab82efd436f3c43e6337",
+      "helperSha256": "38b9a9b009fc5d7aa42e21c5cb88f8e5daf79f0361d3235fc5a93c9ef8da5dae",
+      "releaseMetadataSha256": "b92e8d21da52f3382f28c92ad56e82b42c609b6b7ef709e26312c839c7172aaf"
+    },
+    "cleanValidation": {
+      "exitCode": 0,
+      "tests": "13/13 PASS",
+      "seconds": 46.32,
+      "validator": "47 PASS/0 FAIL/exit0",
+      "processing": "PASS/exit0",
+      "payloadInspector": "PASS/exit0;16 hash-verified complete owned AMD64 files"
+    },
+    "genuinePackages": {
+      "sourceCommit": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
+      "version": "0.1.5",
+      "fileVersion": "0.1.5.6",
+      "compileExitCode": 0,
+      "status": "UNACCEPTED CANDIDATE",
+      "independentExecutableProof": [
+        {
+          "file": "Setup.exe",
+          "sha256": "a7739889742763aa169e534fd6e7cface958c9d3c67a0cc64fdbe286bcd6d9c6",
+          "bytes": 5606937,
+          "architecture": "AMD64",
+          "fileVersion": "0.1.5.6",
+          "productVersion": "0.1.5",
+          "signature": "NotSigned"
+        },
+        {
+          "file": "Updater.exe",
+          "sha256": "2ea9ed8abd2d7ac0cf2ae98a4cf2d8285060afcd17f17e7301a16ce86b129161",
+          "bytes": 5606941,
+          "architecture": "AMD64",
+          "fileVersion": "0.1.5.6",
+          "productVersion": "0.1.5",
+          "signature": "NotSigned"
+        }
+      ],
+      "installedHostRetest": "NOT RUN; safe owner Live closure pending",
+      "offlineExecution": "NOT RUN with networking disabled"
+    },
+    "nativeGuiReview": {
+      "version": "0.1.5",
+      "sourceCommit": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
+      "host": "Separate native VST3 view harness; no audio and not Live acceptance",
+      "observation": "Actual packaged instrument creates and attaches view; Play visibly disabled with Tempo unavailable. Settings and optional-switch UI refresh retain disabled Play; actual attempted click produces no play action. About shows0.1.5/AGPLv3/exactly one current change.",
+      "revisionUnchanged": 0,
+      "playEventCount": 0,
+      "normalEditorCloseCount": 1,
+      "normalInstanceDestroyCount": 1,
+      "harnessExitCode": 0,
+      "scope": "Does not substitute for installed Live3/4/4/4 retest, audio listening or complete Windows scaling."
+    }
   }
 }

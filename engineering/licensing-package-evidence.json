@@ -1,0 +1,35 @@
+{
+  "date": "2026-09-18",
+  "packageVersion": "0.1.5",
+  "sourceCommit": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
+  "projectAuthority": "Owner explicit AGPLv3 authorization; full root LICENSE copied unchanged",
+  "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+  "upstreamNoticeCopiesExact": 8,
+  "noticeManifestHashesExact": 11,
+  "innoLicenseCopyExact": true,
+  "ijgAcknowledgementPresent": true,
+  "trackedFilesAudited": 127,
+  "privateBuildsDependenciesLogsDumpsUserProgressionsAndExecutablesExcluded": true,
+  "limits": "This notice/provenance audit is not host acceptance, an accepted stable release or published binary download verification.",
+  "projectLicense": "AGPL-3.0-only; explicit owner authority",
+  "framework": "JUCE9.0.2AGPL route",
+  "assetRights": "Four original synthesis engines; no third-party sound samples or copied font files; SegoeUI supplied by Windows",
+  "microsoftToolchain": "Acquired free Community18.10.12210.168; original licence and redistribution review recorded in engineering/LICENSING.md. Release /MT runtime; no Microsoft tool/runtime DLL/debug-runtime payload copied.",
+  "inno": "Pinned7.1.0 licence permits any-purpose use; unchanged complete notice included",
+  "upstream": "Pinned complete JUCE/VST3 MIT/HarfBuzz/Apache SheenBidi/LunaSVG/PlutoVG/libpng/zlib texts preserved; IJG legal text and acknowledgement present; PreSonus public-domain acknowledgement retained",
+  "nativeDependencies": {
+    "dumper": "Microsoft COFF/PE Dumper14.51.36257.0",
+    "pluginExitCode": 0,
+    "helperExitCode": 0,
+    "finding": "Windows OS dependencies only; no separate VC/UCRT runtime DLL. WININET/WS2_32 imports do not prove offline execution."
+  },
+  "privacyReview": {
+    "trackedFiles": 127,
+    "publicSecretOrPersonalPathPatternMatches": 0,
+    "nativeSessionFiles": 5,
+    "nativeSecretOrPersonalPathPatternMatches": 0,
+    "rawLogsScreenshotsDumpsUserProgressions": "Private/ignored; not transmitted to public evidence"
+  },
+  "licensingGate": "PASS; prior REPO-05 BLOCKED record superseded by actual acquired toolchain and completed notice/runtime review",
+  "publicStableRelease": "NOT RUN; mandatory installed acceptance/provenance/download gates still required"
+}
