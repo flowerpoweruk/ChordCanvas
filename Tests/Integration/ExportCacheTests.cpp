@@ -1,5 +1,6 @@
 #include "Export/TemporaryMidi.h"
 #include "Export/Midi.h"
+#include "OwnedWorkspace.h"
 #include <windows.h>
 #include <fstream>
 #include <iostream>
@@ -9,7 +10,7 @@ using namespace cc;
 void require(bool ok,const char* why){if(!ok){std::cerr<<"FAIL: "<<why<<'\n';std::exit(1);}}
 void stale(const std::filesystem::path& file){std::filesystem::last_write_time(file.parent_path(),std::filesystem::file_time_type::clock::now()-std::chrono::hours(25));}
 int main(int argc,char** argv){
-    auto root=std::filesystem::path(argc>1 ? argv[1] : ".")/("export-cache-tests-"+std::to_string(GetCurrentProcessId()));
+    auto root=ownedWorkspace(std::filesystem::path(argc>1 ? argv[1] : "."),"export-cache-tests-");
     auto bytes=midi(Timeline{});auto first=TemporaryMidi::prepare(bytes,root,2);auto firstFile=first->file();
     stale(firstFile);auto second=TemporaryMidi::prepare(bytes,root,2);auto secondFile=second->file();
     require(firstFile!=secondFile && std::filesystem::exists(firstFile),"active stale export lease survives cleanup; concurrent files distinct");

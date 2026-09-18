@@ -17,7 +17,10 @@ struct Hash {
 };
 bool lowerHex(const std::string& value){return value.size()==64 && std::all_of(value.begin(),value.end(),[](char c){return (c>='0' && c<='9') || (c>='a' && c<='f');});}
 std::filesystem::path relative(const std::string& value){
-    if(value.empty() || value.size()>240 || value.front()=='/' || value.find_first_of("\\:\t\r\n")!=std::string::npos)throw std::runtime_error("Unsafe payload path");
+    // Format v1 uses printable ASCII bundle filenames. User progression paths
+    // are separate and unrestricted; this prevents Windows Unicode device-name
+    // and case aliases from entering the owned installation manifest.
+    if(value.empty() || value.size()>240 || value.front()=='/' || value.find_first_of("\\:\t\r\n")!=std::string::npos || std::any_of(value.begin(),value.end(),[](unsigned char c){return c<32 || c>=127;}))throw std::runtime_error("Unsafe payload path");
     auto path=std::filesystem::path(std::u8string(value.begin(),value.end()));
     if(path.is_absolute() || path.has_root_path())throw std::runtime_error("Unsafe payload path");
     for(auto segment:path){auto name=segment.wstring();
@@ -51,6 +54,7 @@ std::string sha256(const std::filesystem::path& file){
 Payload Payload::read(const std::filesystem::path& root){
     auto file=root/receiptName;
     if(!plainPath(root) || !plainPath(file) || !std::filesystem::is_regular_file(file) || std::filesystem::file_size(file)>1024*1024)throw std::runtime_error("Installation has no recognised ownership receipt");
+    const auto receiptBefore=sha256(file);
     std::ifstream input(file,std::ios::binary);std::string line;auto next=[&]{if(!std::getline(input,line) || (!line.empty() && line.back()=='\r'))throw std::runtime_error("Invalid payload receipt");return line;};
     if(next()!="ChordCanvasPayload1" || next()!=productIdentity)throw std::runtime_error("Conflicting product identity");
     Payload result;result.version=next();Version::parse(result.version);result.binary=relative(next());
@@ -58,14 +62,17 @@ Payload Payload::read(const std::filesystem::path& root){
     std::set<std::wstring> names;
     while(std::getline(input,line)){
         auto delimiter=line.find('\t');if(delimiter!=64 || !lowerHex(line.substr(0,delimiter)))throw std::runtime_error("Invalid payload hash entry");
-        auto path=relative(line.substr(delimiter+1));if(path==receiptName || !names.insert(foldPath(path)).second || names.size()>4096)throw std::runtime_error("Duplicate or excessive payload entries");
+        auto path=relative(line.substr(delimiter+1));if(foldPath(path)==foldPath(receiptName) || !names.insert(foldPath(path)).second || names.size()>4096)throw std::runtime_error("Duplicate or excessive payload entries");
         result.files.push_back({line.substr(0,delimiter),path});
     }
     if(!input.eof() || result.files.empty() || !names.contains(foldPath(result.binary)))throw std::runtime_error("Incomplete payload receipt");
+    result.receiptHash=sha256(file);
+    if(result.receiptHash!=receiptBefore)throw std::runtime_error("Payload receipt changed during validation");
     return result;
 }
 void Payload::validate(const std::filesystem::path& root,bool hashes) const{
     if(!plainPath(root))throw std::runtime_error("Unsafe installation directory");
+    if(!plainPath(root/receiptName) || receiptHash.empty() || sha256(root/receiptName)!=receiptHash)throw std::runtime_error("Payload receipt changed after validation");
     std::set<std::wstring> expected;expected.insert(foldPath(receiptName));
     std::set<std::wstring> directories;
     for(auto& entry:files){expected.insert(foldPath(entry.relative));auto parent=entry.relative.parent_path();while(!parent.empty()){directories.insert(foldPath(parent));parent=parent.parent_path();}}

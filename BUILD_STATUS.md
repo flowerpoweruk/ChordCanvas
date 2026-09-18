@@ -2,6 +2,18 @@
 
 ## Current execution record — 18 September 2026
 
+### Iteration 5 — retained finalisation and actual interrupted-bundle recovery
+
+Iteration 4 was committed and pushed successfully as **7fef8c2794c0bbf26581fd47d82e76ff3d3edc02**; `git ls-remote` confirmed matching main. Source and honest first-build/host-failure receipts are public. No binaries were distributed. Owner Live closure and Visual Studio licence confirmation remain pending; Microsoft project compilation is paused.
+
+Extended the packaging core with a transaction object retaining the old bundle and mutex through installer finalisation. A bounded, flushed ownership journal precedes changes; uncommitted scope exit restores the old bundle, and a later process recovers known interrupted replacements. Committed but locked cleanup retains at most one backup and marker; another transaction must recover before staging more. Used a product-specific **Global** mutex for the global installation path rather than a session-local mutex. No privilege or security setting was changed. Complete metadata/uninstaller participation is still outstanding; this is not a finished installer.
+
+Actual integration checks now launch this project's disposable child test executable and abruptly exit at real operation boundaries: **nine interruption/recovery cases PASS**, including each of four update and four fresh-install boundaries plus an unexpected-file obstruction/retry. Cross-process mutex refusal, retained finalisation rollback and bounded locked-backup cleanup PASS. Unknown files/journals are preserved, as are unrelated vendor fixtures. Payloads remain synthetic AMD64 test executables, never claimed as a VST3. Added captured receipt hashes and refusal of ownership-receipt case aliases; owned bundle manifest format uses printable ASCII names, while user progression paths are unaffected.
+
+A first run failed export_cache after Windows reused a PID and the fixture found retained files from an earlier test. This was a real isolation failure. All I/O integration fixtures now use exclusive GUID workspaces. Latest `Scripts/build-core.ps1` **6/6 PASS**, **15.65 s / 792,757 assertions**; follow-up payload/transaction checks after the Global mutex change **2/2 PASS, 3.05 s**. Five repeated export isolation checks **PASS, .22 s**. Independent strict parser on 12 synthetic logs in `build/core/log-tests-32660-584D8705-7BB8-448B-BB0A-B64790E4C9A8` **PASS**. Physical power loss is not tested; incomplete markers stop safely. See `engineering/packaging-evidence.json` and updated executable hashes in `engineering/core-evidence.json`.
+
+Remaining release gates: toolchain licence verification, owner-safe Live restart, corrected VST3 link/load, native drag extent behaviour, actual GUI/audio/DPI/fresh-start acceptance, complete metadata/uninstaller rollback, native offline packages and their installed tests. Setup.exe/Updater.exe remain unfinished. Continue independent performance/installer implementation; do not label any package accepted while these gates are open.
+
 ### Iteration 4 continuation — actual Microsoft build and failed host load
 
 First `Scripts/build-plugin.ps1` exited **0**: Release AMD64 VST3 linked and all six Microsoft CTest suites passed, **27.70 s / 789,531 assertions**. Independent music21/mido/log parsing passed. Component/controller IDs and SDK-generated module metadata inspected; DLL imports only Windows OS libraries. Actual first DLL SHA256 `f41e1987a81c2b2422b32f7941c43644a00f66ae4296e0caa938b42efedab17d`. This is development compilation evidence, not release or clean-machine acceptance.

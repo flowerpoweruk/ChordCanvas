@@ -10,6 +10,7 @@ inline constexpr const wchar_t* receiptName=L"chordcanvas.payload";
 struct OwnedFile { std::string sha256;std::filesystem::path relative; };
 struct Payload {
     std::string version;
+    std::string receiptHash;
     std::filesystem::path binary;
     std::vector<OwnedFile> files;
     static Payload read(const std::filesystem::path& root);

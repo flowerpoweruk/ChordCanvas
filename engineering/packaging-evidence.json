@@ -1,0 +1,23 @@
+{
+  "date": "2026-09-18",
+  "source": "7fef8c2794c0bbf26581fd47d82e76ff3d3edc02+dirty",
+  "scope": "LLVM-MinGW Windows filesystem integration tests with synthetic AMD64 payloads; not executable installer or installed VST3 acceptance",
+  "fullSuite": {"command":"Scripts/build-core.ps1","status":"PASS","tests":6,"seconds":15.65,"coreAssertions":792757},
+  "followup": {"scope":"System-wide mutex namespace and payload checks","tests":2,"status":"PASS","payloadSeconds":0.14,"transactionSeconds":2.87,"totalSeconds":3.05},
+  "repeatedExportIsolation": {"command":"ctest --test-dir build/core -R ^export_cache$ --repeat until-fail:5 --output-on-failure","status":"PASS","repetitions":5,"totalSeconds":0.22},
+  "tested": [
+    "Four exception injections after real staging, retention, replacement and validation; original bundle restored",
+    "Nine actual disposable child-process exits at filesystem boundaries; next process restores original bundle or fresh absence",
+    "Another process times out safely while the installer retains its mutex through finalisation",
+    "Ending an uncommitted adapter scope rolls back the validated new bundle",
+    "Committed cleanup with a locked backup retains target, one backup and one marker; further staging refused until recovery succeeds",
+    "Unrecognised journals and unexpected user files block destructive recovery; marker and previous bundle retained",
+    "Receipt identity cannot change between validation and staging; case aliases of the ownership receipt are refused",
+    "Strict printable ASCII owned bundle filenames prevent Unicode device/case aliases; user progression file paths are unaffected",
+    "Numeric release versions, absent updater, same-version no-op, owned repair, downgrade refusal and other-vendor preservation"
+  ],
+  "testDefectFoundAndFixed": "One full-suite run failed export_cache after Windows reused a PID and the fixture found earlier retained files. All I/O integration tests now create exclusive GUID workspaces. Full suite and five repeated export runs then passed.",
+  "durabilityLimits": "Journal is flushed before bundle mutation and completion decision. Incomplete/unrecognised markers stop safely. Tests cover abrupt process exit, not physical power loss or storage hardware failure. Complete installer metadata/uninstaller participants require matching durable snapshots; those are not implemented yet.",
+  "remaining": ["Native installer adapter and metadata/uninstaller transaction", "Final Setup.exe and Updater.exe definitions and payloads", "Actual packaged unsupported OS/architecture and offline runtime checks", "Actual clean install/update/cancellation/rollback/uninstall tests", "Installed Live GUI/audio/MIDI acceptance", "Microsoft toolchain licence verification and runtime distribution clearance"],
+  "artifacts": "No completed Setup.exe or Updater.exe and no stable release claimed"
+}

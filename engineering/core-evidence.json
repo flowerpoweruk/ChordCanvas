@@ -1,7 +1,7 @@
 {
   "scope": "Development core/integration executables; not installed VST3 or release packages",
   "version": "0.1.0-development",
-  "source": "1d29a0a26741c78583c151dda54772a3bad4c5e1+dirty",
+  "source": "7fef8c2794c0bbf26581fd47d82e76ff3d3edc02+dirty",
   "date": "2026-09-18",
   "environment": {
     "windows": "Windows 11 Home 10.0.26200 x64",
@@ -13,19 +13,19 @@
   },
   "testCommands": [
     "Scripts/build-core.ps1",
-    "Scripts/verify-logs.py build/core/log-tests-3896",
+    "Scripts/verify-logs.py build/core/log-tests-32660-584D8705-7BB8-448B-BB0A-B64790E4C9A8",
     "Scripts/verify-midi.py build/core",
     "Scripts/verify-theory.py build/core/theory_probe.exe Tests/Fixtures/music21-scales.json"
   ],
   "ctest": {
     "status": "PASS",
-    "coreSeconds": 10.34,
-    "diagnosticsSeconds": 1.94,
-    "exportCacheSeconds": 0.07,
+    "coreSeconds": 10.5,
+    "diagnosticsSeconds": 1.93,
+    "exportCacheSeconds": 0.04,
     "packageVersionSeconds": 0.02,
-    "payloadSeconds": 0.17,
-    "transactionSeconds": 0.58,
-    "totalSeconds": 13.19,
+    "payloadSeconds": 0.12,
+    "transactionSeconds": 2.97,
+    "totalSeconds": 15.65,
     "tests": 6
   },
   "coreOutput": [
@@ -36,12 +36,12 @@
     "Sound 1: RMS 0.0174645, peak 0.155925",
     "Sound 2: RMS 0.0279154, peak 0.0924241",
     "Sound 3: RMS 0.0326126, peak 0.10709",
-    "PASS: 792591 assertions",
+    "PASS: 792757 assertions",
     "PASS: five-session rotation, active-session preservation, bounded compaction/queues, storage failure and four-producer audio ring",
     "PASS: exclusive drag leases, exact bytes, 24-hour grace, stale cleanup, bounded admission and safe failure",
     "PASS: numeric release SemVer ordering, bounds and explicit prerelease refusal",
     "PASS: SHA256, complete owned file tree, numeric version, malformed paths, corruption and AMD64 PE validation",
-    "PASS: fresh install, absent update, four real rollback boundaries, file lock, numeric update, same version, repair, downgrade and user-file preservation"
+    "PASS: fresh install, absent update, four real rollback boundaries, nine actual abrupt child-process recoveries, cross-process mutex, held finalisation rollback, bounded locked-backup cleanup, file locks, numeric update, repair, downgrade and unknown-file preservation"
   ],
   "diagnosticParser": {
     "status": "PASS",
@@ -88,19 +88,19 @@
   "testExecutables": [
     {
       "file": "core_tests.exe",
-      "sha256": "e861c1eafb8c102c75a33c5cd3fe674a2d232c8f5a8e91ac0448efa329510ae7"
+      "sha256": "1cc2499ec848605cb67b8f324f0d2cfcab703f0c6026cf0fd47d7af18e027e0d"
     },
     {
       "file": "log_tests.exe",
-      "sha256": "2862b6061f2bdbfc57ee86820e680def3c76ac734efafebd17bbe95a4b240557"
+      "sha256": "2a60ebb415c8426021de9178e20d634fd49cfddcb0b44e92e113c82c6f9f7adb"
     },
     {
       "file": "theory_probe.exe",
-      "sha256": "9ca975950af07ab3701d351582d78541cc34447cb3b702738e001eccea6a4a7b"
+      "sha256": "5e02beb603d34749b3626e36790329936f08a74b839c2ef2b2dbe2b315c4c549"
     },
     {
       "file": "export_cache_tests.exe",
-      "sha256": "5956c3696a7492a5af843a2d8272d2df85f55547adb6d13b7c1c866193533b59"
+      "sha256": "435e286426c35fd45479a20994dd646de4908fea242cd64a4fb0743eab9d91e7"
     },
     {
       "file": "package_version_tests.exe",
@@ -108,18 +108,20 @@
     },
     {
       "file": "payload_tests.exe",
-      "sha256": "69feea82432e7b45cacb79a4d973c5cc5dc7fcbd153c34342712361d5ae3634b"
+      "sha256": "eb4a383ff71ffe572a4de203c0b89363abdd49275da58d864dd0d3d647f25595"
     },
     {
       "file": "transaction_tests.exe",
-      "sha256": "6872cb97e4d7956ff7f6b63136b0d9e4e4174cec8ac9b4f7297b09ef26a337a1"
+      "sha256": "b9bbc57ea6d17dd2a1ad84676a7e27c02f4674a4fca30fa62c6687e3bb01e12b"
     }
   ],
   "architectureInspection": "llvm-readobj --file-headers core_tests.exe: COFF-x86-64, IMAGE_FILE_MACHINE_AMD64, 64-bit",
-  "followupDiagnostics": {
-    "seconds": 2.03,
-    "reason": "Strengthened regression to require a terminal end record, not only ordering",
-    "syntheticDirectory": "build/core/log-tests-3896",
-    "status": "PASS"
+  "followupPackage": {
+    "status": "PASS",
+    "tests": 2,
+    "payloadSeconds": 0.14,
+    "transactionSeconds": 2.87,
+    "totalSeconds": 3.05,
+    "reason": "System-wide mutex namespace and payload checks"
   }
 }

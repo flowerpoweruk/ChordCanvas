@@ -1,6 +1,7 @@
 #include "Diagnostics/Log.h"
 #include "Commands/Timeline.h"
 #include "Persistence/Progression.h"
+#include "OwnedWorkspace.h"
 #include <windows.h>
 #include <fstream>
 #include <iostream>
@@ -17,7 +18,7 @@ void waitReady(LogService& log) {
 std::string contents(std::filesystem::path file){std::ifstream in(file,std::ios::binary);return {std::istreambuf_iterator<char>(in),std::istreambuf_iterator<char>()};}
 std::vector<std::filesystem::path> logs(std::filesystem::path root){std::vector<std::filesystem::path> files;for(auto& e:std::filesystem::directory_iterator(root))if(e.path().extension()==L".txt")files.push_back(e.path());return files;}
 int main(int argc,char** argv) {
-    auto root=std::filesystem::path(argc>1 ? argv[1] : ".")/("log-tests-"+std::to_string(GetCurrentProcessId()));
+    auto root=ownedWorkspace(std::filesystem::path(argc>1 ? argv[1] : "."),"log-tests-");
     for(int session=0;session<6;++session) {
         LogService service(root,32*1024*1024,"synthetic-test-host");waitReady(service);service.post(1,"synthetic.session.ordinal","{\"ordinal\":"+std::to_string(session)+"}");service.post(1,"state.snapshot","{\"bars\":8,\"revision\":3}");service.post(1,"timeline.replace.commit","{\"transaction\":3,\"revision_before\":2,\"revision_after\":3}");service.audioEvent({1,1,3,5,960,3});
     }
