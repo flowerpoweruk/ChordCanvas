@@ -48,21 +48,21 @@ void removeOwned(const std::filesystem::path& root,const Payload& payload){
 }
 struct Journal {
     bool committed=false;
-    std::string token,incoming,previous;
+    std::string token,incoming,previous,participant="-";
     std::filesystem::path stage(const std::filesystem::path& parent) const {return parent/(L".ChordCanvas.stage."+std::wstring(token.begin(),token.end()));}
     std::filesystem::path backup(const std::filesystem::path& parent) const {return parent/(L".ChordCanvas.previous."+std::wstring(token.begin(),token.end()));}
-    std::string text() const {return std::string(committed ? "C" : "P")+"ChordCanvasTransaction1\n"+productIdentity+'\n'+token+'\n'+incoming+'\n'+previous+'\n';}
+    std::string text() const {return std::string(committed ? "C" : "P")+"ChordCanvasTransaction1\n"+productIdentity+'\n'+token+'\n'+incoming+'\n'+previous+'\n'+participant+'\n';}
     static Journal read(const std::filesystem::path& parent){
         auto path=parent/journalName;
         if(!plainPath(path) || !std::filesystem::is_regular_file(path) || std::filesystem::file_size(path)>1024)throw std::runtime_error("Unrecognised installation recovery marker");
-        std::ifstream input(path,std::ios::binary);std::array<std::string,5> lines;
+        std::ifstream input(path,std::ios::binary);std::array<std::string,6> lines;
         for(auto& line:lines)if(!std::getline(input,line))throw std::runtime_error("Incomplete recovery marker; installation files preserved");
         std::string extra;if(std::getline(input,extra) || !input.eof())throw std::runtime_error("Malformed recovery marker");
         Journal result;
         if(lines[0]=="CChordCanvasTransaction1")result.committed=true;
         else if(lines[0]!="PChordCanvasTransaction1")throw std::runtime_error("Unrecognised recovery marker");
-        if(lines[1]!=productIdentity || !tokenValid(lines[2]) || !hashValid(lines[3]) || (lines[4]!="-" && !hashValid(lines[4])))throw std::runtime_error("Unsafe installation recovery marker");
-        result.token=lines[2];result.incoming=lines[3];result.previous=lines[4];return result;
+        if(lines[1]!=productIdentity || !tokenValid(lines[2]) || !hashValid(lines[3]) || (lines[4]!="-" && !hashValid(lines[4])) || (lines[5]!="-" && !hashValid(lines[5])))throw std::runtime_error("Unsafe installation recovery marker");
+        result.token=lines[2];result.incoming=lines[3];result.previous=lines[4];result.participant=lines[5];return result;
     }
     void create(const std::filesystem::path& parent) const {
         auto path=parent/journalName;Handle file;
@@ -72,7 +72,7 @@ struct Journal {
         if(!WriteFile(file.value,content.data(),static_cast<DWORD>(content.size()),&written,nullptr) || written!=content.size() || !FlushFileBuffers(file.value))throw std::runtime_error("Cannot persist recovery marker; installation not changed");
     }
     void decideCommit(const std::filesystem::path& parent){
-        auto actual=read(parent);if(actual.token!=token || actual.incoming!=incoming || actual.previous!=previous || actual.committed)throw std::runtime_error("Installation recovery marker changed unexpectedly");
+        auto actual=read(parent);if(actual.token!=token || actual.incoming!=incoming || actual.previous!=previous || actual.participant!=participant || actual.committed)throw std::runtime_error("Installation recovery marker changed unexpectedly");
         Handle file;file.value=CreateFileW((parent/journalName).c_str(),GENERIC_WRITE,0,nullptr,OPEN_EXISTING,FILE_FLAG_WRITE_THROUGH,nullptr);
         DWORD written=0;const char decision='C';
         if(file.value==INVALID_HANDLE_VALUE || !WriteFile(file.value,&decision,1,&written,nullptr) || written!=1 || !FlushFileBuffers(file.value))throw std::runtime_error("Cannot persist installation completion; retained bundle preserved");
@@ -85,7 +85,12 @@ void removeStage(const std::filesystem::path& stage,const std::string& expected)
     if(std::filesystem::is_empty(stage)){std::filesystem::remove(stage);return;}
     auto payload=recognised(stage,expected);removeOwned(stage,payload);
 }
-void rollbackOwned(const std::filesystem::path& parent,const Journal& journal){
+void participantRequired(const Journal& journal,TransactionParticipant* participant){
+    if(journal.participant!="-" && !participant)throw std::runtime_error("Installation metadata participant required; bundle and recovery data preserved");
+}
+void rollbackOwned(const std::filesystem::path& parent,const Journal& journal,TransactionParticipant* participant){
+    participantRequired(journal,participant);
+    if(journal.participant!="-")participant->verify(journal.token,journal.participant);
     auto target=parent/L"ChordCanvas.vst3",stage=journal.stage(parent),backup=journal.backup(parent);
     if(std::filesystem::exists(backup)){
         if(journal.previous=="-")throw std::runtime_error("Unexpected previous bundle; recovery stopped");
@@ -101,51 +106,62 @@ void rollbackOwned(const std::filesystem::path& parent,const Journal& journal){
         else{auto incoming=recognised(target,journal.incoming);for(auto& file:incoming.files)available(target/file.relative);removeOwned(target,incoming);}
     }
     removeStage(stage,journal.incoming);
+    if(journal.participant!="-"){participant->rollback(journal.token,journal.participant);participant->cleanup(journal.token,journal.participant,false);}
     std::filesystem::remove(parent/journalName);
+    if(journal.participant!="-"){try{participant->retire(journal.token,journal.participant);}catch(...){/* One descriptor retained; participant must recover it before staging. */}}
 }
-void finishCommitted(const std::filesystem::path& parent,const Journal& journal){
-    recognised(parent/L"ChordCanvas.vst3",journal.incoming,true);
+void finishCommitted(const std::filesystem::path& parent,const Journal& journal,TransactionParticipant* participant){
+    participantRequired(journal,participant);
+    if(journal.participant!="-")participant->verify(journal.token,journal.participant);
+    auto installed=recognised(parent/L"ChordCanvas.vst3",journal.incoming,true);
+    if(journal.participant!="-")participant->validate(journal.token,journal.participant,installed.version);
     auto backup=journal.backup(parent);
     if(std::filesystem::exists(backup)){
         if(journal.previous=="-")throw std::runtime_error("Unexpected backup; cleanup stopped");
         if(plainPath(backup) && std::filesystem::is_directory(backup) && std::filesystem::is_empty(backup))std::filesystem::remove(backup);
         else{auto previous=recognised(backup,journal.previous);for(auto& file:previous.files)available(backup/file.relative);removeOwned(backup,previous);}
     }
-    removeStage(journal.stage(parent),journal.incoming);std::filesystem::remove(parent/journalName);
+    removeStage(journal.stage(parent),journal.incoming);
+    if(journal.participant!="-")participant->cleanup(journal.token,journal.participant,true);
+    std::filesystem::remove(parent/journalName);
+    if(journal.participant!="-"){try{participant->retire(journal.token,journal.participant);}catch(...){}}
 }
-void recoverLocked(const std::filesystem::path& parent){
+void recoverLocked(const std::filesystem::path& parent,TransactionParticipant* participant){
     if(!std::filesystem::exists(parent/journalName))return;
     auto journal=Journal::read(parent);
-    if(journal.committed)finishCommitted(parent,journal);else rollbackOwned(parent,journal);
+    if(journal.committed)finishCommitted(parent,journal,participant);else rollbackOwned(parent,journal,participant);
 }
 }
 struct BundleTransaction::State {
     Lock lock;
     std::filesystem::path parent;
     Journal journal;
+    std::shared_ptr<TransactionParticipant> participant;
     InstallResult result=InstallResult::installed;
     bool pending=false;
 };
 BundleTransaction::BundleTransaction(std::unique_ptr<State> value):state(std::move(value)){}
 BundleTransaction::~BundleTransaction(){if(state && state->pending){try{rollback();}catch(...){/* Durable marker and previous bundle retained for explicit recovery. */}}}
 InstallResult BundleTransaction::result() const noexcept{return state->result;}
-void BundleTransaction::rollback(){if(!state->pending)return;rollbackOwned(state->parent,state->journal);state->pending=false;}
+void BundleTransaction::rollback(){if(!state->pending)return;rollbackOwned(state->parent,state->journal,state->participant.get());state->pending=false;}
 void BundleTransaction::commit(){
     if(!state->pending)return;
-    recognised(state->parent/L"ChordCanvas.vst3",state->journal.incoming,true);
+    auto installed=recognised(state->parent/L"ChordCanvas.vst3",state->journal.incoming,true);
+    if(state->journal.participant!="-"){state->participant->verify(state->journal.token,state->journal.participant);state->participant->validate(state->journal.token,state->journal.participant,installed.version);}
     state->journal.decideCommit(state->parent);state->pending=false;
     // At most one retained transaction: subsequent staging requires recovery.
-    try{finishCommitted(state->parent,state->journal);}catch(...){ }
+    try{finishCommitted(state->parent,state->journal,state->participant.get());}catch(...){ }
 }
-std::unique_ptr<BundleTransaction> BundleTransaction::begin(const std::filesystem::path& source,const std::filesystem::path& supplied,InstallMode mode,const std::function<void(Boundary)>& injection){
+std::unique_ptr<BundleTransaction> BundleTransaction::begin(const std::filesystem::path& source,const std::filesystem::path& supplied,InstallMode mode,const std::function<void(Boundary)>& injection,std::shared_ptr<TransactionParticipant> participant){
     auto transaction=std::unique_ptr<BundleTransaction>(new BundleTransaction(std::make_unique<State>()));auto& state=*transaction->state;
-    state.parent=safeParent(supplied);recoverLocked(state.parent);
+    state.participant=std::move(participant);state.parent=safeParent(supplied);recoverLocked(state.parent,state.participant.get());
     auto payload=Payload::read(source);payload.validate(source);auto target=state.parent/L"ChordCanvas.vst3";
     bool existed=std::filesystem::exists(target);
     if(!existed && mode==InstallMode::update)throw std::runtime_error("ChordCanvas is not installed; run Setup.exe first");
     Payload previous;
     if(existed){
         previous=Payload::read(target);previous.validate(target,false);
+        if(state.participant)state.participant->checkExisting(previous.version);
         auto installedVersion=Version::parse(previous.version),incomingVersion=Version::parse(payload.version);
         if(installedVersion>incomingVersion)throw std::runtime_error("A newer ChordCanvas version is installed; downgrade refused");
         if(installedVersion==incomingVersion){
@@ -159,8 +175,10 @@ std::unique_ptr<BundleTransaction> BundleTransaction::begin(const std::filesyste
     auto token=identifier();state.journal.token=std::string(token.begin(),token.end());state.journal.incoming=payload.receiptHash;state.journal.previous=existed ? previous.receiptHash : "-";
     auto stage=state.journal.stage(state.parent),backup=state.journal.backup(state.parent);
     if(std::filesystem::exists(stage) || std::filesystem::exists(backup))throw std::runtime_error("Staging identity collision");
+    if(state.participant){state.journal.participant=state.participant->stage(state.journal.token);if(!hashValid(state.journal.participant))throw std::runtime_error("Invalid installation metadata recovery digest");}
     state.journal.create(state.parent);state.pending=true;
     try{
+        if(state.participant){state.participant->apply(state.journal.token,state.journal.participant,payload.version);if(injection)injection(Boundary::participantApplied);}
         if(!std::filesystem::create_directory(stage))throw std::runtime_error("Staging directory collision");
         std::filesystem::copy_file(source/receiptName,stage/receiptName);
         for(auto& entry:payload.files){auto destination=stage/entry.relative;std::filesystem::create_directories(destination.parent_path());std::filesystem::copy_file(source/entry.relative,destination);}
@@ -176,7 +194,7 @@ std::unique_ptr<BundleTransaction> BundleTransaction::begin(const std::filesyste
     }
     return transaction;
 }
-void recoverInterruptedBundle(const std::filesystem::path& parent){Lock lock;recoverLocked(safeParent(parent));}
+void recoverInterruptedBundle(const std::filesystem::path& parent,std::shared_ptr<TransactionParticipant> participant){Lock lock;recoverLocked(safeParent(parent),participant.get());}
 InstallResult installBundle(const std::filesystem::path& source,const std::filesystem::path& parent,InstallMode mode,const std::function<void(Boundary)>& injection){
     auto transaction=BundleTransaction::begin(source,parent,mode,injection);auto result=transaction->result();transaction->commit();return result;
 }

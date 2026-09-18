@@ -1,0 +1,61 @@
+{
+  "date": "2026-09-18",
+  "source": "9f7170be704d65660c4cac0a3fbaf22f06b4e727+dirty",
+  "scope": "Synthetic AMD64 bundle plus disposable HKCU native 64-bit registry integration; not production uninstall registration, Inno packages or Live acceptance",
+  "fullSuite": {
+    "command": "Scripts/build-core.ps1",
+    "status": "PASS",
+    "tests": 9,
+    "seconds": 10.54,
+    "coreAssertions": 792535
+  },
+  "followup": {
+    "scope": "Snapshot allocation bounds and single captured file size after review",
+    "status": "PASS",
+    "tests": 2,
+    "registrySeconds": 0.1,
+    "participantSeconds": 1.68,
+    "totalSeconds": 1.84
+  },
+  "registry": {
+    "status": "PASS",
+    "imageLimitBytes": 1048576,
+    "valueLimitBytes": 65536,
+    "valueLimitCount": 128,
+    "tested": [
+      "Byte-exact DWORD/QWORD/BINARY/SZ/EXPAND_SZ/MULTI_SZ and Unicode string contents",
+      "Durable exclusive snapshot creation and strict round-trip parsing",
+      "Previous values restored; only configured forward values removed",
+      "Unknown values and subkeys stop before mutation; no recursive key removal",
+      "Absent rollback removes only the exact empty owned leaf",
+      "Duplicate names, unsupported types, oversized values, truncation and trailing data refused"
+    ]
+  },
+  "jointTransaction": {
+    "status": "PASS",
+    "actualInterruptedProcesses": 11,
+    "tested": [
+      "Five real filesystem/participant boundaries for both prior-version update and fresh absence",
+      "Previous bundle and typed registry values share the primary durable decision",
+      "Standalone recovery refuses a journal requiring its metadata participant",
+      "Changed snapshot digest refuses recovery before changing either current participant",
+      "Wrong final version prevents commit; scope rollback restores both old identities",
+      "Successful finalisation commits one coherent version and retires recovery records"
+    ],
+    "descriptorLifecycle": "Participant descriptor remains until primary marker removal; optional retirement failure retains at most one descriptor for subsequent staging to handle. No complete production participant yet."
+  },
+  "diagnosticParser": {
+    "status": "PASS",
+    "syntheticFiles": 12,
+    "command": "Scripts/verify-logs.py build/core/log-tests-8860-F867E17D-0013-4A3F-B29B-28A3098D6338"
+  },
+  "failuresFound": "First compile failed on ambiguous binary read/write helper overloads and a mixed auto declaration in the new fixture; corrected and checks passed. No failure is recorded as a successful build.",
+  "remaining": [
+    "Production uninstaller-directory ownership, staged backup and recovery",
+    "Native Inno adapter, two complete packaging definitions and build script",
+    "Actual Setup/Updater installation, update, cancellation, rollback and uninstall tests",
+    "Owner-safe host closure and Visual Studio entitlement confirmation",
+    "Corrected VST3 link/load, actual GUI/audio/native drag and complete acceptance"
+  ],
+  "artifacts": "No completed Setup.exe or Updater.exe, stable tag or binary release"
+}

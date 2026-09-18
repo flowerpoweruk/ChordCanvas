@@ -2,6 +2,20 @@
 
 ## Current execution record — 18 September 2026
 
+### Iteration 7 — typed registry snapshots and joint durable decision
+
+Iteration 6 committed and pushed as **9f7170be704d65660c4cac0a3fbaf22f06b4e727**; actual remote main matched. Pending owner-safe host closure and Microsoft entitlement confirmation remain unresolved; no further Microsoft project compilation or binary distribution.
+
+Added bounded native 64-bit registry leaf images with typed byte-exact values and durable exclusive snapshot writes. Unknown values/subkeys, unsupported types, malformed/truncated snapshots and size violations stop safely; no recursive key deletion or ACL changes. Names are printable ASCII for the owned installer schema; Unicode value contents are preserved. Registry capture checks last-write consistency, and review tightened cumulative capture/file-read allocation bounds.
+
+Extended the primary bundle journal to pin a metadata participant descriptor digest. The participant must verify its recovery data before the bundle can change, share the primary commit/rollback decision, validate final version consistency and retain its descriptor until primary marker removal. Standalone recovery cannot silently discard required metadata. This development journal schema now has six fields; no released installer used the preceding five-field schema.
+
+Actual **eleven abruptly exited disposable child processes PASS** for joint bundle/registry recovery: five boundaries each for fresh/update, plus changed-descriptor obstruction/retry. Wrong final metadata version prevents commit and restores both prior identities. Tests use generated **HKCU** fixture leaves; no real product uninstall key or HKLM key was touched. Production uninstaller-directory participant is still outstanding; these are not accepted package tests.
+
+First compilation failed on ambiguous binary helpers and a mixed auto declaration in a fixture; corrected, then `Scripts/build-core.ps1` **9/9 PASS, 10.54 s / 792,535 assertions**. Reviewed-bounds follow-up registry/participant **2/2 PASS, 1.84 s**. Strict parser on **12 synthetic logs PASS**. Actual updated hashes and receipts in `engineering/core-evidence.json` and `engineering/metadata-evidence.json`.
+
+Next: production metadata/uninstaller backup, native Inno integration and offline package definitions, followed by actual executable tests. Corrected VST3 and all mandatory Live/GUI/release gates remain open. Setup.exe/Updater.exe are unfinished; no stable release is claimed.
+
 ### Iteration 6 — measured sound-engine performance and fidelity
 
 Iteration 5 committed and pushed as **24a5981aa97a3a03de69e3d126ef584b030f0c19**; actual remote main matched. Pending owner-safe Live closure and Visual Studio entitlement confirmation remain unchanged; no further Microsoft project build or binary distribution.
