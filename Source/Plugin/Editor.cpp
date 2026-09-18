@@ -131,6 +131,7 @@ public:
     void zoom(double factor,float anchor) { double time=(anchor+pan)/scale;fitted=false;scale=std::clamp(scale*factor,static_cast<double>(getWidth())/hardEnd,.5);pan=time*scale-anchor;updateView(); }
     void updateView() { pan=std::clamp(pan,0.0,std::max(0.0,hardEnd*scale-getWidth()));if(viewChanged)viewChanged();refreshControls();repaint(); }
     void refresh() { if(fitted)fit();else updateView(); }
+    void resized() override { if(getWidth()>0)refresh(); }
     void refreshControls() {
         controls.clear();auto& s=editor.processor.session;
         for(auto& b:s.document.state().blocks) {
@@ -148,13 +149,18 @@ public:
         auto active=editor.processor.engine.uiBlock.load();bool overridden=editor.processor.engine.uiOverride.load();
         for(auto& b:s.document.state().blocks) {
             auto r=rectangle(b);if(r.getRight()<0 || r.getX()>getWidth())continue;
+            g.saveState();g.reduceClipRegion(r.toNearestInt());
             g.setColour(ui::degree[b.chord.degree].withAlpha(.17f));g.fillRect(r);g.setColour(ui::degree[b.chord.degree]);g.fillRect(r.withWidth(3));
-            auto label=juce::String(resolve(b.chord).label);ui::textAt(g,label,r.toNearestInt().reduced(9,4).withHeight(24),16);
+            auto resolved=resolve(b.chord);auto label=juce::String(resolved.label);auto labelBounds=r.toNearestInt().reduced(9,4).withHeight(24);
+            if(juce::GlyphArrangement::getStringWidth(ui::font(16),label)>labelBounds.getWidth())label=juce::String(resolved.rootLabel);
+            if(labelBounds.getWidth()>0)ui::textAt(g,label,labelBounds,16);
             bool selected=std::find(s.selected.begin(),s.selected.end(),b.id)!=s.selected.end();g.setColour(selected ? ui::text : ui::degree[b.chord.degree].withAlpha(.6f));g.drawRect(r.reduced(.75f),selected ? 2.0f : 1.0f);
+            if(b.id==hovered && !razor && mode==Mode::none){g.setColour(ui::text.withAlpha(.65f));g.drawRect(r.reduced(2),1);if(hoverEdge<0)g.fillRect(r.withWidth(2));else if(hoverEdge>0)g.fillRect(r.withLeft(r.getRight()-2));}
             bool expanded=r.getWidth()>=160 && r.getHeight()>=(ui::optional(s) ? 120 : 92);
-            if(!expanded){auto menu=menuRect(b);g.setColour(ui::raised);g.fillRect(menu);g.setColour(ui::text);for(int dot=0;dot<3;++dot)g.fillEllipse(menu.getCentreX()-7+dot*5,menu.getCentreY()-1,2,2);}
+            if(!expanded){auto menu=menuRect(b);g.setColour(ui::raised);g.fillRect(menu);g.setColour(ui::text);if(menu.getWidth()>=18){for(int dot=0;dot<3;++dot)g.fillEllipse(menu.getCentreX()-7+dot*5,menu.getCentreY()-1,2,2);}else g.fillRect(menu.getCentreX()-.5f,menu.getCentreY()-3,1.0f,6.0f);}
             if(b.id==active){g.setColour(overridden ? ui::secondary : ui::text);g.fillRect(r.withHeight(3));}
             if(std::find(victims.begin(),victims.end(),b.id)!=victims.end()){g.saveState();g.reduceClipRegion(r.toNearestInt());g.setColour(ui::text.withAlpha(.6f));for(float j=r.getX()-r.getHeight();j<r.getRight();j+=8)g.drawLine(j,r.getBottom(),j+r.getHeight(),r.getY(),1);g.restoreState();}
+            g.restoreState();
         }
         if(validPreview){g.setColour(ui::text);for(auto& b:preview.blocks)if(std::find(incoming.begin(),incoming.end(),b.id)!=incoming.end())g.drawRect(rectangle(b),2);}
         if(mode==Mode::marquee){g.setColour(ui::text.withAlpha(.08f));g.fillRect(marquee);g.setColour(ui::text);g.drawRect(marquee,1);}
@@ -166,10 +172,11 @@ public:
     const Block* hit(juce::Point<float> point) const { if(point.y<32 || point.y>getHeight()-6)return nullptr;int t=tick(point.x);for(auto& b:editor.processor.session.document.state().blocks)if(t>=b.start && t<b.end)return &b;return nullptr; }
     void mouseMove(const juce::MouseEvent& e) override {
         auto b=hit(e.position);hovered=b ? b->id : 0;hoverTick=tick(e.position.x);
-        bool edge=b && (std::abs(e.position.x-x(b->start))<edgeWidth(*b) || std::abs(e.position.x-x(b->end))<edgeWidth(*b));
+        hoverEdge=b && std::abs(e.position.x-x(b->start))<edgeWidth(*b) ? -1 : b && std::abs(e.position.x-x(b->end))<edgeWidth(*b) ? 1 : 0;
+        bool edge=hoverEdge!=0;
         setMouseCursor(razor ? juce::MouseCursor::CrosshairCursor : edge ? juce::MouseCursor::LeftRightResizeCursor : juce::MouseCursor::NormalCursor);repaint();
     }
-    void mouseExit(const juce::MouseEvent&) override { hovered=0;repaint(); }
+    void mouseExit(const juce::MouseEvent&) override { hovered=0;hoverEdge=0;repaint(); }
     void mouseDown(const juce::MouseEvent& e) override {
         grabKeyboardFocus();editor.popover(0);auto& s=editor.processor.session;auto b=hit(e.position);before=s.document.state();down=e.position;mode=Mode::none;dragging=false;validPreview=false;victims.clear();incoming.clear();
         if(!b){mode=Mode::marquee;originalSelection=s.selected;return;}
@@ -215,6 +222,7 @@ private:
     juce::Point<float> down;juce::Rectangle<float> marquee;
     bool dragging=false,validPreview=false;
     uint64_t owner=0,hovered=0;int hoverTick=0,anchor=0,offset=0,candidate=0;
+    int hoverEdge=0;
     std::vector<uint64_t> group,victims,incoming,originalSelection;
     std::vector<std::unique_ptr<Voicing>> controls;
     bool operation(Document& d) {
@@ -301,7 +309,7 @@ void Editor::handleAsyncUpdate() {
     select.setToggleState(!canvas->razor,juce::dontSendNotification);razor.setToggleState(canvas->razor,juce::dontSendNotification);
     length.setText(juce::String(s.document.state().bars),false);seventh.setToggleState(s.settings.showSeventh,juce::dontSendNotification);sus2.setToggleState(s.settings.showSus2,juce::dontSendNotification);sus4.setToggleState(s.settings.showSus4,juce::dontSendNotification);
     for(int n=0;n<5;++n){if(s.settings.editGrid==(240<<n))editGrid.setSelectedId(n+1,juce::dontSendNotification);if(s.settings.razorGrid==(240<<n))sliceGrid.setSelectedId(n+1,juce::dontSendNotification);}
-    if(popupOwner && !s.document.find(popupOwner))popover(0);if(popup)popup->refresh();
+    if(popupOwner && !s.document.find(popupOwner))popover(0);if(popup){popup->refresh();popoverTitle.setText(juce::String(resolve(s.document.find(popupOwner)->chord).label),juce::dontSendNotification);}
     for(auto& pad:pads)pad->refresh();resized();canvas->refresh();repaint();
 }
 void Editor::paint(juce::Graphics& g) {
@@ -320,6 +328,7 @@ void Editor::resized() {
     canvas->setBounds(24,toolbar+48,getWidth()-48,getHeight()-toolbar-126);scrollbar.setBounds(24,getHeight()-68,getWidth()-48,14);
     save.setBounds(24,getHeight()-44,144,28);load.setBounds(176,getHeight()-44,144,28);exporter->setBounds(getWidth()-264,getHeight()-44,240,28);
     editSelected.setBounds(344,getHeight()-44,168,28);editSelected.setVisible(!settingsOpen && processor.session.selected.size()==1);
+    if(processor.session.selected.size()==1)if(auto block=processor.session.document.find(processor.session.selected.front()))editSelected.setButtonText("Edit "+juce::String(resolve(block->chord).label));
     back.setBounds(getWidth()-172,134,148,28);seventh.setBounds(24,190,252,28);sus2.setBounds(24,222,252,28);sus4.setBounds(24,254,252,28);editGrid.setBounds(24,328,252,28);sliceGrid.setBounds(320,328,252,28);about.setBounds(24,380,getWidth()-48,100);logs.setBounds(24,getHeight()-80,200,28);logging.setBounds(240,getHeight()-80,getWidth()-264,28);
     for(auto& pad:pads)pad->setVisible(!settingsOpen);for(auto* c:std::initializer_list<juce::Component*>{&select,&razor,&undo,&redo,&minus,&plus,&length,&zoomMinus,&zoomPlus,&fit,&save,&load,&scrollbar,canvas.get(),exporter.get()})c->setVisible(!settingsOpen);
     for(auto* c:std::initializer_list<juce::Component*>{&back,&seventh,&sus2,&sus4,&editGrid,&sliceGrid,&about,&logs,&logging})c->setVisible(settingsOpen);

@@ -2057,44 +2057,38 @@
   },
   {
     "id": "STATE-05",
-    "status": "NOT RUN",
-    "version": "0.1.0-development",
-    "evidence": "engineering/core-evidence.json",
-    "source": "1a35c74dc8b866376ebec3b13fa8db39ad46f828+dirty",
+    "status": "PASS",
+    "version": "0.1.0-installed-cached-image",
+    "evidence": "engineering/live-manual-state-evidence.json",
+    "source": "6ba737c53deb257bdb07bd97878f4e4ea0388f76",
     "date": "2026-09-18",
     "environment": {
-      "windows": "Windows 11 Home 10.0.26200 x64",
+      "windows": "Windows 11 Home 10.0.26200.9168 x64",
       "live": "Ableton Live 12 Suite 12.4.3",
-      "compiler": "LLVM-MinGW 20260908 UCRT x86_64 / Clang 23.1.1",
-      "cmake": "4.4.3",
-      "juce": "not downloaded; licence route pending",
-      "sdk": "10.0.26100.0 available; not used by the MinGW core build"
+      "juce": "9.0.2"
     },
     "expected": "Manual Save/Load is available, with no factory presets/templates/example projects. Save an exact progression, start fresh, explicitly Load, and compare every block's semantic notes, origins, timing and length.",
     "requiredLayers": "C, U",
-    "procedure": "Not yet executed as complete product acceptance",
-    "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
+    "procedure": "Actual Live native Save, device removal/recreation, observed empty defaults, explicit Load and field-by-field synthetic JSON comparison plus resolved note snapshot",
+    "observed": "Exact eight bars, both C Major origins, [3840,7680)/[7680,15360), resolved C [60,64,67]/G [67,71,74]; fresh instance empty until explicit Load",
     "defect": null
   },
   {
     "id": "STATE-06",
-    "status": "NOT RUN",
-    "version": "0.1.0-development",
-    "evidence": "engineering/core-evidence.json",
-    "source": "1a35c74dc8b866376ebec3b13fa8db39ad46f828+dirty",
+    "status": "PASS",
+    "version": "0.1.0-installed-cached-image",
+    "evidence": "engineering/live-manual-state-evidence.json",
+    "source": "6ba737c53deb257bdb07bd97878f4e4ea0388f76",
     "date": "2026-09-18",
     "environment": {
-      "windows": "Windows 11 Home 10.0.26200 x64",
+      "windows": "Windows 11 Home 10.0.26200.9168 x64",
       "live": "Ableton Live 12 Suite 12.4.3",
-      "compiler": "LLVM-MinGW 20260908 UCRT x86_64 / Clang 23.1.1",
-      "cmake": "4.4.3",
-      "juce": "not downloaded; licence route pending",
-      "sdk": "10.0.26100.0 available; not used by the MinGW core build"
+      "juce": "9.0.2"
     },
     "expected": "Manual Load replaces the timeline in one undoable transaction but does not unexpectedly replace current instrument/key or add auto-restore. Retain the defined global-settings boundary.",
     "requiredLayers": "C, U",
-    "procedure": "Not yet executed as complete product acceptance",
-    "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
+    "procedure": "Set F Minor/Guitar; append B-flat-minor block; explicitly Load original C/G; one Undo; compare every restored synthetic progression field and revisions",
+    "observed": "Load retained F Minor/Guitar and original stored C/G context; one Undo restored all three prior blocks and timing exactly. Latest 0.1.3 host retest still unrun.",
     "defect": null
   },
   {

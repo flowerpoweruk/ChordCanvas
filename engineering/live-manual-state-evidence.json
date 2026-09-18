@@ -1,0 +1,64 @@
+{
+  "source": "6ba737c53deb257bdb07bd97878f4e4ea0388f76",
+  "version": "0.1.0",
+  "freshInstanceWasEmpty": true,
+  "explicitLoadProgressionExact": true,
+  "resolvedBlocks": [
+    {
+      "id": 1,
+      "notes": [
+        60,
+        64,
+        67
+      ],
+      "label": "C"
+    },
+    {
+      "id": 2,
+      "notes": [
+        67,
+        71,
+        74
+      ],
+      "label": "G"
+    }
+  ],
+  "saveSha256": "7e98c22d3780f36d8e3c948bd6d51b8d5728f9a4a293b20ccd88c1d52adc4274",
+  "date": "2026-09-18",
+  "environment": {
+    "windows": "Windows 11 Home 10.0.26200.9168 x64",
+    "live": "Ableton Live 12 Suite 12.4.3",
+    "juce": "9.0.2"
+  },
+  "scope": "Actual installed 0.1.0 image cached in Live; current installed filesystem bytes are 0.1.1. No latest-version host pass inferred.",
+  "progression": {
+    "bars": 8,
+    "schema": 1,
+    "intervals": [
+      [
+        3840,
+        7680
+      ],
+      [
+        7680,
+        15360
+      ]
+    ],
+    "origins": "C Major for both",
+    "voicing": "slot 3, root, no seventh or suspension"
+  },
+  "manualLoadBoundary": {
+    "currentKey": "F Minor",
+    "currentSound": "Guitar",
+    "blocksBefore": 3,
+    "blocksAfter": 2,
+    "undoExactComparison": true,
+    "transactionRevisions": [
+      2,
+      3,
+      4
+    ],
+    "userInput": "Load, then one Undo button click",
+    "observed": "Current F Minor/Guitar retained; original C/G origins intact; all three prior blocks restored exactly by one Undo."
+  }
+}

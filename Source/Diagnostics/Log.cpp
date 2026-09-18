@@ -1,4 +1,5 @@
 #include "Log.h"
+#include "BinaryVersion.h"
 #include <windows.h>
 #include <shlobj.h>
 #include <winver.h>
@@ -50,14 +51,11 @@ namespace {
 std::string number(double value){if(!std::isfinite(value))return "null";std::array<char,64> buffer{};auto result=std::to_chars(buffer.data(),buffer.data()+buffer.size(),value);return result.ec==std::errc() ? std::string(buffer.data(),result.ptr) : "null";}
 std::string nativeArchitecture(){SYSTEM_INFO info{};GetNativeSystemInfo(&info);switch(info.wProcessorArchitecture){case PROCESSOR_ARCHITECTURE_AMD64:return "x64";case PROCESSOR_ARCHITECTURE_ARM64:return "arm64";case PROCESSOR_ARCHITECTURE_INTEL:return "x86";default:return "unknown";}}
 std::string windowsVersion(){auto dll=GetModuleHandleW(L"ntdll.dll");if(!dll)return "unknown";using Query=LONG(WINAPI*)(OSVERSIONINFOEXW*);auto query=reinterpret_cast<Query>(GetProcAddress(dll,"RtlGetVersion"));OSVERSIONINFOEXW info{};info.dwOSVersionInfoSize=sizeof(info);if(!query || query(&info)!=0)return "unknown";return std::to_string(info.dwMajorVersion)+'.'+std::to_string(info.dwMinorVersion)+'.'+std::to_string(info.dwBuildNumber);}
-std::string hostBinaryVersion(){
-    // Read only the current host executable's fixed version resource. Its path
+ExecutableVersion hostBinaryVersion(){
+    // Read only the current host executable's version resource. Its path
     // is a local API input, never part of the header or diagnostic payload.
-    std::wstring path(32768,L'\0');auto length=GetModuleFileNameW(nullptr,path.data(),static_cast<DWORD>(path.size()));if(!length || length>=path.size())return "unknown";path.resize(length);
-    DWORD ignored=0;auto bytes=GetFileVersionInfoSizeW(path.c_str(),&ignored);if(!bytes || bytes>4*1024*1024)return "unknown";std::vector<BYTE> resource(bytes);
-    if(!GetFileVersionInfoW(path.c_str(),0,bytes,resource.data()))return "unknown";VS_FIXEDFILEINFO* info=nullptr;UINT size=0;
-    if(!VerQueryValueW(resource.data(),L"\\",reinterpret_cast<void**>(&info),&size) || size<sizeof(*info) || !info || info->dwSignature!=0xfeef04bd)return "unknown";
-    return std::to_string(HIWORD(info->dwProductVersionMS))+'.'+std::to_string(LOWORD(info->dwProductVersionMS))+'.'+std::to_string(HIWORD(info->dwProductVersionLS))+'.'+std::to_string(LOWORD(info->dwProductVersionLS));
+    std::wstring path(32768,L'\0');auto length=GetModuleFileNameW(nullptr,path.data(),static_cast<DWORD>(path.size()));if(!length || length>=path.size())return {};path.resize(length);
+    return executableProductVersion(path);
 }
 std::string audioDetails(const AudioLogEvent& event){
     auto result="{\"kind\":"+std::to_string(event.kind)+",\"revision\":"+std::to_string(event.revision)+",\"owner\":"+std::to_string(event.owner)+",\"tick\":"+std::to_string(event.tick)+",\"value\":"+std::to_string(event.value);
@@ -116,7 +114,7 @@ void LogService::run() noexcept {
     auto path=root/("ChordCanvas_"+session+".txt");auto lockPath=path;lockPath+=L".lock";
     std::string header="ChordCanvas diagnostic session; UTF-8 JSON Lines; schema 1\n";
     auto binaryVersion=hostBinaryVersion();
-    header+="{\"schema\":1,\"event\":\"session.header\",\"session\":"+jsonQuote(session)+",\"version\":"+jsonQuote(CC_VERSION)+",\"host\":"+jsonQuote(host)+",\"host_version\":"+jsonQuote(binaryVersion)+",\"host_version_source\":"+jsonQuote(binaryVersion=="unknown" ? "unavailable" : "process executable fixed product version resource")+",\"plugin_format\":"+jsonQuote(format)+",\"source\":"+jsonQuote(CC_SOURCE_COMMIT)+",\"build_number\":"+std::to_string(CC_BUILD_NUMBER)+",\"build_configuration\":"+jsonQuote(CC_BUILD_CONFIGURATION)+",\"build_id\":"+jsonQuote(std::string(CC_VERSION)+'.'+std::to_string(CC_BUILD_NUMBER)+'@'+CC_SOURCE_COMMIT)+",\"theory_schema\":1,\"windows_version\":"+jsonQuote(windowsVersion())+",\"native_architecture\":"+jsonQuote(nativeArchitecture())+"}\n";
+    header+="{\"schema\":1,\"event\":\"session.header\",\"session\":"+jsonQuote(session)+",\"version\":"+jsonQuote(CC_VERSION)+",\"host\":"+jsonQuote(host)+",\"host_version\":"+jsonQuote(binaryVersion.value)+",\"host_version_source\":"+jsonQuote(binaryVersion.source)+",\"plugin_format\":"+jsonQuote(format)+",\"source\":"+jsonQuote(CC_SOURCE_COMMIT)+",\"build_number\":"+std::to_string(CC_BUILD_NUMBER)+",\"build_configuration\":"+jsonQuote(CC_BUILD_CONFIGURATION)+",\"build_id\":"+jsonQuote(std::string(CC_VERSION)+'.'+std::to_string(CC_BUILD_NUMBER)+'@'+CC_SOURCE_COMMIT)+",\"theory_schema\":1,\"windows_version\":"+jsonQuote(windowsVersion())+",\"native_architecture\":"+jsonQuote(nativeArchitecture())+"}\n";
     auto status=[&](bool ok,const char* reason){std::lock_guard guard(mutex);report.available=ok;report.reason=reason;};
     auto admit=[&]() {
         std::filesystem::create_directories(root);

@@ -1,4 +1,5 @@
 #include "Diagnostics/Log.h"
+#include "Diagnostics/BinaryVersion.h"
 #include "Commands/Timeline.h"
 #include "Persistence/Progression.h"
 #include "OwnedWorkspace.h"
@@ -19,7 +20,11 @@ void waitReady(LogService& log) {
 std::string contents(std::filesystem::path file){std::ifstream in(file,std::ios::binary);return {std::istreambuf_iterator<char>(in),std::istreambuf_iterator<char>()};}
 std::vector<std::filesystem::path> logs(std::filesystem::path root){std::vector<std::filesystem::path> files;for(auto& e:std::filesystem::directory_iterator(root))if(e.path().extension()==L".txt")files.push_back(e.path());return files;}
 int main(int argc,char** argv) {
+    std::wstring executable(32768,L'\0');auto executableLength=GetModuleFileNameW(nullptr,executable.data(),static_cast<DWORD>(executable.size()));require(executableLength>0 && executableLength<executable.size(),"own version fixture executable path");executable.resize(executableLength);
+    auto hostVersion=executableProductVersion(executable);
+    require(hostVersion.value=="12.4.3" && hostVersion.source=="process executable ProductVersion string resource","real string product version wins over generic fixed 1.0.0.1");
     auto root=ownedWorkspace(std::filesystem::path(argc>1 ? argv[1] : "."),"log-tests-");
+    require(executableProductVersion(root/L"absent.exe").value=="unknown","missing host metadata remains unavailable");
     for(int session=0;session<6;++session) {
         LogService service(root,32*1024*1024,"synthetic-test-host");waitReady(service);service.post(1,"synthetic.session.ordinal","{\"ordinal\":"+std::to_string(session)+"}");service.post(1,"state.snapshot","{\"bars\":8,\"revision\":3}");service.post(1,"timeline.replace.commit","{\"transaction\":3,\"revision_before\":2,\"revision_after\":3}");service.audioEvent({1,1,3,5,960,3});
     }

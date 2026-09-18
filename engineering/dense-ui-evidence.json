@@ -1,0 +1,38 @@
+{
+  "date": "2026-09-18",
+  "source": "e68b5f8a59bec3051e7159d1a0932ed1b9a24a78+dirty",
+  "version": "0.1.3",
+  "buildNumber": 4,
+  "scope": "Actual native development view; no Live U-layer substitute",
+  "dense": {
+    "bars": 32,
+    "blocks": 128,
+    "durationTicks": 960,
+    "finalBlock": "Dm7",
+    "fixedDefects": [
+      "menu dots spilled outside tiny blocks",
+      "full labels did not fit",
+      "selected editor used generic label"
+    ],
+    "nativeSaveComparison": "Only block 128 octave 3 to 4; all other fields unchanged",
+    "optionalMinimumLogicalSize": "1000 x 608",
+    "popover": "All enabled voicing controls remain inside the right screen boundary"
+  },
+  "resize": {
+    "defect": "Fit retained old scale when editor grew",
+    "fix": "Canvas::resized refreshes fitted scale",
+    "observed": "Full eight bars visible on actual maximize and restore"
+  },
+  "popoverTitle": "Actual seventh toggle immediately changes C to Cmaj7",
+  "build": {
+    "command": "Scripts/build-plugin.ps1 -BuildDirectory build/plugin-reviewed -VisualStudioLicenseConfirmed",
+    "exitCode": 0,
+    "tests": "13/13 PASS",
+    "seconds": 48.19,
+    "pluginSha256": "1de894567c42eddeb624c5a77fe17bfbf09f61cf43cd9d4712fb57cb04e461e3",
+    "validator": "47 passed, 0 failed, exit 0",
+    "processing": "PASS, exit 0 after correcting bundle-directory invocation to explicit module",
+    "hostVersionRegression": "Real synthetic PE ProductVersion string 12.4.3 takes precedence over fixed 1.0.0.1",
+    "latestLiveRetest": "NOT RUN"
+  }
+}
