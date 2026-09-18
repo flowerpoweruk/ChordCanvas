@@ -2774,10 +2774,10 @@
   },
   {
     "id": "REL-06",
-    "status": "FAIL",
-    "version": "0.1.1-candidate / 0.1.2-development correction",
-    "evidence": "engineering/image-section-evidence.json",
-    "source": "a8306846347cda4094845ad34a42afa4cc06aae3+dirty",
+    "status": "PASS",
+    "version": "0.1.2-candidate",
+    "evidence": "engineering/corrected-package-evidence.json",
+    "source": "eedbc498767fbf5c0e893bd7ea471e2f026a61cd",
     "date": "2026-09-18",
     "environment": {
       "windows": "Windows 11 Home 10.0.26200.9168 x64",
@@ -2792,9 +2792,9 @@
     },
     "expected": "Live has an unsaved test Set and the plug-in bundle is in use. Setup/Updater requests a safe close/retry or refuses; it never force-closes Live or overwrites a loaded binary unsafely.",
     "requiredLayers": "W, H",
-    "procedure": "Run genuine 0.1.1 Updater while actual installed VST3 is mapped by an unsaved Live Set",
-    "observed": "Updater exit 0 replaced installed bundle while Live remained running/mapped. One previous bundle and committed journal retained because loaded old image blocked cleanup. Source corrected and mapped-image regression PASS; corrected real-package refusal/recovery not yet run.",
-    "defect": "Loaded image-section detection missed by READ/DELETE-only probe"
+    "procedure": "Execute both corrected genuine Setup and Updater while unsaved Live still retains the installed old image in the previous committed transaction",
+    "observed": "Both actual packaged executables exit 7 with save/close Live message; installed 0.1.1 DLL hash unchanged; no host closure. Setup preserves all five logs; Updater preserves saved synthetic progression. Mapped PE/late-stage integration regressions independently pass. Successful corrected upgrade/reload remains separate unrun gate.",
+    "defect": null
   },
   {
     "id": "REL-07",

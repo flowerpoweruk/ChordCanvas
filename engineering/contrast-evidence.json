@@ -1,0 +1,349 @@
+{
+  "scope": "Source colour-role calculations; no formal accessibility certification or full rendered-state pass",
+  "rows": [
+    {
+      "role": "text",
+      "background": "ink",
+      "ratio": 15.442121354124998,
+      "target": 4.5
+    },
+    {
+      "role": "text",
+      "background": "surface",
+      "ratio": 13.282095852140385,
+      "target": 4.5
+    },
+    {
+      "role": "text",
+      "background": "raised",
+      "ratio": 11.17804860935777,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "ink",
+      "ratio": 9.0802162464286,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "surface",
+      "ratio": 7.810086436797135,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "raised",
+      "ratio": 6.572872745812606,
+      "target": 4.5
+    },
+    {
+      "role": "text",
+      "background": "pad",
+      "degree": 1,
+      "ratio": 10.910128132023768,
+      "target": 4.5
+    },
+    {
+      "role": "text",
+      "background": "block",
+      "degree": 1,
+      "ratio": 9.339665626898151,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "pad",
+      "degree": 1,
+      "ratio": 6.415331186900478,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "block",
+      "degree": 1,
+      "ratio": 5.491873921772891,
+      "target": 4.5
+    },
+    {
+      "role": "degree-strip",
+      "degree": 1,
+      "ratio": 5.669997065461145,
+      "target": 3
+    },
+    {
+      "role": "control-boundary",
+      "degree": 1,
+      "ratio": 3.1554209072228816,
+      "target": 3
+    },
+    {
+      "role": "text",
+      "background": "pad",
+      "degree": 2,
+      "ratio": 10.53215170155056,
+      "target": 4.5
+    },
+    {
+      "role": "text",
+      "background": "block",
+      "degree": 2,
+      "ratio": 8.779551933693552,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "pad",
+      "degree": 2,
+      "ratio": 6.193074953702758,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "block",
+      "degree": 2,
+      "ratio": 5.162518042470405,
+      "target": 4.5
+    },
+    {
+      "role": "degree-strip",
+      "degree": 2,
+      "ratio": 6.657317066754111,
+      "target": 3
+    },
+    {
+      "role": "control-boundary",
+      "degree": 2,
+      "ratio": 3.046102784033122,
+      "target": 3
+    },
+    {
+      "role": "text",
+      "background": "pad",
+      "degree": 3,
+      "ratio": 10.862097747648715,
+      "target": 4.5
+    },
+    {
+      "role": "text",
+      "background": "block",
+      "degree": 3,
+      "ratio": 9.292639125546046,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "pad",
+      "degree": 3,
+      "ratio": 6.38708854675259,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "block",
+      "degree": 3,
+      "ratio": 5.464221581022699,
+      "target": 4.5
+    },
+    {
+      "role": "degree-strip",
+      "degree": 3,
+      "ratio": 5.501327462233996,
+      "target": 3
+    },
+    {
+      "role": "control-boundary",
+      "degree": 3,
+      "ratio": 3.141529587413892,
+      "target": 3
+    },
+    {
+      "role": "text",
+      "background": "pad",
+      "degree": 4,
+      "ratio": 10.850469043613032,
+      "target": 4.5
+    },
+    {
+      "role": "text",
+      "background": "block",
+      "degree": 4,
+      "ratio": 9.276796597944958,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "pad",
+      "degree": 4,
+      "ratio": 6.3802506813526065,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "block",
+      "degree": 4,
+      "ratio": 5.454905919449462,
+      "target": 4.5
+    },
+    {
+      "role": "degree-strip",
+      "degree": 4,
+      "ratio": 5.513417216778066,
+      "target": 3
+    },
+    {
+      "role": "control-boundary",
+      "degree": 4,
+      "ratio": 3.1381663404021176,
+      "target": 3
+    },
+    {
+      "role": "text",
+      "background": "pad",
+      "degree": 5,
+      "ratio": 11.068165284392006,
+      "target": 4.5
+    },
+    {
+      "role": "text",
+      "background": "block",
+      "degree": 5,
+      "ratio": 9.617956910201148,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "pad",
+      "degree": 5,
+      "ratio": 6.508259579675352,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "block",
+      "degree": 5,
+      "ratio": 5.655513681747469,
+      "target": 4.5
+    },
+    {
+      "role": "degree-strip",
+      "degree": 5,
+      "ratio": 4.851079753225038,
+      "target": 3
+    },
+    {
+      "role": "control-boundary",
+      "degree": 5,
+      "ratio": 3.2011283204325376,
+      "target": 3
+    },
+    {
+      "role": "text",
+      "background": "pad",
+      "degree": 6,
+      "ratio": 11.132983315021994,
+      "target": 4.5
+    },
+    {
+      "role": "text",
+      "background": "block",
+      "degree": 6,
+      "ratio": 9.712815788236407,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "pad",
+      "degree": 6,
+      "ratio": 6.546373626397999,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "block",
+      "degree": 6,
+      "ratio": 5.7112922309313,
+      "target": 4.5
+    },
+    {
+      "role": "degree-strip",
+      "degree": 6,
+      "ratio": 4.746384651136718,
+      "target": 3
+    },
+    {
+      "role": "control-boundary",
+      "degree": 6,
+      "ratio": 3.219874953518774,
+      "target": 3
+    },
+    {
+      "role": "text",
+      "background": "pad",
+      "degree": 7,
+      "ratio": 11.09814847134209,
+      "target": 4.5
+    },
+    {
+      "role": "text",
+      "background": "block",
+      "degree": 7,
+      "ratio": 9.640385684954621,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "pad",
+      "degree": 7,
+      "ratio": 6.525890176859536,
+      "target": 4.5
+    },
+    {
+      "role": "secondary",
+      "background": "block",
+      "degree": 7,
+      "ratio": 5.668702162800922,
+      "target": 4.5
+    },
+    {
+      "role": "degree-strip",
+      "degree": 7,
+      "ratio": 5.041943514909054,
+      "target": 3
+    },
+    {
+      "role": "control-boundary",
+      "degree": 7,
+      "ratio": 3.2098000403081066,
+      "target": 3
+    },
+    {
+      "role": "control-boundary",
+      "background": "ink",
+      "ratio": 4.466161348706402,
+      "target": 3
+    },
+    {
+      "role": "control-boundary",
+      "background": "surface",
+      "ratio": 3.8414400304396703,
+      "target": 3
+    },
+    {
+      "role": "control-boundary",
+      "background": "raised",
+      "ratio": 3.232908711712674,
+      "target": 3
+    }
+  ],
+  "minimumText": 5.162518042470405,
+  "minimumNonText": 3.046102784033122,
+  "failures": [],
+  "date": "2026-09-18",
+  "source": "eedbc498767fbf5c0e893bd7ea471e2f026a61cd",
+  "method": "W3C relative luminance and contrast formula; source role colours and ideal sRGB alpha composites. Renderer quantization and complete visual/state review remain unverified.",
+  "references": [
+    "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+    "https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html"
+  ]
+}

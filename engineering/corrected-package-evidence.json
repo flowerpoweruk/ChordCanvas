@@ -1,0 +1,42 @@
+{
+  "date": "2026-09-18",
+  "status": "CORRECTED GENUINE CANDIDATES BUILT; loaded-image refusal actually verified; successful corrected upgrade/host reload pending",
+  "source": "eedbc498767fbf5c0e893bd7ea471e2f026a61cd",
+  "version": "0.1.2",
+  "fileVersion": "0.1.2.3",
+  "sourceDirty": false,
+  "buildCommand": "Scripts/build-plugin.ps1 -BuildDirectory build/plugin-reviewed -VisualStudioLicenseConfirmed",
+  "buildExit": 0,
+  "tests": "13/13 CTest PASS",
+  "testSeconds": 46.36,
+  "pluginSha256": "6c4a71ae0e2117b087dc7c9e8143d5141abab14af44e1c72f25a1ebe5a564b89",
+  "helperSha256": "b8068beb4aac095af184f8875a033a9b8c0929aa559b969587e9b70978e26fae",
+  "validator": "47 PASS / 0 FAIL / exit 0",
+  "nativeProcessing": "PASS / exit 0",
+  "packageCommand": "Scripts/package-windows.ps1 with clean matching complete inputs, pinned licence/tools, payload inspector and established distribution rights",
+  "packageExit": 0,
+  "payload": "16 owned hash-verified AMD64 files",
+  "setup": {
+    "bytes": 5606435,
+    "sha256": "16ec03625295bc8b830f79a79c2c5469b05022cfef809c6fc49b8c6de5f116c3",
+    "signature": "NotSigned",
+    "loadedImageTestExit": 7,
+    "observed": "Specific safe save/close Live refusal; installed DLL unchanged; all five existing native log hashes unchanged using reader sharing compatible with active writers"
+  },
+  "updater": {
+    "bytes": 5606439,
+    "sha256": "0f24224f559cac16abb0fa4b05a719e5b59a7a27178c5d45c2de6d1285c63297",
+    "signature": "NotSigned",
+    "loadedImageTestExit": 7,
+    "observed": "Specific safe save/close Live refusal; installed DLL/version 0.1.1 unchanged; saved synthetic progression hash unchanged",
+    "activeLogsLimit": "Initial Get-FileHash could not read two active files; null-hash comparison corrected to NOT RUN. No active-log preservation pass claimed for this updater launch."
+  },
+  "retainedState": "Previous failed 0.1.1 update left one committed journal and one old bundle containing mapped image. Corrected 0.1.2 refusal does not delete that state or force-close Live.",
+  "limits": [
+    "Manual safe Live closure pending, including its unsaved Set",
+    "Corrected successful upgrade/fresh install/reload not yet run",
+    "Full Live MIDI import extent/empty clip fail; requirement decision pending",
+    "Host saving/exporting disabled",
+    "Comprehensive Live GUI/DPI/dense gestures, offline/clean-machine/uninstall and stable release acceptance open"
+  ]
+}
