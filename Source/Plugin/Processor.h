@@ -23,7 +23,9 @@ public:
     double getTailLengthSeconds() const override { return 0.8; }
     bool hasEditor() const override { return true; }
     juce::AudioProcessorEditor* createEditor() override;
-    int getNumPrograms() override { return 1; }
+    // VST3 supports zero program lists. Advertising an unnamed dummy program
+    // makes the validator fail and incorrectly exposes a factory preset.
+    int getNumPrograms() override { return 0; }
     int getCurrentProgram() override { return 0; }
     void setCurrentProgram(int) override {}
     const juce::String getProgramName(int) override { return {}; }

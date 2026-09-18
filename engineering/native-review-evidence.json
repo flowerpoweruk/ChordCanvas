@@ -30,9 +30,9 @@
     "initialRetestCommandFailure": "cmake -E chdir ctest failed because ctest was not on PATH; rerun using explicit verified ctest path PASS"
   },
   "nativeDrag": {
-    "status": "NOT RUN to successful import",
-    "observed": "Actual native handle generated 53-byte whole eight-bar chords.mid, three C notes, end_tick 30720, SHA256 8f6f344118da32d2d6bcaccee559b5d3a28b88232b49b881caabe9bfd93bac8b; native completion event truthfully reports host_import_confirmed false. Automated short drag ended without an inspected imported clip",
-    "limits": "No destination import PASS or clip extent claim. Earlier actual browser import trailing/empty failures remain in live-import-evidence.json"
+    "status": "PASS basic native import; FAIL trailing-rest extent",
+    "observed": "Later actual Arrangement Clip Detail inspection confirms imported simultaneous C3/E3/G3, velocity 100, start 1.1.1, end 2.1.1 and length one bar. Actual 53-byte export requests eight bars, EOT 30720; original file SHA256 8f6f344118da32d2d6bcaccee559b5d3a28b88232b49b881caabe9bfd93bac8b. Initial short-gesture observation was inconclusive until this inspection.",
+    "limits": "Native import established, requested full clip extent fails. No manual resizing, fake notes or extra tracks used; disabled Live saving and full host acceptance remain unresolved."
   },
   "openGates": [
     "Actual installed product packages/elevation/offline update/uninstall",
