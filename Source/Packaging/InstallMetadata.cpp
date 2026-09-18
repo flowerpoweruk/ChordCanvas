@@ -20,7 +20,7 @@ std::wstring field(const RegistryImage& image,const std::wstring& name){
     for(auto& value:image.values)if(value.name==name){require(value.type==REG_SZ && value.bytes.size()>=2 && value.bytes.size()%2==0,"Invalid installer metadata field");std::wstring result(value.bytes.size()/2,L'\0');std::memcpy(result.data(),value.bytes.data(),value.bytes.size());require(result.back()==0,"Invalid metadata terminator");result.pop_back();require(result.find(L'\0')==std::wstring::npos,"Embedded metadata terminator");return result;}
     throw std::runtime_error("Missing installer metadata field");
 }
-void available(const std::filesystem::path& file){if(!std::filesystem::exists(file))return;auto handle=CreateFileW(file.c_str(),GENERIC_READ|DELETE,0,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);require(handle!=INVALID_HANDLE_VALUE,"Installer metadata is in use; save and close the relevant application, then retry");CloseHandle(handle);}
+void available(const std::filesystem::path& file){if(!std::filesystem::exists(file))return;auto handle=CreateFileW(file.c_str(),GENERIC_READ|GENERIC_WRITE|DELETE,0,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);require(handle!=INVALID_HANDLE_VALUE,"Installer metadata is in use; save and close the relevant application, then retry");CloseHandle(handle);}
 void move(const std::filesystem::path& from,const std::filesystem::path& to){require(MoveFileExW(from.c_str(),to.c_str(),MOVEFILE_WRITE_THROUGH)!=0,"Installer metadata rename failed; previous files preserved");}
 void inventory(const std::filesystem::path& root,const std::set<std::wstring>& names){
     safeAncestors(root);require(std::filesystem::is_directory(root),"Invalid installer metadata directory");

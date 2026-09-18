@@ -1,0 +1,50 @@
+{
+  "date": "2026-09-18",
+  "scope": "Actual genuine updater failure and tested source correction; corrected product packages not yet built",
+  "failedPackage": {
+    "source": "a8306846347cda4094845ad34a42afa4cc06aae3",
+    "version": "0.1.1",
+    "setupBytes": 5605881,
+    "setupSha256": "5a932bd75ad3e92333fa8a858174a10472a3d2f5cc9a47f2dd6a9a075c18fb3e",
+    "updaterBytes": 5605885,
+    "updaterSha256": "7feddf69537f8a54a3d3562b78757140dd082f14938d4894b874a4f8afb61930",
+    "signature": "NotSigned",
+    "cleanBuild": "13/13 CTest PASS / exit 0 / 47.24 seconds",
+    "validator": "47 PASS / 0 FAIL / exit 0",
+    "runtime": "Genuine Updater exit 0, complete new 0.1.1 payload and uninstall registration installed while Live still mapped the previous image. Blocking file-in-use defect; not accepted.",
+    "installedValidation": "Updated installed binary: official validator 47/0/exit 0; native processing PASS / exit 0",
+    "retainedState": "One committed journal and one previous bundle, two old files remaining; old mapped image prevented cleanup. Never removed this retention manually."
+  },
+  "correction": {
+    "source": "a8306846347cda4094845ad34a42afa4cc06aae3+dirty",
+    "version": "0.1.2-development",
+    "method": "Availability probes request GENERIC_WRITE as well as READ/DELETE, without writing bytes, checking live image-section conflicts. Applies to update/recovery, installer metadata and uninstall preflight; second probe remains immediately before rename.",
+    "reference": "https://learn.microsoft.com/en-us/windows-hardware/drivers/ifs/executable-images",
+    "actualTests": "Five focused CTest scenarios PASS / 38.64 seconds, followed by actual final transaction executable PASS with late mapping and old-probe regression",
+    "mappedImageRegression": "Real SEC_IMAGE PE view survives closed creation handles; old READ/DELETE probe actually succeeds, corrected update refuses before mutation; a mapping created after staging is caught by the second probe and staging rolls back",
+    "rejectedApproach": "Holding handles across directory rename caused actual rename failure / test exit 1; removed. No retained-handle success claimed."
+  },
+  "hostSync": {
+    "source": "6ba737c53deb257bdb07bd97878f4e4ea0388f76",
+    "version": "0.1.0-installed-candidate",
+    "live": "12.4.3",
+    "tempo": 120,
+    "sampleRate": 44100,
+    "bufferFrames": 256,
+    "meter": "4/4",
+    "tempoAvailable": true,
+    "fallbackUsed": false,
+    "observed": "Actual later Live playback starts at approximately bar 13; installed local clock reports tick 0 on both stopped-to-playing edges. Host stops report frozen local ticks 23004 and 24074; native UI visibly returns to Sync armed. No separate pause event inferred."
+  },
+  "exhaustiveMidi": {
+    "source": "a8306846347cda4094845ad34a42afa4cc06aae3+dirty",
+    "oracle": "music21 10.5.0",
+    "parser": "mido 1.3.3",
+    "chords": 30870,
+    "writtenScales": 42,
+    "result": "PASS; actual serialized Type-0/960-PPQ single-track bytes independently match pitches, channel 1, velocity 100, explicit offs 0, leading rest and eight-bar EOT",
+    "storedExport": "PASS; 840 key/sound/rate combinations, pad latch and block preview preserve the stored timeline MIDI bytes",
+    "initialTestCompile": "C2039: guessed volumeDb member absent; corrected to the existing gain member, actual recompile and test PASS"
+  },
+  "pending": "Live retains installed mapping after only disposable device removal; owner manual safe closure requested. Full MIDI import span, deactivated host saving, comprehensive Live GUI/DPI/clean-machine/offline and release acceptance remain open"
+}

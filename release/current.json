@@ -1,9 +1,9 @@
 {
-  "version": "0.1.1",
-  "buildNumber": 2,
+  "version": "0.1.2",
+  "buildNumber": 3,
   "channel": "development",
   "date": "2026-09-18",
-  "changes": ["Keyboard navigation for pad voicing, transport and editing controls.", "Correct chord symbols and VST3 program-list handling.", "Development build: full Live clip extent and release acceptance remain open."],
+  "changes": ["Refuse update and uninstall while executable images are mapped.", "Keyboard navigation for pad voicing, transport and editing controls.", "Development build: full Live clip extent and release acceptance remain open."],
   "installerId": "{EE56A5B5-24E6-4F83-B3AF-1C73BCD93594}",
   "manufacturerCode": "ChCv",
   "pluginCode": "Cc01",

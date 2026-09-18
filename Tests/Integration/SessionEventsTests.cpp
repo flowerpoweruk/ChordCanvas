@@ -1,4 +1,5 @@
 #include "Model/Session.h"
+#include "Export/Midi.h"
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -6,6 +7,15 @@ using namespace cc;
 void check(bool value,const char* reason){if(!value)throw std::runtime_error(reason);}
 struct Observation {std::string name;int degree,activePad;uint64_t targetBlock,revision,owner;bool keyboard,latched;std::vector<uint64_t> selected;};
 int main(){try{
+    Session exportSession;
+    exportSession.edit([](auto& document){return document.add({{3,-1,Mode::minor},4,2,3,true,Suspension::sus4},bar);});
+    const auto originalMidi=midi(exportSession.document.state());
+    for(auto key:keys())for(auto sound:{Sound::piano,Sound::guitar,Sound::strings,Sound::pad})for(int repeatTicks:{480,960,1920,3840,7680}){
+        exportSession.changeKey(key);exportSession.sound=sound;exportSession.gain=.06309573f;exportSession.setRepeatRate(repeatTicks);exportSession.setRepeats(true);exportSession.pressPad(2);exportSession.releasePad(2);
+        check(midi(exportSession.document.state())==originalMidi,"key, sound, gain, repeat rate and active preview cannot change stored exported MIDI bytes");
+        exportSession.setRepeats(false);exportSession.pressBlock(exportSession.document.state().blocks.front().id);
+        check(midi(exportSession.document.state())==originalMidi,"block preview cannot change stored exported MIDI bytes");exportSession.releaseMomentary();
+    }
     Session session;AudioFrame published;std::vector<Observation> events;
     session.publish=[&](const AudioFrame& frame){published=frame;};
     session.semanticEvent=[&](const char* name,int degree,uint64_t block,bool keyboard){events.push_back({name,degree,session.activePad(),block,session.document.revision(),published.previewOwner,keyboard,session.repeatLatched(),session.selected});};

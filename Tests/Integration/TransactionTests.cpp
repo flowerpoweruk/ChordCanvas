@@ -34,6 +34,7 @@ int main(int argc,char** argv){
         auto transaction=BundleTransaction::begin(std::filesystem::path(argv[2]),std::filesystem::path(argv[3]),InstallMode::setup,[=](Boundary point){if(static_cast<int>(point)==boundary)ExitProcess(77);});
         return 2; // The selected real boundary must be reached.
     }
+    try {
     auto build=std::filesystem::path(argc>1 ? argv[1] : ".");auto root=ownedWorkspace(build,"transaction-tests-");
     auto older=root/L"source-1.9.0",newer=root/L"source-1.10.0";payload(older,build/L"core_tests.exe","1.9.0");payload(newer,build/L"core_tests.exe","1.10.0");
     auto installation=root/L"installed";std::filesystem::create_directory(installation);auto target=installation/L"ChordCanvas.vst3";
@@ -47,6 +48,27 @@ int main(int argc,char** argv){
         for(auto& entry:std::filesystem::directory_iterator(installation))require(entry.path()==target || entry.path()==unrelated,"failed transaction leaves no owned stage or backup clutter");
     }
     auto binary=target/L"Contents/x86_64-win/ChordCanvas.vst3";
+    // A real PE image mapping remains in use after both creation handles close.
+    // This reproduces the native Live failure that an ordinary file lock missed.
+    auto imageFile=CreateFileW(binary.c_str(),GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);
+    require(imageFile!=INVALID_HANDLE_VALUE,"open owned executable for image-section regression");
+    auto imageSection=CreateFileMappingW(imageFile,nullptr,PAGE_READONLY|SEC_IMAGE,0,0,nullptr);
+    require(imageSection!=nullptr,"create real executable image section");
+    auto imageView=MapViewOfFile(imageSection,FILE_MAP_READ,0,0,0);
+    require(imageView!=nullptr,"map real executable image section");CloseHandle(imageSection);CloseHandle(imageFile);
+    auto legacyProbe=CreateFileW(binary.c_str(),GENERIC_READ|DELETE,0,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);
+    require(legacyProbe!=INVALID_HANDLE_VALUE,"old read/delete probe actually misses the mapped image");CloseHandle(legacyProbe);
+    require(rejects([&]{installBundle(newer,installation,InstallMode::update);}),"mapped PE image refuses update even without an ordinary open file handle");
+    require(sha256(target/receiptName)==original && !std::filesystem::exists(installation/L".ChordCanvas.transaction"),"mapped-image refusal precedes mutation and preserves the complete installed receipt");
+    require(UnmapViewOfFile(imageView)!=0,"unmap only the owned synthetic image view");
+    imageView=nullptr;
+    require(rejects([&]{installBundle(newer,installation,InstallMode::update,[&](Boundary point){if(point==Boundary::staged){
+        auto opened=CreateFileW(binary.c_str(),GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);
+        require(opened!=INVALID_HANDLE_VALUE,"open only owned late image fixture");auto section=CreateFileMappingW(opened,nullptr,PAGE_READONLY|SEC_IMAGE,0,0,nullptr);
+        require(section!=nullptr,"create owned late image fixture");imageView=MapViewOfFile(section,FILE_MAP_READ,0,0,0);require(imageView!=nullptr,"map owned late image fixture");CloseHandle(section);CloseHandle(opened);
+    }});}),"second pre-rename check refuses an image mapped after initial preflight");
+    require(sha256(target/receiptName)==original && !std::filesystem::exists(installation/L".ChordCanvas.transaction"),"late mapped-image refusal restores owned staging without changing installed version");
+    require(UnmapViewOfFile(imageView)!=0,"unmap only owned late image fixture");
     auto file=CreateFileW(binary.c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);require(file!=INVALID_HANDLE_VALUE,"simulate receiving host's file lock");
     require(rejects([&]{installBundle(newer,installation,InstallMode::update);}),"in-use files stop update without force closure");CloseHandle(file);
     require(sha256(target/receiptName)==original,"file-lock refusal preserves installation");
@@ -93,4 +115,5 @@ int main(int argc,char** argv){
     require(rejects([&]{installBundle(newer,fresh,InstallMode::setup,[](Boundary point){if(point==Boundary::replaced)throw std::runtime_error("synthetic fresh-install failure");});}),"failed fresh installation reported");
     require(std::filesystem::is_empty(fresh),"failed fresh installation leaves no partial bundle");
     std::cout<<"PASS: fresh install, absent update, four real rollback boundaries, nine actual abrupt child-process recoveries, cross-process mutex, held finalisation rollback, bounded locked-backup cleanup, file locks, numeric update, repair, downgrade and unknown-file preservation\n";
+    } catch(const std::exception& error){std::cerr<<"FAIL: "<<error.what()<<'\n';return 1;}
 }

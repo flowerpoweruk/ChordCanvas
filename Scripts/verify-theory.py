@@ -1,9 +1,11 @@
 """Compare production C++ output against pinned, development-only music21."""
 import json
+import io
 import subprocess
 import sys
 from pathlib import Path
 from music21 import pitch, scale, harmony, __version__
+import mido
 
 letters = 'CDEFGAB'
 exe = Path(sys.argv[1])
@@ -69,10 +71,26 @@ for line in rows:
         expected.append(expected.pop(0)+12)
     expected = [n+12*(octave-3) for n in expected]
     assert actual == expected, (fields[:8], actual, expected)
+    exported = mido.MidiFile(file=io.BytesIO(bytes.fromhex(fields[11])), clip=False)
+    assert exported.type == 0 and exported.ticks_per_beat == 960 and len(exported.tracks) == 1
+    tick = 0
+    parsed = []
+    for message in exported.tracks[0]:
+        tick += message.time
+        if message.type == 'end_of_track':
+            assert tick == 30720
+            parsed.append((tick, message.type))
+        else:
+            assert message.type in ('note_on', 'note_off') and message.channel == 0
+            parsed.append((tick, message.type, message.note, message.velocity))
+    expected_events = [(3840, 'note_on', note, 100) for note in expected]
+    expected_events += [(7680, 'note_off', note, 0) for note in expected]
+    expected_events.append((30720, 'end_of_track'))
+    assert parsed == expected_events, (fields[:8], parsed, expected_events)
     count += 1
 assert count == 30870
 target = Path(sys.argv[2]) if len(sys.argv) > 2 else None
 if target:
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps({'provenance': 'music21 '+__version__+' MajorScale/MinorScale, explicit normalized register; no production generator used', 'fixtures': fixtures}, indent=2)+'\n', encoding='utf-8')
-print(json.dumps({'status': 'PASS', 'oracle': 'music21 '+__version__, 'combinations': count, 'writtenScales': len(oracles), 'unicodeChordLabels': count}, indent=2))
+print(json.dumps({'status': 'PASS', 'oracle': 'music21 '+__version__, 'parser': 'mido '+str(mido.version_info), 'combinations': count, 'writtenScales': len(oracles), 'unicodeChordLabels': count, 'serializedMidiChords': count}, indent=2))

@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-18",
+  "scope": "Inspected development public source/history and real local diagnostic files; no raw private logs published",
+  "source": "a8306846347cda4094845ad34a42afa4cc06aae3+dirty",
+  "repository": "flowerpoweruk/ChordCanvas",
+  "public": true,
+  "defaultBranch": "main",
+  "committedIterationsBeforeCurrent": 17,
+  "actualMainRemote": "a8306846347cda4094845ad34a42afa4cc06aae3",
+  "sourceContents": "C++/JUCE integration, pinned acquisition and licence notices, CMake, tests, design system, Setup/Updater transaction definitions and release metadata present",
+  "publicAudit": "git diff --check PASS; private-machine-path/secret search found only a workflow token expression, no hard-coded token; ignored build/dist/dependency/private logs remain outside Git",
+  "nativeLogAudit": {
+    "files": 5,
+    "secretPatternMatches": 0,
+    "personalPathPatternMatches": 0,
+    "sourceReview": "Diagnostics capture ChordCanvas actions/state only; no raw global keystrokes, browser/microphone content or unrelated host state; file actions omit full personal paths"
+  },
+  "limits": "Not complete source-to-product acceptance, tagged reproducibility or published release-byte verification"
+}

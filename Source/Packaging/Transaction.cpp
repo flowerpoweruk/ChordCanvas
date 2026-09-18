@@ -28,7 +28,10 @@ bool hashValid(const std::string& value){return value.size()==64 && std::all_of(
 void renameOwned(const std::filesystem::path& from,const std::filesystem::path& to){if(!MoveFileExW(from.c_str(),to.c_str(),MOVEFILE_WRITE_THROUGH))throw std::runtime_error("Installation rename failed; save and close the host, then retry");}
 void available(const std::filesystem::path& path){
     if(!std::filesystem::exists(path))return;
-    Handle file;file.value=CreateFileW(path.c_str(),GENERIC_READ|DELETE,0,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);
+    // Image sections can outlive every ordinary file handle. READ/DELETE alone
+    // permits renaming a loaded DLL; WRITE_DATA forces Windows' image-section
+    // conflict check without writing any bytes (Microsoft: Executable Images).
+    Handle file;file.value=CreateFileW(path.c_str(),GENERIC_READ|GENERIC_WRITE|DELETE,0,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);
     if(file.value==INVALID_HANDLE_VALUE)throw std::runtime_error("Installed files are in use or inaccessible; save and close the host, then retry");
 }
 void ancestorSafety(const std::filesystem::path& path){auto current=path;for(;;){if(!plainPath(current))throw std::runtime_error("Unsafe installation ancestor");auto next=current.parent_path();if(next==current || next.empty())break;current=next;}}

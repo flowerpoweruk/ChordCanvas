@@ -66,6 +66,7 @@ extern "C" __declspec(dllexport) int WINAPI CC_UninstallCheck(const wchar_t* app
         auto root=parent/L"ChordCanvas.vst3";auto payload=Payload::read(root);payload.validate(root);InstallMetadata current(product(),HKEY_LOCAL_MACHINE,key,module(),payload.version);current.checkUninstall(payload.version);
         std::vector<std::filesystem::path> files={root/receiptName,product()/L"chordcanvas.install"};
         if(std::filesystem::exists(product()/L"unins000.msg"))files.push_back(product()/L"unins000.msg");for(auto& file:payload.files)files.push_back(root/file.relative);
-        for(auto& file:files){auto handle=CreateFileW(file.c_str(),GENERIC_READ|DELETE,0,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);if(handle==INVALID_HANDLE_VALUE)return -4;CloseHandle(handle);}return 0;
+        // Match update's image-section check; no write operation is performed.
+        for(auto& file:files){auto handle=CreateFileW(file.c_str(),GENERIC_READ|GENERIC_WRITE|DELETE,0,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);if(handle==INVALID_HANDLE_VALUE)return -4;CloseHandle(handle);}return 0;
     }catch(const std::exception& fault){return error(fault);}catch(...){return -1;}
 }
