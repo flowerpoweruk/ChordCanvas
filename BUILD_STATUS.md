@@ -2,6 +2,20 @@
 
 ## Current execution record — 18 September 2026
 
+### Iteration 2 — resumed and verified independent core
+
+User authorised continuation after the interruption. Fixed missing LLVM runtime search-path startup by static runtime linking and a development PATH fallback; CTest now completes. Latest core including progression persistence compiled in Release. `Scripts/build-core.ps1`: PASS, 13.46 seconds on the second run. Actual core output reports 30,870 voicing cases, MIDI range 36–125, 20,000 random commands, 30,000 concurrent mailbox publications and 683,816 assertions on the first successful run (concurrent-consumption assertion count varies).
+
+Four original sounds produced finite signal at 48 kHz with observed RMS/peak: Piano .0373431/.169964; Guitar .0174645/.155925; Strings .0279154/.0924241; Pad .0326126/.10709. Automated signal/release checks passed; this is not listening or installed-host sound acceptance.
+
+Independent `Scripts/verify-midi.py build/core`: mido 1.3.3 PASS for exact 12 events, fixed channel/velocities, off-before-on ordering, event allowlist and EOT 30720; empty file has zero notes/EOT 30720. Fixed the initial reporting-only mido version attribute error and reran. `Scripts/verify-theory.py build/core/theory_probe.exe Tests/Fixtures/music21-scales.json`: music21 10.5.0 PASS for all 30,870 voicings and 42 scale spellings; retained independently generated scale fixtures. Initial oracle run completed comparisons but failed writing a missing fixture directory; fixed parent creation and reran successfully. Static executable imports were inspected; LLVM libc++/libunwind DLL imports are absent after static linking.
+
+Standard configured Git Credential Manager provides authenticated **flowerpoweruk** access without interactive login. Credentials were used transiently, never printed or stored in source. Rechecked repository absence via API and created exact public repository **https://github.com/flowerpoweruk/ChordCanvas**. Initial commit `0dd2647` pushed to main successfully. This resolves repository-creation access; browser login is no longer needed for source control. JUCE/project licensing remains unresolved; no JUCE was downloaded or licence assigned.
+
+Live 12.4.3 launched; launch initially timed out waiting for its window but subsequent returned-window discovery succeeded. Inspected the actual disposable Untitled workspace. First screen explicitly reported “Saving and exporting are deactivated.” No licence activation attempted. MIDI extent investigation is ongoing; no plug-in/native-drag or project-lifecycle PASS follows from this observation. Host screenshots stay private.
+
+Previous iteration/handover content below is historical. All current unit results are evidence-layer results, not substitutes for required U/H/W acceptance. UI, diagnostics and Setup/Updater remain under development, and no stable release exists.
+
 **Incomplete development iteration, not a release.** Development source version 0.1.0. The original handover tables below remain historical; this execution record is the current status. No VST3, Setup.exe or Updater.exe has been delivered. All 148 acceptance scenarios are individually recorded as NOT RUN in `engineering/acceptance-results.json`.
 
 Read AGENTS.md, master brief and every numbered specification 01–13 in full before implementation, re-reading truncated sections separately. Initial folder contained only the 16 handover Markdown files and was not a Git repository. Initialised local main without overwriting unrelated work.

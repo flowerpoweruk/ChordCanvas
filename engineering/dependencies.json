@@ -1,0 +1,11 @@
+{
+  "projectLicense": "UNRESOLVED: no licence grant inferred from public visibility",
+  "runtimeAssets": "Original native additive synthesis; no third-party samples or fonts bundled",
+  "framework": {"name": "JUCE", "revision": null, "licenseRoute": "UNRESOLVED", "downloaded": false},
+  "development": [
+    {"name": "LLVM-MinGW", "version": "20260908-ucrt-x86_64", "compiler": "Clang 23.1.1", "url": "https://github.com/mstorsjo/llvm-mingw/releases/tag/20260908", "archiveSha256": "1bcf74d06b724aeecaa6412ca85f5b26fb1da770e7cdcefa9263c9c5c3ad34b6", "rights": "Compiler tools used for development; inspect bundled notices before distributing runtime code"},
+    {"name": "CMake", "version": "4.4.3", "url": "https://github.com/Kitware/CMake/releases/tag/v4.4.3", "archiveSha256": "4d52ebab7193a698651639ed80d8d04fd903358843572cf44c7fd234cb7c26ab", "shipped": false},
+    {"name": "music21", "version": "10.5.0", "url": "https://music21.org/", "shipped": false, "purpose": "Independent theory oracle"},
+    {"name": "mido", "version": "1.3.3", "url": "https://mido.readthedocs.io/", "shipped": false, "purpose": "Independent SMF parser"}
+  ]
+}

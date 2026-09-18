@@ -43,4 +43,4 @@ for filename in ('chords.mid', 'empty.mid'):
     else:
         assert notes == []
     results.append({'file': filename, 'status': 'PASS', 'endTick': tick, 'events': len(notes)})
-print(json.dumps({'parser': 'mido '+mido.version_info.version, 'results': results}, indent=2))
+print(json.dumps({'parser': 'mido '+str(mido.version_info), 'results': results}, indent=2))
