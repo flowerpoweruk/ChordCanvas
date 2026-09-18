@@ -1,7 +1,7 @@
 {
   "scope": "Development core/integration executables; not installed VST3 or release packages",
   "version": "0.1.0-development",
-  "source": "d624b97585a540e77e3d4827e93f07d5cf001082+dirty",
+  "source": "62a9d1d36bcb973d3c861eb2c457f4443fe29b12+dirty",
   "date": "2026-09-18",
   "environment": {
     "windows": "Windows 11 Home 10.0.26200 x64",
@@ -13,7 +13,7 @@
   },
   "testCommands": [
     "Scripts/build-core.ps1",
-    "Scripts/verify-logs.py build/core/log-tests-23292-CC439381-B71A-42E6-994B-FF244E91EF7E",
+    "Scripts/verify-logs.py build/core/log-tests-12884-938A3451-B6FA-4795-9B96-6BA604072BE9",
     "Scripts/verify-midi.py build/core",
     "Scripts/verify-theory.py build/core/theory_probe.exe Tests/Fixtures/music21-scales.json",
     "Scripts/measure-audio.ps1",
@@ -22,22 +22,23 @@
   "ctest": {
     "status": "PASS",
     "tests": 13,
-    "totalSeconds": 17.87,
-    "audioFidelitySeconds": 0.41,
-    "coreSeconds": 2.49,
-    "diagnosticsSeconds": 1.95,
-    "exportCacheSeconds": 0.06,
-    "packageVersionSeconds": 0.03,
-    "payloadSeconds": 0.17,
-    "transactionSeconds": 2.74,
+    "totalSeconds": 17.75,
+    "audioFidelitySeconds": 0.47,
+    "coreSeconds": 2.8,
+    "diagnosticsSeconds": 1.98,
+    "exportCacheSeconds": 0.08,
+    "packageVersionSeconds": 0.02,
+    "payloadSeconds": 0.2,
+    "transactionSeconds": 2.7,
     "registrySeconds": 0.05,
-    "participantSeconds": 1.42,
-    "installMetadataSeconds": 8.23,
+    "participantSeconds": 1.43,
+    "installMetadataSeconds": 7.71,
     "installerApiSeconds": 0.03,
-    "clockSeconds": 0.12,
+    "clockSeconds": 0.14,
     "sessionEventsSeconds": 0.04
   },
   "coreOutput": [
+    "PASS: 72 direct-equation held/released cases; 1128600 samples, maximum absolute error 2.98023e-08, RMS error 9.85111e-10; nonuniform buffers, all sounds, five registers and four-note chords",
     "Theory: 30870 combinations; MIDI 36..125",
     "Timeline: 20,000 deterministic random commands",
     "Mailbox: 30,000 concurrent publications",
@@ -45,19 +46,18 @@
     "Sound 1: RMS 0.0174645, peak 0.155925",
     "Sound 2: RMS 0.0279154, peak 0.0924241",
     "Sound 3: RMS 0.0326126, peak 0.10709",
-    "PASS: 792535 assertions",
+    "PASS: 791511 assertions",
     "PASS: five-session rotation, active-session preservation, bounded compaction/queues, storage failure and four-producer audio ring",
     "PASS: exclusive drag leases, exact bytes, 24-hour grace, stale cleanup, bounded admission and safe failure",
     "PASS: numeric release SemVer ordering, bounds and explicit prerelease refusal",
     "PASS: SHA256, complete owned file tree, numeric version, malformed paths, corruption and AMD64 PE validation",
     "PASS: fresh install, absent update, four real rollback boundaries, nine actual abrupt child-process recoveries, cross-process mutex, held finalisation rollback, bounded locked-backup cleanup, file locks, numeric update, repair, downgrade and unknown-file preservation",
-    "PASS: 72 direct-equation held/released cases; 1128600 samples, maximum absolute error 2.98023e-08, RMS error 9.85111e-10",
     "PASS: disposable HKCU 64-bit typed snapshots, Unicode string contents, exact restoration, allowed forward cleanup, unknown value/subkey preservation, strict bounds/format and absent rollback; no product or HKLM key touched",
     "PASS: eleven real interrupted joint bundle/registry recoveries, fresh absence, exact previous metadata, missing participant refusal, descriptor tampering before mutation, failed finalisation rollback and coherent successful commit; synthetic HKCU only",
-    "PASS: twenty-three real abruptly exited metadata processes, retained uninstall directory and typed registration recovery; synthetic AMD64 fixtures/HKCU only",
-    "PASS: native helper DLL read-only support/version/export/absent-source updater probe; no product installation started",
-    "PASS: exact fractional/unknown/retained tempo, preview-only initial fallback, Sync first-valid start, meter/transport/format/bypass metadata, reattachment and overflow coalescing; 20000 quiet callbacks",
-    "PASS: semantic message-thread ownership, latch/transport, validated selection/post-paste context and diagnostic exception isolation; native formatter/GUI wiring uncompiled"
+    "PASS: twenty-three actual abrupt processes across bundle, metadata, registration, sealing and retirement boundaries; exact old directory/registry restoration, fresh absence, interrupted orphan retirement, unfinished-finalisation rollback, coherent update, unknown-file and loaded-uninstaller replacement refusal; synthetic payloads and HKCU only",
+    "PASS: actual native DLL load, exports, Windows 11 native AMD64 support and version 0.1.0; read-only absent-source updater returned -2; no installation started",
+    "PASS: unknown fallback, exact valid tempo, last-valid retention, explicit meter/transport/buffer/rate/bypass observations, sink attachment and bounded overflow coalescing; 20000 quiet callbacks",
+    "PASS: message-thread semantic ownership, keyboard-repeat suppression, latch/rate/transport, validated selection, post-paste context and diagnostic exception isolation; no GUI/host claim"
   ],
   "diagnosticParser": {
     "status": "PASS",
@@ -105,19 +105,19 @@
   "testExecutables": [
     {
       "file": "core_tests.exe",
-      "sha256": "dde55af225c63034ef219ef589e7448d5dc3d7d0e3f7df01fd633fbd5c4a6180"
+      "sha256": "69e74b9bc09fcffaac644681793864257fb09e3995997634c2ee116946c97f1e"
     },
     {
       "file": "log_tests.exe",
-      "sha256": "cd8fd7ee70828e3e611b67321f11442bf29d6a14d8769423bce666a4e757d685"
+      "sha256": "4158621ff87f3045c3ec30c88b77505b262026e0850c9c5c98df09bbaba05675"
     },
     {
       "file": "theory_probe.exe",
-      "sha256": "02967544280d09c4944a5432e14ce8266729a384fa066ae97dffa3d8353aa911"
+      "sha256": "4cea204c086c513ff1946abdc2ba5b5700f8cbbc71f99914563678b9e750acdb"
     },
     {
       "file": "export_cache_tests.exe",
-      "sha256": "16f7aa4c65205a2fe81304c8cd919a2b69c94f6573f87837a9b5e8282df88383"
+      "sha256": "921ba69cf331dec4a827d817c57ab385e1ae146bfeb6c95e89363d5152a79ada"
     },
     {
       "file": "package_version_tests.exe",
@@ -133,11 +133,11 @@
     },
     {
       "file": "audio_probe.exe",
-      "sha256": "413717eeb340914769633830c06aff996bb3c76536cf981f391b09c756dadd01"
+      "sha256": "dc39cef59853552fb8277a1a5c008a664095fd68c3457a2240a47d3e621e0bdb"
     },
     {
       "file": "audio_fidelity_tests.exe",
-      "sha256": "0b4d4a948a335dc84c49ee8cc4e76288b224670a36692774328d59066f1d62fb"
+      "sha256": "f484b20b03ca4edae6bf223ddc9109f0346efa0d2e7aadb7121c1aba986bb69f"
     },
     {
       "file": "registry_tests.exe",
@@ -165,11 +165,11 @@
     },
     {
       "file": "clock_tests.exe",
-      "sha256": "4360eb4501274a4e7eb9a58ed3d94aa2ee96066f54c64ae359fef289c527c26a"
+      "sha256": "efb19fa811abe8b918d49fd2ddcc3c42ea861963a9ee6fb7cc8f316953849dce"
     },
     {
       "file": "session_events_tests.exe",
-      "sha256": "b4cb9603967ba3131e2c493aeef16b769dcd187b5685d4c04201134dca24eb62"
+      "sha256": "883c8407035f2a81132e387d3cde75c73446ef40b10044de31c5ea627a55ad19"
     }
   ],
   "architectureInspection": "llvm-readobj --file-headers core_tests.exe: COFF-x86-64, IMAGE_FILE_MACHINE_AMD64, 64-bit",
@@ -192,5 +192,6 @@
     "tests": 2,
     "seconds": 2.53,
     "coreAssertions": 791979
-  }
+  },
+  "innoRuntimeEvidence": "engineering/inno-runtime-evidence.json"
 }

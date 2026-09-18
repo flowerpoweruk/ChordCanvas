@@ -1,0 +1,113 @@
+{
+  "status": "PASS",
+  "scope": "Development-only synthetic AMD64 payload, generated folder, per-user Inno and HKCU; no product installation, VST3 host, elevation, clean-machine or network-isolation acceptance",
+  "scenarios": [
+    {
+      "scenario": "updater-without-installation",
+      "exitCode": 7,
+      "packageSha256": "f71d418ec8138e43bd10ba4cc9dacf6d9f6527e8c59b5f97d339f2a02f0738cc"
+    },
+    {
+      "scenario": "fresh-setup",
+      "exitCode": 0,
+      "packageSha256": "84e8d7e009668a9488e959666a43a057b883306ab6b399b44ce02af523b8d2f6"
+    },
+    {
+      "scenario": "numeric-full-payload-update",
+      "exitCode": 0,
+      "packageSha256": "f71d418ec8138e43bd10ba4cc9dacf6d9f6527e8c59b5f97d339f2a02f0738cc"
+    },
+    {
+      "scenario": "same-version-no-op",
+      "exitCode": 7,
+      "packageSha256": "f71d418ec8138e43bd10ba4cc9dacf6d9f6527e8c59b5f97d339f2a02f0738cc"
+    },
+    {
+      "scenario": "downgrade-refused",
+      "exitCode": 7,
+      "packageSha256": "84e8d7e009668a9488e959666a43a057b883306ab6b399b44ce02af523b8d2f6"
+    },
+    {
+      "scenario": "corrupt-payload-refused",
+      "exitCode": 7,
+      "packageSha256": "047357edc8f165704dc8bdd5119ffb6138691e640768a1c20b53fa9b75686450"
+    },
+    {
+      "scenario": "files-in-use-refused",
+      "exitCode": 7,
+      "packageSha256": "f72e1efc38832d171bf8ae95285294d06e165b336d1313b86e4d26a856a511cc"
+    },
+    {
+      "scenario": "late-finalisation-rollback",
+      "exitCode": 66,
+      "packageSha256": "f72e1efc38832d171bf8ae95285294d06e165b336d1313b86e4d26a856a511cc"
+    },
+    {
+      "scenario": "retry-after-rollback",
+      "exitCode": 0,
+      "packageSha256": "f72e1efc38832d171bf8ae95285294d06e165b336d1313b86e4d26a856a511cc"
+    },
+    {
+      "scenario": "actual-uninstaller",
+      "exitCode": 0,
+      "packageSha256": "3ce5514cc0bfa64a895809e32f91be5c35a659e9dabb7a2758dfe88f8400c404",
+      "workerCompletion": "Actual closed Inno log reports success, removed all, no restart; owned directories and HKCU entry absent"
+    },
+    {
+      "scenario": "fresh-late-finalisation-rollback",
+      "exitCode": 66,
+      "packageSha256": "84e8d7e009668a9488e959666a43a057b883306ab6b399b44ce02af523b8d2f6"
+    },
+    {
+      "scenario": "fresh-retry-after-rollback",
+      "exitCode": 0,
+      "packageSha256": "84e8d7e009668a9488e959666a43a057b883306ab6b399b44ce02af523b8d2f6"
+    },
+    {
+      "scenario": "fresh-retry-uninstaller",
+      "exitCode": 0,
+      "packageSha256": "ede6e5ada48504d49994567a1a15a3bed781e1a00877ea3f8a77c28dea18c641",
+      "workerCompletion": "Actual closed Inno log reports success, removed all, no restart; owned directories and HKCU entry absent"
+    }
+  ],
+  "date": "2026-09-18",
+  "source": "62a9d1d36bcb973d3c861eb2c457f4443fe29b12+dirty",
+  "command": "Tests/Integration/verify-inno-runtime.py --cmake <pinned CMake> --compiler <pinned LLVM> --make <pinned Make> --iscc <pinned Inno> --synthetic-pe build/core/core_tests.exe",
+  "environment": {
+    "windows": "Windows 11 Home 10.0.26200.9168 native AMD64",
+    "compiler": "LLVM-MinGW 20260908 UCRT / Clang 23.1.1; development-only fixture",
+    "cmake": "4.4.3",
+    "inno": "7.1.0 x64"
+  },
+  "helperSha256": "00ba6df4cb3dcf7272b570fa5e25f318564da7c1208eb00ba11cee0243517731",
+  "syntheticPayloadSha256": "dde55af225c63034ef219ef589e7448d5dc3d7d0e3f7df01fd633fbd5c4a6180",
+  "shippingRuntimeAcceptance": "NOT RUN",
+  "elevation": "NOT RUN",
+  "networkIsolation": "NOT RUN",
+  "actualVst3Host": "NOT RUN",
+  "initialFailures": [
+    "First ownership-marker fixture used CRLF instead of its required LF; unsupported-path result and an unsuppressed custom MsgBox led to an actual 60-second timeout. Only verified disposable fixture processes were terminated; no owner process or installation was touched.",
+    "Second run completed all package operations but incorrectly checked uninstaller removal immediately after its launcher returned; the temporary worker completed successfully afterward. Verification now observes the closed success log and directory/registration absence."
+  ],
+  "corrections": [
+    "Fixture marker written with exact LF.",
+    "Shared production script uses SuppressibleMsgBox with IDOK for documented /SUPPRESSMSGBOXES support; ordinary interactive behaviour retained.",
+    "Actual uninstaller verification observes the temporary worker completion and no-restart result."
+  ],
+  "preservation": "Actual unchanged hashes of representative user-owned and unrelated-vendor sentinels across update, rollback and uninstall; byte-exact old installation and native 64-bit HKCU registration after late update failure; fresh late failure restores complete absence.",
+  "shippingDefinitionCompiles": {
+    "status": "PASS",
+    "executed": false,
+    "scope": "Updated production Setup/Updater definitions compiled with synthetic core executable inputs only; these production-path fixtures were not executed.",
+    "artifacts": [
+      {
+        "file": "Setup.exe",
+        "sha256": "fae7b6c35106f2accae8f3c30ca6c340722cc51c1274296da5ac5f91dfb872e1"
+      },
+      {
+        "file": "Updater.exe",
+        "sha256": "38bec1ee4d79fd3f9b0474637806f36a432311a28db646ff5e2c446c6c1bf28a"
+      }
+    ]
+  }
+}

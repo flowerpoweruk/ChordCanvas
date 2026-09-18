@@ -2,6 +2,20 @@
 
 ## Current execution record — 18 September 2026
 
+### Iteration 11 — actual isolated Inno execution and observed uninstall completion
+
+Iteration 10 committed/pushed as **62a9d1d36bcb973d3c861eb2c457f4443fe29b12**; actual remote main matched. Owner-authorised AGPL/public source remains in effect. Investigated Microsoft Community 2026 terms in full: individual use and OSI-licensed application development provide a free route. Requested minimum authority to install Microsoft-signed Community (verified valid signature; SHA256 **e99867faceaa394f1c5b22b83ffacaf6d81b0e5f847b71e99123ca0d96289433**). Pending response/UAC; no Community installation or Microsoft project compilation performed. Live remains open; no owner work closed. A new separate native build directory can avoid the old development DLL link lock once licensing is resolved.
+
+Shared the production transaction event script with an explicit development-only Inno fixture. Its adapter is pinned at build time to a generated project build/UUID directory and owner marker, with a distinct per-user uninstall identity and HKCU entry; it cannot use shipping Program Files/HKLM paths. Production packaging never builds or includes this adapter. No synthetic production-path installer was executed.
+
+Actual **13 disposable Inno process scenarios PASS**: no-install updater refusal, fresh Setup, numeric 1.9.0→1.10.0 full-payload update, identical-version no-op, downgrade/corruption/file-in-use refusals, late update finalisation failure **exit 66** with byte-exact previous files/registration restored, retry to 1.11.0, real uninstall, late fresh finalisation failure **exit 66** restoring absence, fresh retry and second real uninstall. User-owned/unrelated-vendor sentinels retain their hashes; actual uninstall worker logs close successfully with removed-all/no-restart, owned directories and registration absent. Existing durable transaction markers are absent afterward. These are **synthetic AMD64 payload/per-user development tests**, not shipping VST3/HKLM/elevation/clean-machine/network-disabled or Live acceptance.
+
+Initial fixture marker CRLF caused ownership refusal; an actual 60-second timeout exposed unsuppressed custom dialogs. Corrected marker and shared production messages to documented `SuppressibleMsgBox(..., IDOK)`; normal interactive messages retained. Only identity-verified own disposable fixture processes were terminated. A second run revealed premature uninstall checking: the launcher returns while its temporary worker finishes. Verification now observes actual worker log completion and absence rather than inferring success from launch exit. Failures preserved in sanitized evidence; raw logs remain private/ignored.
+
+Updated production Setup/Updater definitions both **compiled PASS** with synthetic inputs only; unexecuted/non-deliverable. `Scripts/build-core.ps1` **13/13 PASS, 17.75 s / 791,511 assertions**; independent strict parser **12 synthetic files / five clock changes PASS**. Actual hashes, scenario exits, observed worker completions and limits recorded in `engineering/inno-runtime-evidence.json` and updated core receipt.
+
+Continue: obtain the pending free Community installation authority/UAC, compile the corrected VST3/helper in a separate directory, run actual rendered GUI and Live acceptance, resolve trailing/empty MIDI import and host save restrictions, then execute legally cleared product packages. **No accepted Setup.exe/Updater.exe, stable tag or binary release exists.**
+
 ### Iteration 10 — semantic audition/selection diagnostics and failure isolation
 
 Iteration 9 committed/pushed as **d624b97585a540e77e3d4827e93f07d5cf001082**; actual remote main matched. Pending Microsoft entitlement and owner-safe Live closure still prevent corrected native compilation/load. No owner work dismissed, Microsoft project build executed or binary distributed.
