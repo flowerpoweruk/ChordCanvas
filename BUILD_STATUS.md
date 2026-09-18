@@ -2,6 +2,18 @@
 
 ## Current execution record — 18 September 2026
 
+### Iteration 6 — measured sound-engine performance and fidelity
+
+Iteration 5 committed and pushed as **24a5981aa97a3a03de69e3d126ef584b030f0c19**; actual remote main matched. Pending owner-safe Live closure and Visual Studio entitlement confirmation remain unchanged; no further Microsoft project build or binary distribution.
+
+Measured 72 offline cases at 44.1/48/96 kHz, buffers 64/256/1024, all four sounds, dense 32-bar four-tone timeline edits and fastest repeats at stress tempo 999 BPM. Production bounded audio diagnostics attached. Baseline worst average CPU fraction **0.750503258**, worst measured call/deadline **1.845**: an actual performance defect. Cached per-articulation frequency/envelope coefficients, fixed prepared 8192-entry interpolated sine table and inaudible envelope floor remove repeated expensive synthesis work. Original harmonics/Nyquist limit, four distinct sounds and note timing preserved.
+
+Final `Scripts/measure-audio.ps1` **PASS**: worst average CPU fraction **0.326283710**, worst call/deadline **0.822300000**, zero guarded C++ allocations/deallocations. These are normal-priority offline observations on an AMD Ryzen 9 270 (8 cores/16 threads), not a universal timing guarantee or Live callback pass. The guard covers C++ new/delete, not arbitrary CRT malloc or the JUCE/host wrapper. Baseline development executable was rebuilt before hashing; its hash is unknown, while measured JSON/source blob and final executable/source hashes are recorded honestly in `engineering/audio-evidence.json`.
+
+Independent direct-equation fidelity **PASS**: 72 held/released sound/register/rate cases, four-tone chords, nonuniform 17/127/256-frame blocks; **1,128,600 samples**, max absolute difference **2.98023e-8**, RMS **9.85111e-10** (limit 2e-6). Follow-up passed after correcting a test pattern that initially skipped the intended 127-frame buffer. `Scripts/build-core.ps1` **7/7 PASS, 8.52 s / 792,361 assertions**; independent parser **12 synthetic logs PASS**. Relevant tests cover release expiry, repeat timing, safe bypass and unchanged timbre RMS/peaks. Actual listening, installed host stress, GUI/DPI and native drag acceptance remain unrun/failed as previously recorded.
+
+No completed Setup.exe or Updater.exe is claimed. Next independent work: installer metadata/uninstaller participation and native adapter; resume corrected VST3 link/Live proof once pending external gates are resolved.
+
 ### Iteration 5 — retained finalisation and actual interrupted-bundle recovery
 
 Iteration 4 was committed and pushed successfully as **7fef8c2794c0bbf26581fd47d82e76ff3d3edc02**; `git ls-remote` confirmed matching main. Source and honest first-build/host-failure receipts are public. No binaries were distributed. Owner Live closure and Visual Studio licence confirmation remain pending; Microsoft project compilation is paused.

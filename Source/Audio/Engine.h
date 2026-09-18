@@ -55,18 +55,28 @@ public:
     std::atomic<bool> uiRunning {false},uiOverride {false},uiMeter {true},uiTempoKnown {false};
     uint64_t articulations() const noexcept { return articulationCount; }
 private:
-    struct Voice { bool active=false,held=false;int note=0;Sound sound=Sound::piano;double phase=0,age=0,release=1; };
+    struct Voice {
+        bool active=false,held=false;Sound sound=Sound::piano;
+        int harmonics=0;double phase=0,increment=0,age=0,release=1;
+        double releaseFactor=1,attackRemaining=1,attackFactor=1;
+        std::array<double,12> amplitude{},decay{};
+    };
     std::array<Voice,32> voices {};
     AudioFrame frame;
     NoteSet sounding;
     uint64_t source=0,articulationCount=0;
     double rate=48000,tick=0,bpm=120,repeatPhase=0;
     float smoothGain=0.25118864f;
+    float gainFactor=0;
+    static constexpr int waveSize=8192;
+    std::array<double,waveSize+1> wave{};
+    bool waveReady=false;
     bool running=false,lastHost=false,knownTempo=false,meterValid=true;
     int activeVoices=0;
     void release() noexcept;
     void trigger(NoteSet notes,uint64_t owner) noexcept;
     float sample(Voice& v) noexcept;
+    double sine(double cycles) const noexcept;
     const PlaybackBlock* blockAt(double time) const noexcept;
 };
 }

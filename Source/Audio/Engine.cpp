@@ -22,7 +22,12 @@ bool FrameMailbox::consume(AudioFrame& value) noexcept {
     front=middle.exchange(front,std::memory_order_acq_rel)&3u;
     value=slots[front];return true;
 }
-void Engine::prepare(double sr) noexcept { rate=std::isfinite(sr) && sr>=8000 ? sr : 48000;reset(); }
+void Engine::prepare(double sr) noexcept {
+    rate=std::isfinite(sr) && sr>=8000 ? sr : 48000;
+    gainFactor=static_cast<float>(1-std::exp(-1/(rate*0.01)));
+    if(!waveReady){for(int i=0;i<=waveSize;++i)wave[i]=std::sin(2*std::numbers::pi*i/waveSize);waveReady=true;}
+    reset();
+}
 void Engine::reset() noexcept {
     for(auto& v:voices) v={};sounding={};source=0;running=false;activeVoices=0;
     frame.previewOwner=0;frame.preview={};frame.localRun=false;
@@ -37,7 +42,20 @@ void Engine::trigger(NoteSet notes,uint64_t owner) noexcept {
         if(notes.notes[i]<0 || notes.notes[i]>127) continue;
         auto it=std::find_if(voices.begin(),voices.end(),[](auto& v){return !v.active;});
         if(it==voices.end()) it=std::min_element(voices.begin(),voices.end(),[](auto& a,auto& b){return a.release<b.release;});
-        *it={true,true,notes.notes[i],frame.sound,0,0,1};
+        *it={};it->active=true;it->held=true;it->sound=frame.sound;
+        double frequency=440*std::exp2((notes.notes[i]-69)/12.0);
+        it->increment=frequency/rate;
+        it->releaseFactor=std::exp(-1/(rate*(it->sound==Sound::strings || it->sound==Sound::pad ? .07 : .025)));
+        it->attackFactor=std::exp(-1/(rate*(it->sound==Sound::strings ? .07 : it->sound==Sound::pad ? .12 : .002)));
+        for(int h=1;h<=12 && frequency*h<rate*.45;++h){
+            auto index=h-1;++it->harmonics;it->decay[index]=1;
+            switch(it->sound){
+                case Sound::piano:it->amplitude[index]=1/(h*h*.65);it->decay[index]=std::exp(-(0.6+h*.32)/rate);break;
+                case Sound::guitar:it->amplitude[index]=std::sin(h*1.13)/h;it->decay[index]=std::exp(-(1.0+h*.65)/rate);break;
+                case Sound::strings:it->amplitude[index]=.5/h;break;
+                case Sound::pad:it->amplitude[index]=std::exp(-h*.7)*1.3;break;
+            }
+        }
     }
 }
 const PlaybackBlock* Engine::blockAt(double time) const noexcept {
@@ -46,24 +64,29 @@ const PlaybackBlock* Engine::blockAt(double time) const noexcept {
     if(lo>0 && time<frame.blocks[lo-1].end) return &frame.blocks[lo-1];
     return nullptr;
 }
+double Engine::sine(double cycles) const noexcept {
+    cycles-=std::floor(cycles);double position=cycles*waveSize;
+    int index=static_cast<int>(position);
+    if(index>=waveSize)return wave[0]; // Negative values very near zero can round up during wrapping.
+    // A fixed table, prepared outside processing, bounds the oscillator work.
+    return wave[index]+(wave[index+1]-wave[index])*(position-index);
+}
 float Engine::sample(Voice& v) noexcept {
     constexpr double tau=2*std::numbers::pi;
-    double frequency=440*std::exp2((v.note-69)/12.0);
-    v.phase+=frequency/rate;if(v.phase>=1)v.phase-=std::floor(v.phase);
+    v.phase+=v.increment;if(v.phase>=1)v.phase-=std::floor(v.phase);
     v.age+=1/rate;
-    if(!v.held) v.release*=std::exp(-1/(rate*(v.sound==Sound::strings || v.sound==Sound::pad ? 0.07 : 0.025)));
+    if(!v.held) v.release*=v.releaseFactor;
     if(v.release<0.00005){v.active=false;return 0;}
-    double output=0,attack=1-std::exp(-v.age/(v.sound==Sound::strings ? 0.07 : v.sound==Sound::pad ? 0.12 : 0.002));
+    v.attackRemaining*=v.attackFactor;if(v.attackRemaining<1e-20)v.attackRemaining=0;
+    double output=0,attack=1-v.attackRemaining;
+    double vibrato=v.sound==Sound::strings ? .015*sine(5.2*v.age)/tau : 0;
     // Original additive voices. Harmonics above Nyquist are never generated.
-    for(int h=1;h<=12 && frequency*h<rate*0.45;++h) {
-        double amplitude=0,angle=tau*v.phase*h;
-        switch(v.sound) {
-            case Sound::piano: amplitude=std::exp(-v.age*(0.6+h*0.32))/(h*h*0.65);break;
-            case Sound::guitar: amplitude=std::exp(-v.age*(1.0+h*0.65))*std::sin(h*1.13)/h;break;
-            case Sound::strings: amplitude=0.5/h;angle+=0.015*h*std::sin(tau*5.2*v.age);break;
-            case Sound::pad: amplitude=std::exp(-h*0.7)*1.3;angle+=0.18*std::sin(tau*0.8*v.age+h);break;
-        }
-        output+=amplitude*std::sin(angle);
+    for(int h=1;h<=v.harmonics;++h) {
+        auto index=h-1;v.amplitude[index]*=v.decay[index];
+        if(std::abs(v.amplitude[index])<1e-20)v.amplitude[index]=0; // No inaudible denormal tails.
+        double cycles=(v.phase+vibrato)*h;
+        if(v.sound==Sound::pad)cycles+=.18*sine(.8*v.age+h/tau)/tau;
+        output+=v.amplitude[index]*sine(cycles);
     }
     return static_cast<float>(output*attack*v.release*0.15);
 }
@@ -107,7 +130,7 @@ void Engine::process(float* left,float* right,int count,HostClock host,bool bypa
         float value=0;activeVoices=0;
         for(auto& v:voices)if(v.active){value+=sample(v);++activeVoices;}
         float target=std::isfinite(frame.gain) ? std::clamp(frame.gain,0.0f,1.0f) : 0.0f;
-        smoothGain+=(target-smoothGain)*static_cast<float>(1-std::exp(-1/(rate*0.01)));
+        smoothGain+=(target-smoothGain)*gainFactor;
         value=std::tanh(value*smoothGain);left[i]=value;right[i]=value;
         if(running){tick+=step;if(tick>=frame.end)tick-=frame.end;}
     }
