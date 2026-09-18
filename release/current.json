@@ -1,14 +1,10 @@
 {
-  "version": "0.1.3",
-  "buildNumber": 4,
+  "version": "0.1.4",
+  "buildNumber": 5,
   "channel": "development",
   "date": "2026-09-18",
   "changes": [
-    "Keep narrow chord labels and menu indicators inside their blocks.",
-    "Name the selected chord's editor and refresh popover chord labels immediately.",
-    "Show distinct block hover and resize-edge feedback.",
-    "Keep the whole fitted timeline visible when the editor is resized.",
-    "Report the host executable product version instead of its generic fixed resource."
+    "Disable timeline timing edits while the host reports a meter other than 4/4."
   ],
   "installerId": "{EE56A5B5-24E6-4F83-B3AF-1C73BCD93594}",
   "manufacturerCode": "ChCv",

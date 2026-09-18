@@ -1,0 +1,92 @@
+{
+  "date": "2026-09-18",
+  "installedTestVersion": "0.1.3",
+  "installedSource": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+  "host": "Ableton Live 12 Suite 12.4.5; Windows 11 x64; 44.1 kHz/256 frames",
+  "collision": {
+    "originalIntervals": [
+      [
+        0,
+        3840
+      ],
+      [
+        3840,
+        7680
+      ]
+    ],
+    "insertedInterval": [
+      2880,
+      6720
+    ],
+    "insertedNotes": [
+      60,
+      64,
+      67
+    ],
+    "remainingBlocks": 1,
+    "exactUndoRestoration": true
+  },
+  "groupPointerReview": {
+    "marqueeSelected": [
+      1,
+      2
+    ],
+    "movedIntervals": [
+      [
+        3840,
+        7680
+      ],
+      [
+        7680,
+        11520
+      ]
+    ],
+    "selectedMemberDragPreservesGroup": true,
+    "musicalFieldsUnchanged": true,
+    "exactUndoRestoration": true,
+    "completeBoundaryAndGridCoverage": "NOT RUN"
+  },
+  "unsupportedMeter": {
+    "status": "FAIL in installed 0.1.3",
+    "reportedNumerator": 3,
+    "reportedDenominator": 4,
+    "tempoBpm": 120,
+    "hostPlaying": false,
+    "visibleState": "4/4 required; Play disabled",
+    "observedDefect": "Body drag still moves timeline blocks while host reports 3/4",
+    "correction": "0.1.4 guards pointer commits/pad append/length/history/timing shortcuts, disables timing controls; pad controls and export retained",
+    "correctedHostRetest": "NOT RUN"
+  },
+  "developmentBuild": {
+    "sourceCommit": "04b79520e7510b3d9c294b12e5d9d0409b959667",
+    "sourceDirty": true,
+    "version": "0.1.4",
+    "buildNumber": 5,
+    "configuration": "Release",
+    "tests": "PASS",
+    "visualStudioVersion": "18.10.12210.168",
+    "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+    "pluginSha256": "54e75bba390c2c401a0f6d1e182bf15a9616fb9ebd0311b97f2657d1e663beed",
+    "moduleInfoSha256": "d55cf41317d0d0d951b2127862b8882b4c8b8adea9af78b19d490698c4395ea1",
+    "helperSha256": "c549ffc2a31084a4c20f4d90a15ba48bd46ff1d9a514a52cf57e586ecbffb833",
+    "releaseMetadataSha256": "4bebbb5a615f9af4ae083ea20c77779fc5fc0f25fa4830341d52acfc42fecf65"
+  },
+  "developmentValidation": {
+    "command": "Scripts/build-plugin.ps1 -BuildDirectory build/plugin-shortcuts -VisualStudioLicenseConfirmed",
+    "exitCode": 0,
+    "tests": "13/13 PASS",
+    "seconds": 42.71,
+    "validator": "47 PASS/0 FAIL/exit 0",
+    "processing": "PASS/exit 0",
+    "privateCaptures": "Ignored build/meter-guard-final-build-private.txt, build/meter-final-validator-private.txt, build/meter-final-processing-private.txt"
+  },
+  "keyboardReview": {
+    "status": "NOT RUN for Ctrl clipboard acceptance",
+    "actualOrdinaryDelete": "Deletes selected block in native VST3 harness",
+    "actualCtrlShortcuts": "Ctrl+A/C/Z no document action; Ctrl+Delete behaves like unmodified Delete in same native editor",
+    "caseNormalizationExperiment": "13/13 tests PASS at48.24 seconds, but actual native Ctrl behavior unchanged; experimental code reverted",
+    "limitation": "Observed behavior indicates modifier delivery/routing limitation; physical keyboard product behavior is not proven by this automation",
+    "harnessClosed": "Both native windows closed normally, exit0; Live never force-closed"
+  },
+  "hostPreservation": "Additional manual edits/settings now observed in open unsaved Live Set; not discarded or overwritten; meter restoration inputs rejected on detected local interaction"
+}

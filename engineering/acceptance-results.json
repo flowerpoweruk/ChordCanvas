@@ -176,7 +176,7 @@
       "juce": "not downloaded; licence route pending",
       "sdk": "10.0.26100.0 available; not used by the MinGW core build"
     },
-    "expected": "Enumerate exactly 42 key entries: seven letters \u00d7 natural/sharp/flat \u00d7 Major/Minor. Check unique spelled identities, including B\u266f, E\u266f, F\u266d and C\u266d. Their collections reduce to 24 unique tonic-pitch-class/mode pairs; do not remove enharmonic entries.",
+    "expected": "Enumerate exactly 42 key entries: seven letters × natural/sharp/flat × Major/Minor. Check unique spelled identities, including B♯, E♯, F♭ and C♭. Their collections reduce to 24 unique tonic-pitch-class/mode pairs; do not remove enharmonic entries.",
     "requiredLayers": "C, U",
     "procedure": "Not yet executed as complete product acceptance",
     "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
@@ -239,7 +239,7 @@
       "juce": "not downloaded; licence route pending",
       "sdk": "10.0.26100.0 available; not used by the MinGW core build"
     },
-    "expected": "C Major yields C, Dm, Em, F, G, Am, Bdim; F Minor yields Fm, Gdim, A\u266d, B\u266dm, Cm, D\u266d, E\u266d. No harmonic-minor dominant is silently introduced.",
+    "expected": "C Major yields C, Dm, Em, F, G, Am, Bdim; F Minor yields Fm, Gdim, A♭, B♭m, Cm, D♭, E♭. No harmonic-minor dominant is silently introduced.",
     "requiredLayers": "C, U",
     "procedure": "Not yet executed as complete product acceptance",
     "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
@@ -260,7 +260,7 @@
       "juce": "not downloaded; licence route pending",
       "sdk": "10.0.26100.0 available; not used by the MinGW core build"
     },
-    "expected": "C\u266f Major and D\u266d Major have equivalent sounding notes/registers but preserve distinct labels; C\u266f Major includes E\u266fm and B\u266fdim. C\u266d Major retains valid C\u266d/F\u266d spellings.",
+    "expected": "C♯ Major and D♭ Major have equivalent sounding notes/registers but preserve distinct labels; C♯ Major includes E♯m and B♯dim. C♭ Major retains valid C♭/F♭ spellings.",
     "requiredLayers": "C, U",
     "procedure": "Not yet executed as complete product acceptance",
     "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
@@ -281,7 +281,7 @@
       "juce": "not downloaded; licence route pending",
       "sdk": "10.0.26100.0 available; not used by the MinGW core build"
     },
-    "expected": "G\u266f Major retains its key label, stores F-double-sharp theoretically and displays the simplified seventh-degree root G. Display substitutions preserve pitch and quality; no double-accidental glyph leaks into normal labels.",
+    "expected": "G♯ Major retains its key label, stores F-double-sharp theoretically and displays the simplified seventh-degree root G. Display substitutions preserve pitch and quality; no double-accidental glyph leaks into normal labels.",
     "requiredLayers": "C, U",
     "procedure": "Not yet executed as complete product acceptance",
     "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
@@ -302,7 +302,7 @@
       "juce": "not downloaded; licence route pending",
       "sdk": "10.0.26100.0 available; not used by the MinGW core build"
     },
-    "expected": "Five octave positions are 1\u20135, default 3. C-Major tonic root at position 3 is `[60,64,67]`; slots 1/2/4/5 shift all notes by \u221224/\u221212/+12/+24. Inspect the actual Live pitch naming separately; do not substitute ambiguous octave text for integer assertions.",
+    "expected": "Five octave positions are 1–5, default 3. C-Major tonic root at position 3 is `[60,64,67]`; slots 1/2/4/5 shift all notes by −24/−12/+12/+24. Inspect the actual Live pitch naming separately; do not substitute ambiguous octave text for integer assertions.",
     "requiredLayers": "C, H",
     "procedure": "Not yet executed as complete product acceptance",
     "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
@@ -344,7 +344,7 @@
       "juce": "not downloaded; licence route pending",
       "sdk": "10.0.26100.0 available; not used by the MinGW core build"
     },
-    "expected": "Optional sevenths follow the originating scale: Cmaj7 `[60,64,67,71]`; G7 in C Major; Bm7\u266d5 in C Major; Cm7 in F Minor. Check every degree in all keys.",
+    "expected": "Optional sevenths follow the originating scale: Cmaj7 `[60,64,67,71]`; G7 in C Major; Bm7♭5 in C Major; Cm7 in F Minor. Check every degree in all keys.",
     "requiredLayers": "C",
     "procedure": "All diatonic seventh pitches match independent music21; degree-quality name tables also asserted.",
     "observed": "All diatonic seventh pitches match independent music21; degree-quality name tables also asserted.",
@@ -428,7 +428,7 @@
       "juce": "not downloaded; licence route pending",
       "sdk": "10.0.26100.0 available; not used by the MinGW core build"
     },
-    "expected": "Exercise all **30,870** combinations: 42 keys \u00d7 7 degrees \u00d7 5 slots \u00d7 [3 suspension states \u00d7 (3 triad inversions + 4 seventh inversions)]. Pitches stay in 0\u2013127, ordered correctly, without duplicates or unintended wrapping.",
+    "expected": "Exercise all **30,870** combinations: 42 keys × 7 degrees × 5 slots × [3 suspension states × (3 triad inversions + 4 seventh inversions)]. Pitches stay in 0–127, ordered correctly, without duplicates or unintended wrapping.",
     "requiredLayers": "C",
     "procedure": "30,870 combinations passed exact pitch, ordered/distinct/range checks.",
     "observed": "30,870 combinations passed exact pitch, ordered/distinct/range checks.",
@@ -645,28 +645,30 @@
     "expected": "Resize either edge shorter/longer. The fixed opposite edge stays fixed, musical notes stay identical and duration never becomes less than 960 ticks. Left-edge resizing does not recalculate a chord.",
     "requiredLayers": "C, U",
     "procedure": "Actually drag both C edges shorter and longer. Attempt to resize C below 960 ticks; compare all recorded origins/voicings/resolved notes and opposite edges; Undo minimum clamp.",
-    "observed": "PASS: [3840,7680) \u2192 [3840,6720) \u2192 [4800,6720) \u2192 [4800,7680) \u2192 [3840,7680). Notes remain [60,64,67]. Under-minimum attempt clamps [0,960); one Undo exactly restores original progression.",
+    "observed": "PASS: [3840,7680) → [3840,6720) → [4800,6720) → [4800,7680) → [3840,7680). Notes remain [60,64,67]. Under-minimum attempt clamps [0,960); one Undo exactly restores original progression.",
     "defect": null
   },
   {
     "id": "TL-06",
-    "status": "NOT RUN",
-    "version": "0.1.0-development",
-    "evidence": "engineering/core-evidence.json",
-    "source": "1a35c74dc8b866376ebec3b13fa8db39ad46f828+dirty",
+    "status": "PASS",
+    "version": "0.1.3-installed-candidate",
+    "evidence": "engineering/meter-edit-evidence.json",
+    "source": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
     "date": "2026-09-18",
     "environment": {
-      "windows": "Windows 11 Home 10.0.26200 x64",
-      "live": "Ableton Live 12 Suite 12.4.3",
-      "compiler": "LLVM-MinGW 20260908 UCRT x86_64 / Clang 23.1.1",
+      "windows": "Windows 11 Home 10.0.26200.9168 x64",
+      "live": "Ableton Live 12 Suite 12.4.5",
+      "juce": "9.0.2",
+      "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+      "compiler": "MSVC 19.51.36257.0 x64 static Release runtime",
+      "sdk": "10.0.26100.0",
       "cmake": "4.4.3",
-      "juce": "not downloaded; licence route pending",
-      "sdk": "10.0.26100.0 available; not used by the MinGW core build"
+      "audio": "44.1 kHz / 256 frames / 120 BPM / 4/4"
     },
     "expected": "With A `[0,3840)` and B `[3840,7680)`, insert C `[2880,6720)`. A and B are removed completely; C retains its own 3840-tick length. No automatic ripple or retained fragments. Undo restores both originals.",
     "requiredLayers": "C, U",
-    "procedure": "Not yet executed as complete product acceptance",
-    "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
+    "procedure": "Actual native Load adjacent C/Dm fixture in installed0.1.3; drag Cpad to tick2880; inspect following snapshot, then one Undo and compare every original field.",
+    "observed": "PASS: both complete destination blocks removed; single C[2880,6720), notes[60,64,67]. One Undo restores exact original eight-bar progression.",
     "defect": null
   },
   {
@@ -1169,7 +1171,7 @@
       "juce": "not downloaded; licence route pending",
       "sdk": "10.0.26100.0 available; not used by the MinGW core build"
     },
-    "expected": "Property/fuzz tests perform bounded random edit sequences and assert no overlap, valid IDs, valid notes, starts \u22650, durations \u2265960, end \u2264122880, and consistent Undo/Redo. A failed validation leaves the old snapshot intact.",
+    "expected": "Property/fuzz tests perform bounded random edit sequences and assert no overlap, valid IDs, valid notes, starts ≥0, durations ≥960, end ≤122880, and consistent Undo/Redo. A failed validation leaves the old snapshot intact.",
     "requiredLayers": "C",
     "procedure": "20,000 seeded random operations checked invariants, note range and full undo/redo snapshots; invalid load left prior document intact.",
     "observed": "20,000 seeded random operations checked invariants, note range and full undo/redo snapshots; invalid load left prior document intact.",
@@ -1232,7 +1234,7 @@
       "juce": "not downloaded; licence route pending",
       "sdk": "10.0.26100.0 available; not used by the MinGW core build"
     },
-    "expected": "Repeat off: mouse-down on a pad sounds the chord; mouse-up stops its held notes, allowing a natural release envelope. Number keys 1\u20137 behave identically. OS key-repeat events do not accumulate duplicate voices.",
+    "expected": "Repeat off: mouse-down on a pad sounds the chord; mouse-up stops its held notes, allowing a natural release envelope. Number keys 1–7 behave identically. OS key-repeat events do not accumulate duplicate voices.",
     "requiredLayers": "I, U",
     "procedure": "Not yet executed as complete product acceptance",
     "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
@@ -1253,7 +1255,7 @@
       "juce": "not downloaded; licence route pending",
       "sdk": "10.0.26100.0 available; not used by the MinGW core build"
     },
-    "expected": "Repeat on: one click starts indefinite repeats; releasing the button does not stop; clicking the same active pad again stops; a different pad switches immediately. Keys 1\u20137 use the same latch behaviour.",
+    "expected": "Repeat on: one click starts indefinite repeats; releasing the button does not stop; clicking the same active pad again stops; a different pad switches immediately. Keys 1–7 use the same latch behaviour.",
     "requiredLayers": "I, U",
     "procedure": "Not yet executed as complete product acceptance",
     "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
@@ -1597,24 +1599,26 @@
   },
   {
     "id": "AUD-21",
-    "status": "NOT RUN",
-    "version": "0.1.0-development",
-    "evidence": "engineering/core-evidence.json",
-    "source": "1a35c74dc8b866376ebec3b13fa8db39ad46f828+dirty",
+    "status": "FAIL",
+    "version": "0.1.3-installed-candidate",
+    "evidence": "engineering/meter-edit-evidence.json",
+    "source": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
     "date": "2026-09-18",
     "environment": {
-      "windows": "Windows 11 Home 10.0.26200 x64",
-      "live": "Ableton Live 12 Suite 12.4.3",
-      "compiler": "LLVM-MinGW 20260908 UCRT x86_64 / Clang 23.1.1",
+      "windows": "Windows 11 Home 10.0.26200.9168 x64",
+      "live": "Ableton Live 12 Suite 12.4.5",
+      "juce": "9.0.2",
+      "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+      "compiler": "MSVC 19.51.36257.0 x64 static Release runtime",
+      "sdk": "10.0.26100.0",
       "cmake": "4.4.3",
-      "juce": "not downloaded; licence route pending",
-      "sdk": "10.0.26100.0 available; not used by the MinGW core build"
+      "audio": "44.1 kHz / 256 frames / 120 BPM / 3/4"
     },
     "expected": "Host meter changes away from 4/4: timeline playback/edit timing is safely disabled as specified, with a concise unsupported-meter state. Pads remain usable; the plug-in never changes Live's meter. Return to 4/4 restores valid operation.",
     "requiredLayers": "I, H",
-    "procedure": "Not yet executed as complete product acceptance",
-    "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
-    "defect": null
+    "procedure": "Set actual disposable Live host numerator3; inspect4/4-required/Play-disabled state, attempt block-body drag; compare host clock and progression observations.",
+    "observed": "FAIL: actual host reports3/4, timeline Play disabled and warning visible, but native body drag still moves blocks. 0.1.4 correction compiles/tests/validates; corrected installed host retest pending.",
+    "defect": "Timeline timing edits remained enabled outside4/4 in installed0.1.3"
   },
   {
     "id": "AUD-22",
@@ -1778,7 +1782,7 @@
       "juce": "not downloaded; licence route pending",
       "sdk": "10.0.26100.0 available; not used by the MinGW core build"
     },
-    "expected": "File includes no CC, program change, pitch bend, aftertouch, instrument-selection data, tempo map, time-signature event or track-name text. The necessary SMF header/division/EOT remain; \u201cno metadata\u201d does not mean an invalid file.",
+    "expected": "File includes no CC, program change, pitch bend, aftertouch, instrument-selection data, tempo map, time-signature event or track-name text. The necessary SMF header/division/EOT remain; “no metadata” does not mean an invalid file.",
     "requiredLayers": "C",
     "procedure": "Independent parser event allowlist accepted note_on/note_off/end_of_track only.",
     "observed": "Independent parser event allowlist accepted note_on/note_off/end_of_track only.",
@@ -2200,7 +2204,7 @@
       "juce": "not downloaded; licence route pending",
       "sdk": "10.0.26100.0 available; not used by the MinGW core build"
     },
-    "expected": "Core workflow is clear: choose key \u2192 audition/modify \u2192 add/move/resize/slice \u2192 play \u2192 drag MIDI. Primary operations do not require unexplained hidden gestures. The design was iterated during implementation, not added only after functionality.",
+    "expected": "Core workflow is clear: choose key → audition/modify → add/move/resize/slice → play → drag MIDI. Primary operations do not require unexplained hidden gestures. The design was iterated during implementation, not added only after functionality.",
     "requiredLayers": "U, R",
     "procedure": "Not yet executed as complete product acceptance",
     "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
@@ -2456,7 +2460,7 @@
       "juce": "not downloaded; licence route pending",
       "sdk": "10.0.26100.0 available; not used by the MinGW core build"
     },
-    "expected": "Settings \u2192 Open Logs Folder opens that exact directory in Explorer, including paths with spaces/non-ASCII characters. Missing folder is created safely; errors are useful.",
+    "expected": "Settings → Open Logs Folder opens that exact directory in Explorer, including paths with spaces/non-ASCII characters. Missing folder is created safely; errors are useful.",
     "requiredLayers": "U, W",
     "procedure": "Not yet executed as complete product acceptance",
     "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
@@ -2519,7 +2523,7 @@
       "juce": "not downloaded; licence route pending",
       "sdk": "10.0.26100.0 available; not used by the MinGW core build"
     },
-    "expected": "Reconstruct a synthetic replace \u2192 resize \u2192 undo \u2192 export-error sequence from timestamps, transaction IDs, revisions and snapshots. A parser can link the action and actual error; logs are not just \u201csomething went wrong\u201d.",
+    "expected": "Reconstruct a synthetic replace → resize → undo → export-error sequence from timestamps, transaction IDs, revisions and snapshots. A parser can link the action and actual error; logs are not just “something went wrong”.",
     "requiredLayers": "I, R",
     "procedure": "Executable synthetic model replace -> resize -> undo and actual file-open failure reconstructed by independent JSON parser with matching transaction/revision/snapshots.",
     "observed": "Executable synthetic model replace -> resize -> undo and actual file-open failure reconstructed by independent JSON parser with matching transaction/revision/snapshots.",

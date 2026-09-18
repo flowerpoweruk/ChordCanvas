@@ -112,7 +112,7 @@ public:
         if(e.getNumberOfClicks()>1){editor.processor.session.cancelPreview();return;}
         editor.processor.session.pressPad(degree);repaint();
     }
-    void mouseDoubleClick(const juce::MouseEvent&) override { editor.processor.session.cancelPreview();editor.processor.session.edit([this](auto& d){return d.append(chord,editor.processor.session.settings.editGrid);});editor.changed(); }
+    void mouseDoubleClick(const juce::MouseEvent&) override { editor.processor.session.cancelPreview();if(!editor.processor.engine.uiMeter.load())return;editor.processor.session.edit([this](auto& d){return d.append(chord,editor.processor.session.settings.editGrid);});editor.changed(); }
     void mouseDrag(const juce::MouseEvent& e) override { if(e.getDistanceFromDragStart()<6)return;if(!dragging){dragging=true;editor.processor.session.cancelPreview();editor.beginPadDrag(chord,e);}editor.updatePadDrag(e); }
     void mouseUp(const juce::MouseEvent& e) override { if(dragging)editor.finishPadDrag(e);else editor.processor.session.releasePad(degree);dragging=false;repaint(); }
 private:
@@ -178,6 +178,7 @@ public:
     }
     void mouseExit(const juce::MouseEvent&) override { hovered=0;hoverEdge=0;repaint(); }
     void mouseDown(const juce::MouseEvent& e) override {
+        if(!editor.processor.engine.uiMeter.load())return;
         grabKeyboardFocus();editor.popover(0);auto& s=editor.processor.session;auto b=hit(e.position);before=s.document.state();down=e.position;mode=Mode::none;dragging=false;validPreview=false;victims.clear();incoming.clear();
         if(!b){mode=Mode::marquee;originalSelection=s.selected;return;}
         owner=b->id;
@@ -192,6 +193,7 @@ public:
         if(mode==Mode::move)s.pressBlock(owner);repaint();
     }
     void mouseDrag(const juce::MouseEvent& e) override {
+        if(!editor.processor.engine.uiMeter.load()){clearGesture();editor.processor.session.releaseMomentary();return;}
         if(mode==Mode::none || e.getDistanceFromDragStart()<6)return;dragging=true;auto& s=editor.processor.session;
         if(mode==Mode::move && s.activeBlock()==owner)s.releaseMomentary();
         if(mode==Mode::marquee){marquee=juce::Rectangle<float>(down,e.position);repaint();return;}
@@ -199,6 +201,7 @@ public:
     }
     void mouseUp(const juce::MouseEvent& e) override {
         auto& s=editor.processor.session;
+        if(!editor.processor.engine.uiMeter.load()){s.releaseMomentary();clearGesture();editor.changed();return;}
         if(mode==Mode::marquee) {
             if(dragging){auto chosen=e.mods.isShiftDown() ? originalSelection : std::vector<uint64_t>{};for(auto& b:s.document.state().blocks)if(marquee.intersects(rectangle(b)) && std::find(chosen.begin(),chosen.end(),b.id)==chosen.end())chosen.push_back(b.id);s.setSelection(std::move(chosen));}
             else{s.setSelection({});s.seek(tick(e.position.x));}
@@ -226,6 +229,7 @@ private:
     std::vector<uint64_t> group,victims,incoming,originalSelection;
     std::vector<std::unique_ptr<Voicing>> controls;
     bool operation(Document& d) {
+        if(!editor.processor.engine.uiMeter.load())return false;
         int grid=editor.processor.session.settings.editGrid;
         if(mode==Mode::pad)return d.add(padChord,candidate,grid);
         if(mode==Mode::move)return d.move(group,candidate,grid);
@@ -236,7 +240,7 @@ private:
         if(validPreview){preview=d.state();for(auto& old:before.blocks)if(!d.find(old.id) && std::find(group.begin(),group.end(),old.id)==group.end())victims.push_back(old.id);for(auto& b:preview.blocks)if(mode==Mode::pad ? std::none_of(before.blocks.begin(),before.blocks.end(),[&](auto& old){return old.id==b.id;}) : std::find(group.begin(),group.end(),b.id)!=group.end() || b.id==owner)incoming.push_back(b.id);}
         repaint();
     }
-    void commitGesture() { if(editor.processor.session.document.state()!=before)return;editor.processor.session.edit([this](auto& d){return operation(d);}); }
+    void commitGesture() { if(!editor.processor.engine.uiMeter.load() || editor.processor.session.document.state()!=before)return;editor.processor.session.edit([this](auto& d){return operation(d);}); }
     void clearGesture() { mode=Mode::none;validPreview=false;victims.clear();incoming.clear();marquee={};repaint(); }
 };
 struct Editor::ExportHandle final : juce::Component {
@@ -274,8 +278,8 @@ Editor::Editor(Processor& p) : AudioProcessorEditor(p),processor(p),skin(std::ma
     volume.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);volume.setTextBoxStyle(juce::Slider::TextBoxBelow,false,54,18);volume.setRange(-60,0,.1);volume.setTextValueSuffix(" dB");volume.onValueChange=[this]{processor.session.gain=volume.getValue()<=-60 ? 0 : static_cast<float>(std::pow(10.0,volume.getValue()/20));processor.session.send();};
     repeats.onClick=[this]{processor.session.setRepeats(!processor.session.repeats);changed();};settings.onClick=[this]{settingsOpen=true;popover(0);changed();};back.onClick=[this]{settingsOpen=false;changed();};
     play.onClick=[this]{processor.session.play();};stop.onClick=[this]{processor.session.stop();};start.onClick=[this]{processor.session.seek(0);};sync.onClick=[this]{processor.session.setSync(!processor.session.sync);changed();};
-    select.onClick=[this]{canvas->razor=false;changed();};razor.onClick=[this]{canvas->razor=true;changed();};undo.onClick=[this]{processor.session.undo();changed();};redo.onClick=[this]{processor.session.redo();changed();};
-    minus.onClick=[this]{processor.session.edit([](auto& d){return d.length(d.state().bars-1);});changed();};plus.onClick=[this]{processor.session.edit([](auto& d){return d.length(d.state().bars+1);});changed();};
+    select.onClick=[this]{canvas->razor=false;changed();};razor.onClick=[this]{canvas->razor=true;changed();};undo.onClick=[this]{if(processor.engine.uiMeter.load())processor.session.undo();changed();};redo.onClick=[this]{if(processor.engine.uiMeter.load())processor.session.redo();changed();};
+    minus.onClick=[this]{if(processor.engine.uiMeter.load())processor.session.edit([](auto& d){return d.length(d.state().bars-1);});changed();};plus.onClick=[this]{if(processor.engine.uiMeter.load())processor.session.edit([](auto& d){return d.length(d.state().bars+1);});changed();};
     zoomMinus.onClick=[this]{canvas->zoom(1/1.2,canvas->x(static_cast<int>(processor.engine.uiTick.load())));};zoomPlus.onClick=[this]{canvas->zoom(1.2,canvas->x(static_cast<int>(processor.engine.uiTick.load())));};fit.onClick=[this]{canvas->fit();};
     length.setFont(ui::font(14));length.setInputRestrictions(8);length.setSelectAllWhenFocused(true);length.onReturnKey=[this]{applyLength();};length.onFocusLost=[this]{applyLength();};
     save.onClick=[this]{manualFile(true);};load.onClick=[this]{manualFile(false);};
@@ -339,6 +343,8 @@ void Editor::timerCallback() {
     if(processor.bypassPreviewCleanup.exchange(false,std::memory_order_relaxed))processor.session.cancelPreview();
     bool playing=processor.engine.uiRunning.load(),preview=processor.engine.uiOverride.load();juce::String state=preview ? processor.session.repeatLatched() ? "Repeating" : "Preview" : playing ? "Playing" : processor.session.sync ? "Sync armed" : "Stopped";
     bool meter=processor.engine.uiMeter.load();if(!meter)state="4/4 required";
+    canvas->setEnabled(meter);
+    for(auto* control:std::initializer_list<juce::Component*>{&length,&minus,&plus,&razor,&undo,&redo})control->setEnabled(meter);
     bool tempoKnown=processor.engine.uiTempoKnown.load(),tempoAvailable=processor.engine.uiTempoAvailable.load();
     play.setEnabled(!processor.session.sync && meter && tempoKnown);
     auto tempo=tempoKnown ? juce::String(processor.engine.uiTempo.load(),1)+" BPM"+(tempoAvailable ? "" : " (last)") : juce::String("Tempo unavailable");
@@ -366,6 +372,7 @@ void Editor::beginPadDrag(Chord chord,const juce::MouseEvent&) { canvas->beginPa
 void Editor::updatePadDrag(const juce::MouseEvent& e) { canvas->padMove(e.getEventRelativeTo(canvas.get()).position); }
 void Editor::finishPadDrag(const juce::MouseEvent& e) { canvas->padEnd(e.getEventRelativeTo(canvas.get()).position); }
 void Editor::applyLength() {
+    if(!processor.engine.uiMeter.load()){changed();return;}
     auto value=length.getText();if(value.isNotEmpty() && value.containsOnly("0123456789")){int bars=value.getIntValue();if(bars>=1 && bars<=32)processor.session.edit([bars](auto& d){return d.length(bars);});}changed();
 }
 void Editor::fail(const char* operation,const juce::String& message) {
@@ -387,9 +394,10 @@ bool Editor::keyPressed(const juce::KeyPress& keypress) {
     auto& s=processor.session;auto c=keypress.getTextCharacter();int k=keypress.getKeyCode();
     if(!keypress.getModifiers().isCtrlDown() && c>='1' && c<='7'){int d=c-'1';heldKeys[d]=true;s.pressPad(d,true);return true;}
     if(keypress.getModifiers().isCtrlDown()) {
+        if(!processor.engine.uiMeter.load() && (k=='V' || k=='D' || k=='Z' || k=='Y'))return true;
         if(k=='A' && canvas->hasKeyboardFocus(true))s.selectAll();else if(k=='C')s.copy();else if(k=='V')s.paste(static_cast<int>(processor.engine.uiTick.load()));else if(k=='D')s.duplicate();else if(k=='Z')s.undo();else if(k=='Y')s.redo();else return false;changed();return true;
     }
-    if(k==juce::KeyPress::deleteKey || k==juce::KeyPress::backspaceKey){s.removeSelected();changed();return true;}return false;
+    if(k==juce::KeyPress::deleteKey || k==juce::KeyPress::backspaceKey){if(!processor.engine.uiMeter.load())return true;s.removeSelected();changed();return true;}return false;
 }
 bool Editor::keyStateChanged(bool) {
     bool handled=false;for(int d=0;d<7;++d)if(heldKeys[d] && !juce::KeyPress::isKeyCurrentlyDown('1'+d)){heldKeys[d]=false;processor.session.releasePad(d,true);handled=true;}return handled;
