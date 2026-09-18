@@ -94,15 +94,54 @@
     "runtimeResult": "Newer version installed; cannot downgrade; PrepareToInstall refusal"
   },
   "hostStartup": {
-    "status": "NOT RUN against installed 0.1.5",
-    "observed": "Normal launch exposes Live automatic-update-in-progress notice; normal OK dismissed. Host executable now reports 12.4.6; no successful latest startup inferred."
+    "status": "PASS for installed load/basic audition/current About and corrected meter scenario; full acceptance incomplete",
+    "observed": "Host updater finished naturally. Actual Live12.4.6 process module inspection verifies global installed0.1.5; actual diagnostic header matches version/source/build6. Latest sanitized host evidence recorded separately.",
+    "evidence": "engineering/installed-live-015-evidence.json"
   },
   "limitations": [
     "Candidate remains unaccepted; immutable manifest records package-time status.",
     "Exit 7 records actual non-destructive PrepareToInstall refusal, not successful installation.",
     "No network-disabled or clean-machine execution established.",
-    "Latest corrected 3/4 host scenario, full MIDI clip extent, host saving and remaining GUI/audio/package failure acceptance remain open.",
+    "Corrected installed3/4 meter scenario PASS; full MIDI clip extent, host saving and remaining GUI/audio/package failure acceptance remain open.",
     "Both executable candidates remain NotSigned.",
     "Private runtime logs, real user paths, vendor file paths and preservation fixtures remain ignored."
-  ]
+  ],
+  "corruptedPackageCopies": {
+    "setup": {
+      "procedure": "Copy genuine packaged Setup and flip one compressed-overlay byte beyond every PE section; immutable original untouched",
+      "alterationOffset": 3483660,
+      "imageRawEnd": 1360384,
+      "exitCode": 1,
+      "runtimeLogCreated": true,
+      "all16InstalledPayloadFilesUnchanged": true,
+      "immutableSetupHashUnchanged": true,
+      "liveProcessPreserved": true,
+      "corruptedCopySha256": "f8b31c5c677a5fecf71f046870e1df1f27a4a9a47f7975a9a1475d1fb56141f0"
+    },
+    "updater": {
+      "procedure": "Copy genuine packaged Updater and flip one compressed-overlay byte beyond every PE section; immutable original untouched",
+      "alterationOffset": 3483662,
+      "imageRawEnd": 1360384,
+      "exitCode": 1,
+      "runtimeLogCreated": true,
+      "all16InstalledPayloadFilesUnchanged": true,
+      "immutableUpdaterHashUnchanged": true,
+      "liveProcessPreserved": true,
+      "corruptedCopySha256": "357881e20ec9ff6bd741caeca023c4dccb14d9fbc489f056d2026774b93b2712"
+    },
+    "runtimeResult": "Both explicitly reject corrupted compressed data during temporary payload extraction, exit1; no installed payload replacement",
+    "installedProcessingAfterBoth": "PASS / exit0",
+    "remainingFailureScenarios": "Cancellation, permission denial, disk full and genuine mid-transaction rollback remain NOT RUN; no full REL-07 PASS inferred."
+  },
+  "publicNativeCi": {
+    "productSourceRun": 35382467070,
+    "productSource": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
+    "status": "completed",
+    "conclusion": "success",
+    "latestPriorEvidenceRun": 35387005740,
+    "latestPriorEvidenceSource": "1d1fe1f625634dd1b78d4b6382b44698e5022610",
+    "latestPriorEvidenceStatus": "completed",
+    "latestPriorEvidenceConclusion": "success",
+    "scope": "Public Windows Server native CI; not Windows11/Live acceptance"
+  }
 }

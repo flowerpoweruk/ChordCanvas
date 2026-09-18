@@ -230,5 +230,12 @@
       "harnessExitCode": 0,
       "scope": "Does not substitute for installed Live3/4/4/4 retest, audio listening or complete Windows scaling."
     }
+  },
+  "installed015Retest": {
+    "status": "PASS",
+    "evidence": "engineering/installed-live-015-evidence.json",
+    "sourceCommit": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
+    "host": "Ableton Live12.4.6",
+    "original013FailureRetained": true
   }
 }

@@ -26,13 +26,13 @@
   {
     "id": "ENV-02",
     "status": "PASS",
-    "version": "0.1.3-installed-candidate",
-    "evidence": "engineering/installed-live-013-evidence.json and engineering/installed-013-evidence.json",
-    "source": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+    "version": "0.1.5-installed-candidate",
+    "evidence": "engineering/installed-live-015-evidence.json and engineering/installed-015-evidence.json",
+    "source": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
     "date": "2026-09-18",
     "environment": {
       "windows": "Windows 11 Home 10.0.26200.9168 x64",
-      "live": "Ableton Live 12 Suite 12.4.5",
+      "live": "Ableton Live 12 Suite 12.4.6",
       "juce": "9.0.2",
       "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
       "compiler": "MSVC 19.51.36257.0 x64 static Release runtime",
@@ -42,9 +42,34 @@
     },
     "expected": "A minimal ChordCanvas VST3 instrument scans, appears and opens in the installed Live 12. Its audio reaches the track/master through ordinary host routing. No Max for Live component or external sound-bank download is needed.",
     "requiredLayers": "H",
-    "procedure": "Load genuine global installed 0.1.3 in actual Live 12.4.5; verify process module path, fresh GUI and repeat audition through track/Main meters.",
-    "observed": "Actual scan/browser/load PASS; one plug-in entry; global installed module verified; Em repeat reaches both meters at -15.3 dB and persists with editor hidden.",
-    "defect": null
+    "procedure": "Load genuine global installed0.1.5 in Live12.4.6; inspect actual module path/header and pad repeat through normal routing.",
+    "observed": "PASS: one installed browser product entry; global module loaded; C pad repeat reaches track/Main -14.6dB without bank download or Max.",
+    "defect": null,
+    "previousResults": [
+      {
+        "id": "ENV-02",
+        "status": "PASS",
+        "version": "0.1.3-installed-candidate",
+        "evidence": "engineering/installed-live-013-evidence.json and engineering/installed-013-evidence.json",
+        "source": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+        "date": "2026-09-18",
+        "environment": {
+          "windows": "Windows 11 Home 10.0.26200.9168 x64",
+          "live": "Ableton Live 12 Suite 12.4.5",
+          "juce": "9.0.2",
+          "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+          "compiler": "MSVC 19.51.36257.0 x64 static Release runtime",
+          "sdk": "10.0.26100.0",
+          "cmake": "4.4.3",
+          "audio": "44.1 kHz / 256 frames / 120 BPM / 4/4"
+        },
+        "expected": "A minimal ChordCanvas VST3 instrument scans, appears and opens in the installed Live 12. Its audio reaches the track/master through ordinary host routing. No Max for Live component or external sound-bank download is needed.",
+        "requiredLayers": "H",
+        "procedure": "Load genuine global installed 0.1.3 in actual Live 12.4.5; verify process module path, fresh GUI and repeat audition through track/Main meters.",
+        "observed": "Actual scan/browser/load PASS; one plug-in entry; global installed module verified; Em repeat reaches both meters at -15.3 dB and persists with editor hidden.",
+        "defect": null
+      }
+    ]
   },
   {
     "id": "ENV-03",
@@ -73,13 +98,13 @@
   {
     "id": "ENV-04",
     "status": "FAIL",
-    "version": "0.1.3-installed-candidate",
-    "evidence": "engineering/installed-live-013-evidence.json",
-    "source": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+    "version": "0.1.5-installed-candidate",
+    "evidence": "engineering/installed-live-015-evidence.json and engineering/installed-015-evidence.json",
+    "source": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
     "date": "2026-09-18",
     "environment": {
       "windows": "Windows 11 Home 10.0.26200.9168 x64",
-      "live": "Ableton Live 12 Suite 12.4.5",
+      "live": "Ableton Live 12 Suite 12.4.6",
       "juce": "9.0.2",
       "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
       "compiler": "MSVC 19.51.36257.0 x64 static Release runtime",
@@ -89,9 +114,34 @@
     },
     "expected": "An eight-bar exported progression with its last note ending in bar 4 imports with the intended eight-bar clip extent, including trailing silence. Inspect Session clip loop/end markers and Arrangement placement. This is an early release-blocking gate; source documentation alone does not establish the result.",
     "requiredLayers": "H",
-    "procedure": "Native drag actual installed eight-bar C/Dm/C progression with final note-off tick15360 into a Session slot in actual Live12.4.5; independently parse actual native file; inspect clip loop/end controls.",
-    "observed": "FAIL: independently parsed Type0 one-track 960PPQ MIDI has exact nine notes and EOT30720 without padding/other events. Actual Live imports start1.1.1/end5.1.1/loopLength4.0.0 instead of eight bars. Earlier Arrangement failure remains recorded separately.",
-    "defect": "Release-blocking Live import extent/empty-clip incompatibility"
+    "procedure": "Native drag actual installed eight-bar C/Dm/C export with last note-off15360 to Session and Arrangement; independently parse actual file and inspect host markers.",
+    "observed": "FAIL: exact103-byte Type0/960PPQ/nine-note file/EOT30720. Live12.4.6 Session and Arrangement both start1.1.1/end5.1.1/length4.0.0. Arrangement duration8seconds at120BPM, rather than intended16seconds.",
+    "defect": "Release-blocking full-clip trailing-rest incompatibility persists in actual Live12.4.6",
+    "previousResults": [
+      {
+        "id": "ENV-04",
+        "status": "FAIL",
+        "version": "0.1.3-installed-candidate",
+        "evidence": "engineering/installed-live-013-evidence.json",
+        "source": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+        "date": "2026-09-18",
+        "environment": {
+          "windows": "Windows 11 Home 10.0.26200.9168 x64",
+          "live": "Ableton Live 12 Suite 12.4.5",
+          "juce": "9.0.2",
+          "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+          "compiler": "MSVC 19.51.36257.0 x64 static Release runtime",
+          "sdk": "10.0.26100.0",
+          "cmake": "4.4.3",
+          "audio": "44.1 kHz / 256 frames / 120 BPM / 4/4"
+        },
+        "expected": "An eight-bar exported progression with its last note ending in bar 4 imports with the intended eight-bar clip extent, including trailing silence. Inspect Session clip loop/end markers and Arrangement placement. This is an early release-blocking gate; source documentation alone does not establish the result.",
+        "requiredLayers": "H",
+        "procedure": "Native drag actual installed eight-bar C/Dm/C progression with final note-off tick15360 into a Session slot in actual Live12.4.5; independently parse actual native file; inspect clip loop/end controls.",
+        "observed": "FAIL: independently parsed Type0 one-track 960PPQ MIDI has exact nine notes and EOT30720 without padding/other events. Actual Live imports start1.1.1/end5.1.1/loopLength4.0.0 instead of eight bars. Earlier Arrangement failure remains recorded separately.",
+        "defect": "Release-blocking Live import extent/empty-clip incompatibility"
+      }
+    ]
   },
   {
     "id": "ENV-05",
@@ -1599,26 +1649,51 @@
   },
   {
     "id": "AUD-21",
-    "status": "FAIL",
-    "version": "0.1.3-installed-candidate",
-    "evidence": "engineering/meter-edit-evidence.json",
-    "source": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+    "status": "PASS",
+    "version": "0.1.5-installed-candidate",
+    "evidence": "engineering/installed-live-015-evidence.json and engineering/installed-015-evidence.json",
+    "source": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
     "date": "2026-09-18",
     "environment": {
       "windows": "Windows 11 Home 10.0.26200.9168 x64",
-      "live": "Ableton Live 12 Suite 12.4.5",
+      "live": "Ableton Live 12 Suite 12.4.6",
       "juce": "9.0.2",
       "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
       "compiler": "MSVC 19.51.36257.0 x64 static Release runtime",
       "sdk": "10.0.26100.0",
       "cmake": "4.4.3",
-      "audio": "44.1 kHz / 256 frames / 120 BPM / 3/4"
+      "audio": "44.1 kHz / 256 frames / 120 BPM; controlled4/4 and3/4 meter phases"
     },
     "expected": "Host meter changes away from 4/4: timeline playback/edit timing is safely disabled as specified, with a concise unsupported-meter state. Pads remain usable; the plug-in never changes Live's meter. Return to 4/4 restores valid operation.",
     "requiredLayers": "I, H",
-    "procedure": "Set actual disposable Live host numerator3; inspect4/4-required/Play-disabled state, attempt block-body drag; compare host clock and progression observations.",
-    "observed": "FAIL: actual host reports3/4, timeline Play disabled and warning visible, but native body drag still moves blocks. 0.1.4 correction compiles/tests/validates; corrected installed host retest pending.",
-    "defect": "Timeline timing edits remained enabled outside4/4 in installed0.1.3"
+    "procedure": "Set disposable Live3/4; attempt body move, pad append, length, Undo and local Play; verify unchanged snapshot and routed pad repeat. Restore4/4, move and Play; change back3/4 during playback; inspect native release/frozen cursor.",
+    "observed": "PASS: rejected timing edits preserve revision2/two blocks; zero unsupported Play requests; pad repeat reaches track/Main -14.6dB. Restore4/4 creates move revision3/local Play; subsequent3/4 releases at tick3329 and freezes. Source has no host-meter setter. Physical keyboard test not credited.",
+    "defect": null,
+    "previousResults": [
+      {
+        "id": "AUD-21",
+        "status": "FAIL",
+        "version": "0.1.3-installed-candidate",
+        "evidence": "engineering/meter-edit-evidence.json",
+        "source": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+        "date": "2026-09-18",
+        "environment": {
+          "windows": "Windows 11 Home 10.0.26200.9168 x64",
+          "live": "Ableton Live 12 Suite 12.4.5",
+          "juce": "9.0.2",
+          "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+          "compiler": "MSVC 19.51.36257.0 x64 static Release runtime",
+          "sdk": "10.0.26100.0",
+          "cmake": "4.4.3",
+          "audio": "44.1 kHz / 256 frames / 120 BPM / 3/4"
+        },
+        "expected": "Host meter changes away from 4/4: timeline playback/edit timing is safely disabled as specified, with a concise unsupported-meter state. Pads remain usable; the plug-in never changes Live's meter. Return to 4/4 restores valid operation.",
+        "requiredLayers": "I, H",
+        "procedure": "Set actual disposable Live host numerator3; inspect4/4-required/Play-disabled state, attempt block-body drag; compare host clock and progression observations.",
+        "observed": "FAIL: actual host reports3/4, timeline Play disabled and warning visible, but native body drag still moves blocks. 0.1.4 correction compiles/tests/validates; corrected installed host retest pending.",
+        "defect": "Timeline timing edits remained enabled outside4/4 in installed0.1.3"
+      }
+    ]
   },
   {
     "id": "AUD-22",
@@ -1940,7 +2015,17 @@
     "requiredLayers": "C, H",
     "procedure": "Live browser drag of generated fixtures into disposable Untitled Set; inspected actual clip markers",
     "observed": "Valid empty eight-bar SMF passed parser; Session destination remained empty.",
-    "defect": "Release-blocking Live import extent/empty-clip incompatibility"
+    "defect": "Release-blocking Live import extent/empty-clip incompatibility",
+    "retests": [
+      {
+        "version": "0.1.5",
+        "source": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
+        "host": "Live12.4.6",
+        "status": "NOT RUN as complete latest host acceptance",
+        "observed": "Actual valid28-byte empty native export/EOT30720. No silent clip observed; later fresh device creation unverified. Earlier failure retained.",
+        "evidence": "engineering/installed-live-015-evidence.json"
+      }
+    ]
   },
   {
     "id": "MIDI-13",
@@ -1989,13 +2074,13 @@
   {
     "id": "STATE-01",
     "status": "PASS",
-    "version": "0.1.3-installed-candidate",
-    "evidence": "engineering/installed-live-013-evidence.json and engineering/installed-013-evidence.json",
-    "source": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+    "version": "0.1.5-installed-candidate",
+    "evidence": "engineering/installed-live-015-evidence.json and engineering/installed-015-evidence.json",
+    "source": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
     "date": "2026-09-18",
     "environment": {
       "windows": "Windows 11 Home 10.0.26200.9168 x64",
-      "live": "Ableton Live 12 Suite 12.4.5",
+      "live": "Ableton Live 12 Suite 12.4.6",
       "juce": "9.0.2",
       "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
       "compiler": "MSVC 19.51.36257.0 x64 static Release runtime",
@@ -2005,9 +2090,34 @@
     },
     "expected": "Fresh processor: C Major, slot 3/root pads, empty eight bars, optional modifications hidden, Repeat off, Sync off and all declared global defaults.",
     "requiredLayers": "C, H",
-    "procedure": "Instantiate latest installed processor in fresh disposable Live Set and inspect native GUI plus first actual state snapshot.",
-    "observed": "PASS: C Major/root/slot3 seven pads; empty eight bars; Piano/-12 dB; Repeat/Sync off; optional controls hidden; edit/slice grids 960; no automatic timeline load.",
-    "defect": null
+    "procedure": "Load installed fresh processor; inspect rendered defaults and first actual private snapshot.",
+    "observed": "PASS: C Major/root/slot3, empty8 bars, Piano -12dB, Repeat/Sync off and all optional modifications hidden.",
+    "defect": null,
+    "previousResults": [
+      {
+        "id": "STATE-01",
+        "status": "PASS",
+        "version": "0.1.3-installed-candidate",
+        "evidence": "engineering/installed-live-013-evidence.json and engineering/installed-013-evidence.json",
+        "source": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+        "date": "2026-09-18",
+        "environment": {
+          "windows": "Windows 11 Home 10.0.26200.9168 x64",
+          "live": "Ableton Live 12 Suite 12.4.5",
+          "juce": "9.0.2",
+          "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+          "compiler": "MSVC 19.51.36257.0 x64 static Release runtime",
+          "sdk": "10.0.26100.0",
+          "cmake": "4.4.3",
+          "audio": "44.1 kHz / 256 frames / 120 BPM / 4/4"
+        },
+        "expected": "Fresh processor: C Major, slot 3/root pads, empty eight bars, optional modifications hidden, Repeat off, Sync off and all declared global defaults.",
+        "requiredLayers": "C, H",
+        "procedure": "Instantiate latest installed processor in fresh disposable Live Set and inspect native GUI plus first actual state snapshot.",
+        "observed": "PASS: C Major/root/slot3 seven pads; empty eight bars; Piano/-12 dB; Repeat/Sync off; optional controls hidden; edit/slice grids 960; no automatic timeline load.",
+        "defect": null
+      }
+    ]
   },
   {
     "id": "STATE-02",
@@ -2033,13 +2143,13 @@
   {
     "id": "STATE-03",
     "status": "PASS",
-    "version": "0.1.3-installed-candidate",
-    "evidence": "engineering/installed-live-013-evidence.json",
-    "source": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+    "version": "0.1.5-installed-candidate",
+    "evidence": "engineering/installed-live-015-evidence.json and engineering/installed-015-evidence.json",
+    "source": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
     "date": "2026-09-18",
     "environment": {
       "windows": "Windows 11 Home 10.0.26200.9168 x64",
-      "live": "Ableton Live 12 Suite 12.4.5",
+      "live": "Ableton Live 12 Suite 12.4.6",
       "juce": "9.0.2",
       "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
       "compiler": "MSVC 19.51.36257.0 x64 static Release runtime",
@@ -2049,9 +2159,34 @@
     },
     "expected": "Close and reopen only the editor in the same live processor. Current timeline, controls and playback remain; editor construction does not reset the session.",
     "requiredLayers": "U, H",
-    "procedure": "Hide/reopen running editor during latched repeat; after populated source MIDI export switches visible destination instance, return to source track and reopen only its own editor. Inspect source state and controls.",
-    "observed": "PASS: repeat retained across hiding/reopening until switched off. Source instance1 retains all3 blocks/revision13 after export and editor reopening; fresh destination instance2 is distinct. No reset by editor construction.",
-    "defect": null
+    "procedure": "Hide/reopen editor during latched pad audition and local playback; compare source progression around native drag and further reopening.",
+    "observed": "PASS: repeat/local playback continue with editor hidden; source revision5/full three-block progression unchanged after native drag and reopening.",
+    "defect": null,
+    "previousResults": [
+      {
+        "id": "STATE-03",
+        "status": "PASS",
+        "version": "0.1.3-installed-candidate",
+        "evidence": "engineering/installed-live-013-evidence.json",
+        "source": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+        "date": "2026-09-18",
+        "environment": {
+          "windows": "Windows 11 Home 10.0.26200.9168 x64",
+          "live": "Ableton Live 12 Suite 12.4.5",
+          "juce": "9.0.2",
+          "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+          "compiler": "MSVC 19.51.36257.0 x64 static Release runtime",
+          "sdk": "10.0.26100.0",
+          "cmake": "4.4.3",
+          "audio": "44.1 kHz / 256 frames / 120 BPM / 4/4"
+        },
+        "expected": "Close and reopen only the editor in the same live processor. Current timeline, controls and playback remain; editor construction does not reset the session.",
+        "requiredLayers": "U, H",
+        "procedure": "Hide/reopen running editor during latched repeat; after populated source MIDI export switches visible destination instance, return to source track and reopen only its own editor. Inspect source state and controls.",
+        "observed": "PASS: repeat retained across hiding/reopening until switched off. Source instance1 retains all3 blocks/revision13 after export and editor reopening; fresh destination instance2 is distinct. No reset by editor construction.",
+        "defect": null
+      }
+    ]
   },
   {
     "id": "STATE-04",
@@ -2152,13 +2287,13 @@
   {
     "id": "STATE-09",
     "status": "PASS",
-    "version": "0.1.3-installed-candidate",
-    "evidence": "engineering/installed-live-013-evidence.json and engineering/installed-013-evidence.json",
-    "source": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+    "version": "0.1.5-installed-candidate",
+    "evidence": "engineering/installed-live-015-evidence.json and engineering/installed-015-evidence.json",
+    "source": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
     "date": "2026-09-18",
     "environment": {
       "windows": "Windows 11 Home 10.0.26200.9168 x64",
-      "live": "Ableton Live 12 Suite 12.4.5",
+      "live": "Ableton Live 12 Suite 12.4.6",
       "juce": "9.0.2",
       "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
       "compiler": "MSVC 19.51.36257.0 x64 static Release runtime",
@@ -2168,9 +2303,34 @@
     },
     "expected": "About shows the running binary's version and current-version changes only, including after an actual update. It does not show the entire historical release changelog.",
     "requiredLayers": "U, W",
-    "procedure": "After actual genuine update and additional reinstall of identical payload, load installed binary in Live; open Settings/About and compare all current changes with release/current.json.",
-    "observed": "PASS: running 0.1.3, exactly five matching current-version changes, AGPLv3; no older release changes. Actual header proves source 178b6dcb/build4.",
-    "defect": null
+    "procedure": "After genuine update and Setup reinstall, open installed Settings/About and compare running header/current release change.",
+    "observed": "PASS: running0.1.5AGPLv3/exactly one matching current-version change; no historical changes; source55795004/build6.",
+    "defect": null,
+    "previousResults": [
+      {
+        "id": "STATE-09",
+        "status": "PASS",
+        "version": "0.1.3-installed-candidate",
+        "evidence": "engineering/installed-live-013-evidence.json and engineering/installed-013-evidence.json",
+        "source": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+        "date": "2026-09-18",
+        "environment": {
+          "windows": "Windows 11 Home 10.0.26200.9168 x64",
+          "live": "Ableton Live 12 Suite 12.4.5",
+          "juce": "9.0.2",
+          "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+          "compiler": "MSVC 19.51.36257.0 x64 static Release runtime",
+          "sdk": "10.0.26100.0",
+          "cmake": "4.4.3",
+          "audio": "44.1 kHz / 256 frames / 120 BPM / 4/4"
+        },
+        "expected": "About shows the running binary's version and current-version changes only, including after an actual update. It does not show the entire historical release changelog.",
+        "requiredLayers": "U, W",
+        "procedure": "After actual genuine update and additional reinstall of identical payload, load installed binary in Live; open Settings/About and compare all current changes with release/current.json.",
+        "observed": "PASS: running 0.1.3, exactly five matching current-version changes, AGPLv3; no older release changes. Actual header proves source 178b6dcb/build4.",
+        "defect": null
+      }
+    ]
   },
   {
     "id": "UX-01",

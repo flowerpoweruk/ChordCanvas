@@ -1,0 +1,283 @@
+{
+  "date": "2026-09-18",
+  "version": "0.1.5",
+  "buildNumber": 6,
+  "sourceCommit": "5579500498b3595c34d9be3e32808f0b61ec8eaf",
+  "environment": "Windows 11 Home 10.0.26200.9168 x64; Ableton Live 12 Suite 12.4.6; 44.1 kHz / 256 frames / 120 BPM",
+  "moduleOrigin": {
+    "moduleCount": 1,
+    "installedGlobalModule": true,
+    "hostProductVersion": "12.4.6"
+  },
+  "freshState": {
+    "revision": 0,
+    "progression": {
+      "schema": 1,
+      "bars": 8,
+      "blocks": []
+    },
+    "key": "C Major",
+    "sound": 0,
+    "gain": 0.251188635826111,
+    "repeat": false,
+    "repeat_ticks": 960,
+    "sync": false,
+    "edit_grid": 960,
+    "slice_grid": 960,
+    "show_seventh": false,
+    "show_sus2": false,
+    "show_sus4": false,
+    "selected": [],
+    "resolved_blocks": [],
+    "pads": [
+      {
+        "degree": 0,
+        "octave": 3,
+        "inversion": 0,
+        "seventh": false,
+        "suspension": 0,
+        "notes": [
+          60,
+          64,
+          67
+        ]
+      },
+      {
+        "degree": 1,
+        "octave": 3,
+        "inversion": 0,
+        "seventh": false,
+        "suspension": 0,
+        "notes": [
+          62,
+          65,
+          69
+        ]
+      },
+      {
+        "degree": 2,
+        "octave": 3,
+        "inversion": 0,
+        "seventh": false,
+        "suspension": 0,
+        "notes": [
+          64,
+          67,
+          71
+        ]
+      },
+      {
+        "degree": 3,
+        "octave": 3,
+        "inversion": 0,
+        "seventh": false,
+        "suspension": 0,
+        "notes": [
+          65,
+          69,
+          72
+        ]
+      },
+      {
+        "degree": 4,
+        "octave": 3,
+        "inversion": 0,
+        "seventh": false,
+        "suspension": 0,
+        "notes": [
+          67,
+          71,
+          74
+        ]
+      },
+      {
+        "degree": 5,
+        "octave": 3,
+        "inversion": 0,
+        "seventh": false,
+        "suspension": 0,
+        "notes": [
+          69,
+          72,
+          76
+        ]
+      },
+      {
+        "degree": 6,
+        "octave": 3,
+        "inversion": 0,
+        "seventh": false,
+        "suspension": 0,
+        "notes": [
+          71,
+          74,
+          77
+        ]
+      }
+    ]
+  },
+  "about": {
+    "version": "0.1.5",
+    "licence": "AGPLv3",
+    "currentChangesCount": 1,
+    "currentChange": "Keep Play disabled across UI refreshes when the host meter or tempo is unavailable.",
+    "historicalChangesAbsent": true,
+    "observedAfterGenuineUpdateAndReinstall": true
+  },
+  "meterRetest": {
+    "status": "PASS",
+    "unsupportedMeter": [
+      3,
+      4
+    ],
+    "label": "4/4 required",
+    "playDisabled": true,
+    "attemptedBodyMovePadAppendLengthUndoAndPlayLeaveProgressionUnchanged": true,
+    "revisionBeforeAndAfterRejectedEdits": 2,
+    "playRequestsDuringUnsupportedAttempts": 0,
+    "padRepeatRoutedTrackAndMainPeakDb": -14.6,
+    "returnTo4_4RestoresEditing": true,
+    "subsequentMoveRevision": 3,
+    "subsequentLocalPlayRequests": 1,
+    "meterChangedAwayWhilePlayingReleasesActiveNotes": true,
+    "releasedAndFrozenTick": 3329,
+    "pluginDoesNotSetHostMeter": "Source exposes no host-meter control; only ordinary Live numerator edits used for controlled phases",
+    "keyboardDeletionAttempt": "Not credited: host-root key targeting and focus ambiguity, host numerator became4. Physical plug-in keyboard acceptance remains unverified."
+  },
+  "editorLifecycle": {
+    "repeatContinuesWithEditorHidden": true,
+    "timelinePreservedAfterHideAndReopenAndNativeExport": true,
+    "revision5SourceProgressionExactAfterFirstNativeDrag": true
+  },
+  "nativeMidi": {
+    "parser": "mido 1.3.3",
+    "status": "PASS",
+    "sha256": "a9891ff9979f49b4e295b1086b0914c3d494ae273de15b7885087ceeb715ba2f",
+    "bytes": 103,
+    "type": 0,
+    "ppq": 960,
+    "tracks": 1,
+    "noteOn": [
+      [
+        0,
+        60
+      ],
+      [
+        0,
+        64
+      ],
+      [
+        0,
+        67
+      ],
+      [
+        7680,
+        62
+      ],
+      [
+        7680,
+        65
+      ],
+      [
+        7680,
+        69
+      ],
+      [
+        11520,
+        60
+      ],
+      [
+        11520,
+        64
+      ],
+      [
+        11520,
+        67
+      ]
+    ],
+    "noteOff": [
+      [
+        3840,
+        60
+      ],
+      [
+        3840,
+        64
+      ],
+      [
+        3840,
+        67
+      ],
+      [
+        11520,
+        62
+      ],
+      [
+        11520,
+        65
+      ],
+      [
+        11520,
+        69
+      ],
+      [
+        15360,
+        60
+      ],
+      [
+        15360,
+        64
+      ],
+      [
+        15360,
+        67
+      ]
+    ],
+    "endOfTrackTick": 30720,
+    "paddingOrOtherEvents": false,
+    "actualNativeExportRetainedAfterImport": true
+  },
+  "sessionImport": {
+    "start": "1.1.1",
+    "end": "5.1.1",
+    "loopPosition": "1.1.1",
+    "loopLength": "4.0.0",
+    "completeEightBarExtent": "FAIL"
+  },
+  "arrangementImport": {
+    "start": "1.1.1",
+    "end": "5.1.1",
+    "length": "4.0.0",
+    "durationSecondsAt120Bpm": 8,
+    "completeEightBarExtent": "FAIL"
+  },
+  "emptyExport": {
+    "file": {
+      "parser": "mido 1.3.3",
+      "type": 0,
+      "tracks": 1,
+      "ppq": 960,
+      "bytes": 28,
+      "sha256": "7c784bcf7121262c206810f5247f819612fc1d36950dd7c9fd79fd75e2d6a858",
+      "endOfTrackTick": 30720,
+      "notes": 0,
+      "otherEvents": 0,
+      "readableAfterNativeDrag": true
+    },
+    "observedDrop": "No intended silent clip observed after native drag; another fresh instance appeared afterward. Attribution of that later instance is unverified. No complete latest empty-import pass credited."
+  },
+  "alternativeEncodingInvestigation": {
+    "status": "NOT RUN in host",
+    "observed": "UIA cached property unavailable; Explorer window screenshot/coordinate targeting remained unreliable after recovery. Prepared fixtures remain development-only; product Type0 unchanged."
+  },
+  "hostSavedSetTests": {
+    "status": "BLOCKED",
+    "observed": "Live12.4.6 explicitly displays Saving and exporting are deactivated; no authentication automated."
+  },
+  "limits": [
+    "Native callback completion is not claimed as confirmed import success.",
+    "Full scaling/audio/physical keyboard/clipboard/lifecycle acceptance incomplete.",
+    "No raw diagnostic paths, filenames, dumps or captures published.",
+    "Candidate is unaccepted; complete MIDI clip extent remains a release-blocking contradiction."
+  ]
+}
