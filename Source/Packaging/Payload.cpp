@@ -51,6 +51,7 @@ std::string sha256(const std::filesystem::path& file){
     std::array<unsigned char,32> digest{};checked(BCryptFinishHash(state.hash,digest.data(),digest.size(),0));
     static constexpr char hex[]="0123456789abcdef";std::string result;result.reserve(64);for(auto byte:digest){result+=hex[byte>>4];result+=hex[byte&15];}return result;
 }
+void validateAmd64Pe(const std::filesystem::path& file){if(!plainPath(file))throw std::runtime_error("Unsafe binary path");architecture(file);}
 Payload Payload::read(const std::filesystem::path& root){
     auto file=root/receiptName;
     if(!plainPath(root) || !plainPath(file) || !std::filesystem::is_regular_file(file) || std::filesystem::file_size(file)>1024*1024)throw std::runtime_error("Installation has no recognised ownership receipt");

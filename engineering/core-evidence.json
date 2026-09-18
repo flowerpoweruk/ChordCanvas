@@ -1,7 +1,7 @@
 {
   "scope": "Development core/integration executables; not installed VST3 or release packages",
   "version": "0.1.0-development",
-  "source": "9f7170be704d65660c4cac0a3fbaf22f06b4e727+dirty",
+  "source": "bbd4a277a22207d61b611354f72bc97ad8616033+dirty",
   "date": "2026-09-18",
   "environment": {
     "windows": "Windows 11 Home 10.0.26200 x64",
@@ -13,7 +13,7 @@
   },
   "testCommands": [
     "Scripts/build-core.ps1",
-    "Scripts/verify-logs.py build/core/log-tests-8860-F867E17D-0013-4A3F-B29B-28A3098D6338",
+    "Scripts/verify-logs.py build/core/log-tests-11860-F6441AD1-F7CE-4B03-A1B7-954F38C809B0",
     "Scripts/verify-midi.py build/core",
     "Scripts/verify-theory.py build/core/theory_probe.exe Tests/Fixtures/music21-scales.json",
     "Scripts/measure-audio.ps1",
@@ -21,17 +21,19 @@
   ],
   "ctest": {
     "status": "PASS",
-    "tests": 9,
-    "totalSeconds": 10.54,
-    "audioFidelitySeconds": 0.48,
-    "coreSeconds": 2.92,
-    "diagnosticsSeconds": 1.99,
-    "exportCacheSeconds": 0.09,
+    "tests": 11,
+    "totalSeconds": 18.26,
+    "audioFidelitySeconds": 0.37,
+    "coreSeconds": 2.45,
+    "diagnosticsSeconds": 1.88,
+    "exportCacheSeconds": 0.04,
     "packageVersionSeconds": 0.02,
-    "payloadSeconds": 0.25,
-    "transactionSeconds": 2.97,
-    "registrySeconds": 0.09,
-    "participantSeconds": 1.59
+    "payloadSeconds": 0.11,
+    "transactionSeconds": 2.89,
+    "registrySeconds": 0.07,
+    "participantSeconds": 1.47,
+    "installMetadataSeconds": 8.84,
+    "installerApiSeconds": 0.03
   },
   "coreOutput": [
     "Theory: 30870 combinations; MIDI 36..125",
@@ -41,7 +43,7 @@
     "Sound 1: RMS 0.0174645, peak 0.155925",
     "Sound 2: RMS 0.0279154, peak 0.0924241",
     "Sound 3: RMS 0.0326126, peak 0.10709",
-    "PASS: 792535 assertions",
+    "PASS: 792363 assertions",
     "PASS: five-session rotation, active-session preservation, bounded compaction/queues, storage failure and four-producer audio ring",
     "PASS: exclusive drag leases, exact bytes, 24-hour grace, stale cleanup, bounded admission and safe failure",
     "PASS: numeric release SemVer ordering, bounds and explicit prerelease refusal",
@@ -49,7 +51,9 @@
     "PASS: fresh install, absent update, four real rollback boundaries, nine actual abrupt child-process recoveries, cross-process mutex, held finalisation rollback, bounded locked-backup cleanup, file locks, numeric update, repair, downgrade and unknown-file preservation",
     "PASS: 72 direct-equation held/released cases; 1128600 samples, maximum absolute error 2.98023e-08, RMS error 9.85111e-10",
     "PASS: disposable HKCU 64-bit typed snapshots, Unicode string contents, exact restoration, allowed forward cleanup, unknown value/subkey preservation, strict bounds/format and absent rollback; no product or HKLM key touched",
-    "PASS: eleven real interrupted joint bundle/registry recoveries, fresh absence, exact previous metadata, missing participant refusal, descriptor tampering before mutation, failed finalisation rollback and coherent successful commit; synthetic HKCU only"
+    "PASS: eleven real interrupted joint bundle/registry recoveries, fresh absence, exact previous metadata, missing participant refusal, descriptor tampering before mutation, failed finalisation rollback and coherent successful commit; synthetic HKCU only",
+    "PASS: twenty-three real abruptly exited metadata processes, retained uninstall directory and typed registration recovery; synthetic AMD64 fixtures/HKCU only",
+    "PASS: native helper DLL read-only support/version/export/absent-source updater probe; no product installation started"
   ],
   "diagnosticParser": {
     "status": "PASS",
@@ -96,19 +100,19 @@
   "testExecutables": [
     {
       "file": "core_tests.exe",
-      "sha256": "e13f991f56a373a9b2edc163d7650309296ff27c68bf869ab157229f8d80038f"
+      "sha256": "ee627ca2ff7e59d2960cea07ad29678ef128d85b77f47a388dfebacb8a8d52a3"
     },
     {
       "file": "log_tests.exe",
-      "sha256": "a6d383a7a895805588a60da12b5780aab3b34a6b45b3d16d7da60bdaae98a378"
+      "sha256": "f007f29f1e9bc73d4b81246ac0860a9999a3dad97f43c9b4b8f680daaaf3c863"
     },
     {
       "file": "theory_probe.exe",
-      "sha256": "56e197f3279451f9cee2be533e1b65ce1888bad3bf0299c27f8e7f72534eb26c"
+      "sha256": "41b4c84858143e4f16a891cd1d1ad1390bbb89a21e992992fe1fe379373bab34"
     },
     {
       "file": "export_cache_tests.exe",
-      "sha256": "5da98da3b5d465ac543864fafaed5497e4508c7edc2a3a5679ff037f1f636f55"
+      "sha256": "26d28e74079978963e5a9fcb3b30aec29b97ba929ec889112800c4fff707b194"
     },
     {
       "file": "package_version_tests.exe",
@@ -116,27 +120,43 @@
     },
     {
       "file": "payload_tests.exe",
-      "sha256": "3f564b7292eba0417ae80c877424bc09ceff886c8e5d2c4e12650ba15d9b6012"
+      "sha256": "f0b29114b31de3975620003a4cce933bce7c9513c9970f0c368ce803dbbf5d52"
     },
     {
       "file": "transaction_tests.exe",
-      "sha256": "0067485991351affd0874e9d7857b8b44835c92ddc7b45faf4edcbd76a759e0b"
+      "sha256": "9dd6195f43994926888091b9eed2124c58d2aae586a07393a09a751f6749b481"
     },
     {
       "file": "audio_probe.exe",
-      "sha256": "a9669b12023d7a65caec1d5a1dd4d608f723cd49becd6f1473e3ea7477645304"
+      "sha256": "51071656de7cc1e476d2d1a43ef98fd9ca7457fc6dcd6bccf012fead97e5559a"
     },
     {
       "file": "audio_fidelity_tests.exe",
-      "sha256": "a28eaeb2644ff05a5e7ca1e5ea6751e11e4ef68b9f6a477ff9434fe621ff6c07"
+      "sha256": "ef4c30d3aca3fd9aafd323130e0589f8daa51b1c5781f54e571c0694233a5137"
     },
     {
       "file": "registry_tests.exe",
-      "sha256": "9b1b0da0e853c86bbcc7a8b28ef621b1edc995bda39fc0947e0ce9f7bd9c735d"
+      "sha256": "314c5ff4cb48d919f2a6a0c7333774b07735f773028ed3dafc349aaaacf2962d"
     },
     {
       "file": "participant_tests.exe",
-      "sha256": "c1a227f9a76203f8c95de546e67941f480bee21eaad5c3590295adbb09cbd24d"
+      "sha256": "0d92e0a3765b3bb72d1e3f1b5ac03a599f95e7ddd84391f7f4e9bf199da2b1ba"
+    },
+    {
+      "file": "install_metadata_tests.exe",
+      "sha256": "9d8884b68096a9b56b6b0fbbd8ff63116c1f83ca35445888c997a8e49a491a85"
+    },
+    {
+      "file": "installer_api_probe.exe",
+      "sha256": "950dc3e8e83b45645a999bf0eb184b5e7beae72d12503dfb7be83abfaa25acee"
+    },
+    {
+      "file": "ChordCanvasInstaller.dll",
+      "sha256": "cf4ec796b49687ae9e922989b52dba5f42502ba691ab57ec7037d6bf0e0ab7f5"
+    },
+    {
+      "file": "payload_inspect.exe",
+      "sha256": "23a3915abfd252df0540b563f6ccbaf3d5941575fa78cfa35b7210a03089d31f"
     }
   ],
   "architectureInspection": "llvm-readobj --file-headers core_tests.exe: COFF-x86-64, IMAGE_FILE_MACHINE_AMD64, 64-bit",
@@ -149,5 +169,6 @@
     "participantSeconds": 1.68,
     "totalSeconds": 1.84
   },
-  "metadataEvidence": "engineering/metadata-evidence.json"
+  "metadataEvidence": "engineering/metadata-evidence.json",
+  "installerEvidence": "engineering/installer-evidence.json"
 }

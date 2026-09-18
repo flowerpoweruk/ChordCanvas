@@ -18,4 +18,5 @@ struct Payload {
 };
 std::string sha256(const std::filesystem::path& file);
 bool plainPath(const std::filesystem::path& path);
+void validateAmd64Pe(const std::filesystem::path& file);
 }

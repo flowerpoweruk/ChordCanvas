@@ -2,6 +2,24 @@
 
 ## Current execution record — 18 September 2026
 
+### Iteration 8 — production uninstall metadata and native offline package integration
+
+Iteration 7 committed/pushed as **bbd4a277a22207d61b611354f72bc97ad8616033**; actual remote main matched. Owner-safe Live closure and Visual Studio entitlement remain pending. Live still runs; no force-close, further Microsoft project compilation or binary distribution.
+
+Implemented the production immutable installer-directory participant: exclusive durable descriptor/snapshot, prior uninstaller-directory retention, final owned-file receipt, exact known registration/version checks and joint primary bundle decision. A separate pinned retirement marker survives final auxiliary-directory removal; unknown files, reparse points, ownership conflicts and loaded uninstallers stop safely. Mutable logs/progressions never enter this directory.
+
+Actual **23 abruptly exited disposable processes PASS** across fresh/update bundle/registration/sealing and metadata staging/rollback/retirement boundaries. Tests use synthetic AMD64 executables and generated HKCU leaves, not a VST3, actual Inno uninstaller or real product HKLM key. Initial path/registration test failures and a misplaced hook-loop compile failure were corrected; later successful tests do not erase those failures.
+
+Added AMD64 native helper exports for OS/architecture, source preflight, finalisation/abort and safe uninstall preflight. Actual helper **FileVersion 0.1.0.1 / ProductVersion 0.1.0**, DLL load/export/support/version probe PASS; absent-source updater returned **-2**, no installation started. No rollback runs under DLL loader lock. Inno holds the product Global mutex throughout uninstall and rechecks before deletion. Verified pinned Inno source opens .dat exclusively before callbacks; only uninstall exempts that engine-owned file's second content read. Install/update integrity remains strict and tested.
+
+Shared Inno definitions implement fixed known-folder/identity, native x64 Windows 11, compact automatic path flow, admin elevation, offline payload and explicit no application closure/restart. Both definitions **compiled successfully** with synthetic development payloads; private Setup.exe/Updater.exe fixtures were **never executed or delivered**. Generated uninstall rules list exact owned files and empty directories, never common VST3 parent deletion. The product builder checks numeric binary versions, SDK class IDs, pinned compiler/notices, complete native payload validation and clean committed Release build receipts/hashes before creating unaccepted candidates. Actual product-input invocation **REFUSED the stale 0.1.0.0 VST3** before output creation. Positive product packaging path remains unrun.
+
+`Scripts/build-core.ps1` latest **11/11 PASS, 18.26 s / 792,363 assertions**; native recovery-error follow-up **1/1 PASS .12 s**. Independent strict parser **12 synthetic logs PASS**. Native payload inspector PASS on a synthetic 1.10.0 owned AMD64 manifest; wide-character Windows paths supported. PowerShell parser PASS. Receipts/hashes/scope in `engineering/installer-evidence.json` and updated `engineering/core-evidence.json`. LLVM helper remains development-only; its Windows/UCRT imports include a private UCRT contract, and clean-machine runtime/redistribution acceptance is unrun. Inno's actual installed licence permits any-purpose use; compiler branding does not replace that inspected licence text.
+
+Fresh independent rechecks also PASS: music21 10.5.0 all **30,870 voicings / 42 written scales**, and mido 1.3.3 **three exact full-extent EOT fixtures**. These file/oracle checks do not change failed actual Live trailing/empty import evidence.
+
+Remaining: licensed clean Microsoft VST3/helper build, corrected actual Live load, package execution/elevation/offline update/cancellation/rollback/uninstall, actual native GUI/listening/DPI/fresh-start/drag acceptance, trailing/empty clip import and disabled Live save gates, runtime/dependency clearance and release. **No accepted Setup.exe, Updater.exe, stable tag or binary release exists.** Continue independent diagnostics/GUI source work while pending external gates remain.
+
 ### Iteration 7 — typed registry snapshots and joint durable decision
 
 Iteration 6 committed and pushed as **9f7170be704d65660c4cac0a3fbaf22f06b4e727**; actual remote main matched. Pending owner-safe host closure and Microsoft entitlement confirmation remain unresolved; no further Microsoft project compilation or binary distribution.

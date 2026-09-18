@@ -1,0 +1,104 @@
+{
+  "date": "2026-09-18",
+  "source": "bbd4a277a22207d61b611354f72bc97ad8616033+dirty",
+  "scope": "Production metadata/adapter source tested with synthetic AMD64 executables and disposable HKCU leaves. Inno definitions compiled only; neither synthetic package executed. Not installed product or Live acceptance.",
+  "fullSuite": {
+    "command": "Scripts/build-core.ps1",
+    "status": "PASS",
+    "tests": 11,
+    "seconds": 18.26,
+    "coreAssertions": 792363
+  },
+  "nativeApiFollowup": {
+    "command": "CTest -R ^installer_api$ after recovery-error mapping",
+    "status": "PASS",
+    "tests": 1,
+    "seconds": 0.12
+  },
+  "metadata": {
+    "status": "PASS",
+    "actualAbruptProcesses": 23,
+    "freshAndUpdateMainBoundaries": 14,
+    "additionalMetadataBoundaries": 9,
+    "registry": "Disposable generated HKCU native 64-bit leaves only; no real product HKLM registration touched",
+    "tested": [
+      "Prior directory and typed registration restored together with prior bundle",
+      "Fresh interruption restores complete absence",
+      "Descriptor staging, directory creation, helper copy, registration, sealing, rollback and retirement interruption",
+      "Incomplete finalisation prevents commit and restores prior installation",
+      "Known retirement marker handles last-directory cleanup interruption",
+      "Unknown files preserved; loaded uninstaller replacement refused; identical version read-only no-op",
+      "Inno-exclusive .dat permits narrowly scoped uninstall preflight, while install/update retain full integrity reads"
+    ]
+  },
+  "nativeDll": {
+    "status": "PASS read-only load/probe",
+    "fileVersion": "0.1.0.1",
+    "productVersion": "0.1.0",
+    "machine": "AMD64 PE32+ DLL",
+    "sha256": "cf4ec796b49687ae9e922989b52dba5f42502ba691ab57ec7037d6bf0e0ab7f5",
+    "exports": [
+      "CC_Abort",
+      "CC_Begin",
+      "CC_Finalise",
+      "CC_Supported",
+      "CC_UninstallCheck",
+      "CC_Version"
+    ],
+    "probeObserved": "Actual Windows 11 native AMD64 support/version, absent-source updater returned -2, Abort returned 0; no installation started",
+    "runtime": "LLVM development static C++ runtime; Windows/UCRT imports, including api-ms-win-crt-private-l1-1-0.dll. Clean-machine runtime acceptance and compiler/runtime distribution clearance remain unrun; not distributed."
+  },
+  "innoCompileOnly": {
+    "status": "PASS",
+    "compiler": "Inno Setup 7.1.0 x64",
+    "compilerSha256": "d06ebd38f38e3cee60a3c50cc45bd449d77e0bc6a5cabc607ea9886808e4de1a",
+    "licenseSha256": "2e5346868c2a18434489824e11d65c3031620f792fefc415d05f19cd441abf5c",
+    "fixtureDirectory": "build/packaging-syntax-e8c87342-fdd0-4fcb-ab50-41691b050ed4",
+    "helperInputSha256": "cf4ec796b49687ae9e922989b52dba5f42502ba691ab57ec7037d6bf0e0ab7f5",
+    "payloadInputSha256": "ee627ca2ff7e59d2960cea07ad29678ef128d85b77f47a388dfebacb8a8d52a3",
+    "definitions": "Packaging/Windows/Setup.iss and Updater.iss; shared fixed-ID Common.iss",
+    "artifacts": [
+      {
+        "file": "Setup.exe",
+        "sha256": "c564033e64bb4888520d13858fb6966f01d2044f9a6de1b14f4391cb2de20370",
+        "bytes": 3537996,
+        "accepted": false,
+        "executed": false,
+        "payload": "Synthetic core_tests.exe, not VST3"
+      },
+      {
+        "file": "Updater.exe",
+        "sha256": "00d392030b536d69999fee2dccd04390cff5a5189d79ab0ce34db29ce04c4381",
+        "bytes": 3538003,
+        "accepted": false,
+        "executed": false,
+        "payload": "Synthetic core_tests.exe, not VST3"
+      }
+    ]
+  },
+  "packageBuilder": {
+    "syntax": "PowerShell parser PASS",
+    "realInputAttempt": "REFUSED expected 0.1.0.1 / 0.1.0; observed locked old VST3 0.1.0.0 / 0.1.0. No product package output created.",
+    "provenance": "Requires actual clean Release build receipt matching commit and four input hashes, pinned JUCE/Inno inputs and distribution clearance. Positive product packaging path has not run."
+  },
+  "payloadInspector": {
+    "status": "PASS",
+    "fixture": "Synthetic 1.10.0 manifest, one complete hash-verified AMD64 file",
+    "paths": "Wide-character Windows entry point; no end-user tool dependency"
+  },
+  "diagnosticParser": {
+    "status": "PASS",
+    "syntheticFiles": 12,
+    "command": "Scripts/verify-logs.py build/core/log-tests-11860-F6441AD1-F7CE-4B03-A1B7-954F38C809B0"
+  },
+  "failuresAndReview": "Initial metadata test failed because safe-path checking required a not-yet-created final directory, then because synthetic registration slash/case comparison was too strict; corrected and rerun. Hook loop initially inserted before fixture variables caused compile failure; moved and rebuilt. Source review found Inno exclusively opens .dat before callbacks; uninstall alone exempts its second content read and rechecks before deletion. SDK metadata property names contain spaces; packager corrected against actual generated JSON. No earlier failure is treated as PASS.",
+  "remaining": [
+    "Owner-safe Live closure and Visual Studio entitlement confirmation",
+    "Corrected VST3 linkage and actual Live instrument load",
+    "Positive product packager invocation after clean licensed Release build",
+    "Actual Setup/Updater elevation, installation, same/new/absent/downgrade, offline update, cancellation, failure, rollback and uninstall tests",
+    "Exact installed Live/GUI/audio/DPI/fresh-start/native drag acceptance; trailing/empty import and disabled saving gates",
+    "Dependency/runtime clearance and actual release publication"
+  ],
+  "delivery": "No accepted Setup.exe/Updater.exe, stable tag or binary release. Private synthetic compile fixtures are not deliverables."
+}
