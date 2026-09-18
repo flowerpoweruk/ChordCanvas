@@ -252,7 +252,7 @@ struct Editor::PopoverBackground final : juce::Component {
     void paint(juce::Graphics& g) override { g.fillAll(ui::raised);g.setColour(ui::text);g.drawRect(getLocalBounds(),1); }
 };
 Editor::Editor(Processor& p) : AudioProcessorEditor(p),processor(p),skin(std::make_unique<Skin>()),canvas(std::make_unique<Canvas>(*this)),exporter(std::make_unique<ExportHandle>(*this)) {
-    setLookAndFeel(skin.get());setWantsKeyboardFocus(true);setResizable(true,true);setResizeLimits(1000,560,1800,1200);processor.interactive();
+    setLookAndFeel(skin.get());setWantsKeyboardFocus(true);processor.interactive();
     for(auto* c:std::initializer_list<juce::Component*>{&key,&sound,&rate,&volume,&length,&repeats,&settings,&play,&stop,&start,&sync,&select,&razor,&undo,&redo,&minus,&plus,&zoomMinus,&zoomPlus,&fit,&save,&load,&logs,&back,&seventh,&sus2,&sus4,&editGrid,&sliceGrid,&status,&about,&logging,&scrollbar,canvas.get(),exporter.get(),&closePopover,&popoverTitle})addAndMakeVisible(c);
     for(int d=0;d<7;++d){pads[d]=std::make_unique<Pad>(*this,d);addAndMakeVisible(*pads[d]);}
     for(auto* b:std::initializer_list<juce::Button*>{&repeats,&settings,&play,&stop,&start,&sync,&select,&razor,&undo,&redo,&minus,&plus,&zoomMinus,&zoomPlus,&fit,&save,&load,&logs,&back,&seventh,&sus2,&sus4,&closePopover})b->setWantsKeyboardFocus(false);
@@ -278,6 +278,9 @@ Editor::Editor(Processor& p) : AudioProcessorEditor(p),processor(p),skin(std::ma
     auto metadata=juce::JSON::parse(chordCanvasRelease);juce::String changes="ChordCanvas "+metadata["version"].toString()+" · AGPLv3\n\n";
     auto currentChanges=metadata["changes"];if(auto* list=currentChanges.getArray())for(auto& change:*list)changes+=change.toString()+"\n";about.setText(changes,juce::dontSendNotification);
     for(auto* l:{&status,&logging,&popoverTitle}){l->setFont(ui::font(12));l->setColour(juce::Label::textColourId,ui::secondary);}
+    // JUCE setResizeLimits constrains the initial zero-size bounds immediately,
+    // calling our resized(). Every child and its callbacks must exist first.
+    setResizable(true,true);setResizeLimits(1000,560,1800,1200);
     setSize(1040,640);handleAsyncUpdate();startTimerHz(30);processor.event("editor.open");
 }
 Editor::~Editor() { stopTimer();cancelPendingUpdate();scrollbar.removeListener(this);processor.session.loseFocus();processor.event("editor.close");setLookAndFeel(nullptr); }

@@ -2,6 +2,18 @@
 
 ## Current execution record — 18 September 2026
 
+### Iteration 12 — actual native editor-creation failure and initialization correction
+
+Iteration 11 committed/pushed as **d9116af28d1135309af09a782f7c4e0df3bf021a**; actual remote main matched. Community installation authority/UAC remains pending. No further Microsoft project compilation, owner Live closure or binary distribution.
+
+Built a minimal LLVM development-only native VST3 view host using the pinned SDK interfaces, IHostApplication, connected component/controller, IComponentHandler and HWND frame. It explicitly identifies itself as a development view host, opens no audio device, supplies no pretend Live clock and never substitutes for actual Live acceptance. `Scripts/build-vst3-view-host.ps1` actual compile **PASS**; PowerShell parser **PASS**; explicit absent-module refusal **exit 1 PASS**. Initial missing Windows DPI declaration corrected by an explicit supported Windows target. Eight upstream SDK pragma-pack warnings remain documented.
+
+The existing unchanged first-build VST3 (**f41e1987... / numeric 0.1.0.0**) initializes its factory/component/controller/connections, then **crashes at createView(editor)** before rendering. Actual native process **exit -1073741819 / 0xC0000005**, reproduced under bundled LLVM LLDB in only our disposable process. Actual fault reads address 0x40 with rcx=0; optimized DLL lacks available function/line PDB, so nearest-export debugger labels are not asserted as function attribution. Owner Live remains running; no owner work touched. Raw debugger/session material remains private/ignored.
+
+Pinned JUCE source confirms `setResizeLimits` immediately constrains zero-size bounds and can invoke `resized()`. Our constructor called it before constructing the pad children, while layout dereferences every pad. Moved resizability/limits after all child construction and callback wiring. This corrects the source-identified unsafe initialization path consistent with the observed failure; **corrected native compilation/retest NOT RUN**. No rendered screenshot/gesture/design pass claimed. Evidence and exact binary/harness hashes: `engineering/editor-creation-evidence.json`; design record updated.
+
+The preceding unchanged core suite remains **13/13 PASS / 17.75 s**, and isolated actual Inno scenarios **13 PASS**. These do not verify the uncompiled editor correction. Continue with the pending free Community installation, separate-directory native build and actual editor/Live retests; full MIDI clip extent, disabled Live saving, installed product/elevation/clean-machine/runtime/release gates remain open. **No accepted Setup.exe/Updater.exe or stable release exists.**
+
 ### Iteration 11 — actual isolated Inno execution and observed uninstall completion
 
 Iteration 10 committed/pushed as **62a9d1d36bcb973d3c861eb2c457f4443fe29b12**; actual remote main matched. Owner-authorised AGPL/public source remains in effect. Investigated Microsoft Community 2026 terms in full: individual use and OSI-licensed application development provide a free route. Requested minimum authority to install Microsoft-signed Community (verified valid signature; SHA256 **e99867faceaa394f1c5b22b83ffacaf6d81b0e5f847b71e99123ca0d96289433**). Pending response/UAC; no Community installation or Microsoft project compilation performed. Live remains open; no owner work closed. A new separate native build directory can avoid the old development DLL link lock once licensing is resolved.

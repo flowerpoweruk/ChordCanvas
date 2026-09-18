@@ -1,0 +1,44 @@
+{
+  "date": "2026-09-18",
+  "source": "d9116af28d1135309af09a782f7c4e0df3bf021a+dirty",
+  "scope": "Native development-only view host using the existing older Microsoft-built VST3. No audio device/processing, Live impersonation, rendering screenshot, GUI acceptance or shipping binary distribution.",
+  "environment": {
+    "windows": "Windows 11 Home 10.0.26200.9168 native AMD64",
+    "compiler": "LLVM-MinGW 20260908 UCRT / Clang 23.1.1 for development host only",
+    "debugger": "Bundled LLVM LLDB",
+    "sdk": "Pinned JUCE 9.0.2 VST3 SDK interfaces; COM-compatible Windows native x64 calling convention"
+  },
+  "developmentHost": {
+    "buildCommand": "Scripts/build-vst3-view-host.ps1",
+    "buildStatus": "PASS",
+    "sha256": "228a19d71295f51aa9e429b1135e0dffc6fcb614f4563ac30388fbf4cf1bbf68",
+    "powerShellParser": "PASS",
+    "absentModuleRefusal": "PASS; actual exit 1 before native module loading",
+    "initialCompileFailure": "Windows DPI API declaration unavailable with the compiler's default Windows target; explicit Windows 10/11 _WIN32_WINNT target corrected it",
+    "warnings": "Eight upstream SDK pragma-pack diagnostics; no project diagnostic in the actual successful compile"
+  },
+  "testedPlugin": {
+    "sha256": "f41e1987a81c2b2422b32f7941c43644a00f66ae4296e0caa938b42efedab17d",
+    "numericFileVersion": "0.1.0.0",
+    "productVersion": "0.1.0",
+    "status": "Older unchanged first-build DLL; corrected event bus/version/diagnostic/UI sources have not been linked"
+  },
+  "actualProcedure": "Load explicit existing native module; initialize factory/component/controller with a correctly named development IHostApplication; connect both IConnectionPoint interfaces; supply IComponentHandler; call IEditController::createView(editor). Reproduce the failure in the owned disposable process under LLVM LLDB.",
+  "observed": {
+    "moduleFactoryComponentControllerConnections": "PASS",
+    "componentHandler": "PASS",
+    "editorCreation": "FAIL before view attachment/rendering",
+    "actualExitCode": -1073741819,
+    "exception": "0xC0000005 access violation reading address 0x40",
+    "debuggerReceiver": "Actual faulting rcx is zero",
+    "pluginFrames": "Failure and preceding stack frames are in ChordCanvas.vst3; optimized DLL has no available function/line PDB, so exact function names were not inferred from the debugger's nearest exported-symbol labels",
+    "privateEvidence": "Debugger output remains private/ignored; no real session log, raw stack, dump or user path is public",
+    "live": "Owner Live remains running; no owner process or unsaved work was closed"
+  },
+  "sourceFinding": "Editor called setResizeLimits before constructing its seven pad children. Full pinned JUCE source shows that this constrains the initial zero-size bounds immediately and can invoke the editor's resized(), which dereferences each pad. This is a source-identified unsafe initialization path consistent with the observed null-receiver fault, rather than a symbolized debugger attribution.",
+  "sourceCorrection": "Moved setResizable/setResizeLimits after all child construction and callback wiring, before final setSize/handleAsyncUpdate.",
+  "correctedPluginCompilation": "NOT RUN; pending valid Microsoft Community acquisition/installation authority and UAC",
+  "correctedPluginRetest": "NOT RUN",
+  "renderedDesignReview": "NOT RUN; creation failure prevented screenshots and gesture review",
+  "abletonAcceptance": "NOT RUN against corrected binary; prior actual Live event-input-bus load failure remains open"
+}

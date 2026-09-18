@@ -26,7 +26,7 @@
       "packageVersionSeconds": 0.09,
       "payloadSeconds": 0.69,
       "transactionSeconds": 3.87,
-      "totalSeconds": 27.70,
+      "totalSeconds": 27.7,
       "coreAssertions": 789531
     },
     "binarySha256": "f41e1987a81c2b2422b32f7941c43644a00f66ae4296e0caa938b42efedab17d",
@@ -48,7 +48,8 @@
   "correctionsAwaitingVerification": [
     "Declare the event input bus required by Live; ignore incoming MIDI without adding controller mapping or live MIDI output",
     "Generate numeric Windows file version 0.1.0.1 from the release metadata build number",
-    "Preserve narrow-block body targets and increase minimum height when optional voicing controls are visible"
+    "Preserve narrow-block body targets and increase minimum height when optional voicing controls are visible",
+    "Construct and wire every editor child before applying resize limits, which can invoke layout immediately"
   ],
   "subsequentBuilds": {
     "eventBusBuild": "FAIL at link: LNK1104, Live retains the original DLL lock; no host force-closure attempted",
@@ -56,5 +57,12 @@
     "separateBuild": "Stopped after discovering the Microsoft toolchain licence gate; no corrected VST3 load PASS claimed"
   },
   "licensingGate": "Project/JUCE AGPLv3 explicitly authorised. Build Tools 2026 terms require a valid Visual Studio licence to develop this project's own C++ source; standalone exemption covers third-party open-source dependencies. Owner licence verification pending; further Microsoft project builds paused. No Microsoft-built binaries distributed.",
-  "packages": "Setup.exe and Updater.exe unfinished; no release or accepted installation/update claimed"
+  "packages": "Setup.exe and Updater.exe unfinished; no release or accepted installation/update claimed",
+  "editorCreationAttempt": {
+    "status": "FAIL before rendering",
+    "scope": "Existing older VST3 in native development-only view host; not Live",
+    "evidence": "engineering/editor-creation-evidence.json",
+    "correctedCompilation": "NOT RUN",
+    "correctedRetest": "NOT RUN"
+  }
 }

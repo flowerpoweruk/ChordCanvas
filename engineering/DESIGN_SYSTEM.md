@@ -2,6 +2,8 @@
 
 Engineering design baseline; rendered review has not yet run.
 
+18 September development review: the existing native VST3 fails during editor creation in the separate native view host, before it can render. Source inspection found resize limits triggering layout before pad construction; initialization order corrected in source. Corrected compilation/rendering remains pending. Actual exit/debugger observations and their limits are recorded in `editor-creation-evidence.json`; there is no invented first-open screenshot or GUI pass.
+
 The composition occupies one ink workspace, with seven coloured vertical strips joining the pad faces to their lower voicing controls. The horizontal timeline uses the same degree accents on rectangular blocks. The first view gives musical surfaces priority over the product wordmark and secondary actions. Settings replaces the composition view within the editor, with persistent transport status and a stop route.
 
 Tokens: background #11171D; surface #1C252E; raised #26323E; ordinary text #E9EEF2; secondary text #ABBAC6. Degree accents: #F1AD67, #E4D16B, #86C88A, #6BC8C4, #79AEEB, #B59BE5, #E397BA. Spacing 4/8/12/16/24; controls 24 or 28 high; corners 2 pixels; Segoe UI system typography at 12/14/18/24. Numeric roles are aligned and compact. No gradients or decorative shadows.
