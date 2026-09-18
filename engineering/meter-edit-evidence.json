@@ -144,5 +144,28 @@
       "https://www.ableton.com/en/manual/managing-files-and-sets/"
     ],
     "finding": "Official documentation supports SMF0 and drag import; no compatible full trailing-silence clip-boundary method established from inspected sources. Actual installed Live12.4.5 failure remains authoritative; no format/scope waiver inferred."
+  },
+  "playRefreshCorrection": {
+    "version": "0.1.5",
+    "buildNumber": 6,
+    "finding": "Source async refresh enabled Play based only on Sync, contradicting meter/tempo timer state until next timer tick; audio engine already safely refused invalid-meter playback.",
+    "change": "Async refresh applies same meter/known-tempo/Sync state; activation callback refuses invalid meter/unknown tempo; no audio callback changes.",
+    "developmentBuild": {
+      "sourceCommit": "7ad377a36913cb4aa297a9d25222b36f5873081c",
+      "sourceDirty": true,
+      "version": "0.1.5",
+      "buildNumber": 6,
+      "configuration": "Release",
+      "tests": "PASS",
+      "visualStudioVersion": "18.10.12210.168",
+      "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+      "pluginSha256": "75e156bfdcc7b57732bae5cead3155b48cf7ecc29b13a739d6ec46921ab66221",
+      "moduleInfoSha256": "bd60406b8d422bdde586ad5ecbfbceafaef2358715d2ab82efd436f3c43e6337",
+      "helperSha256": "38b9a9b009fc5d7aa42e21c5cb88f8e5daf79f0361d3235fc5a93c9ef8da5dae",
+      "releaseMetadataSha256": "b92e8d21da52f3382f28c92ad56e82b42c609b6b7ef709e26312c839c7172aaf"
+    },
+    "actualValidation": "13/13 PASS/47.71s/exit0; official validator47PASS/0FAIL/exit0; native processingPASS/exit0",
+    "cleanBuildAndPackages": "NOT RUN",
+    "installedHostRetest": "NOT RUN; safe owner Live closure pending"
   }
 }

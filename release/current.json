@@ -1,10 +1,10 @@
 {
-  "version": "0.1.4",
-  "buildNumber": 5,
+  "version": "0.1.5",
+  "buildNumber": 6,
   "channel": "development",
   "date": "2026-09-18",
   "changes": [
-    "Disable timeline timing edits while the host reports a meter other than 4/4."
+    "Keep Play disabled across UI refreshes when the host meter or tempo is unavailable."
   ],
   "installerId": "{EE56A5B5-24E6-4F83-B3AF-1C73BCD93594}",
   "manufacturerCode": "ChCv",

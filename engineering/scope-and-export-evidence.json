@@ -1,0 +1,48 @@
+{
+  "date": "2026-09-18",
+  "testedInstalledVersion": "0.1.3",
+  "sourceCommit": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+  "host": "Windows11 Home10.0.26200.9168 x64; Ableton Live12.4.5",
+  "actualGuiEvidence": "engineering/installed-live-013-evidence.json",
+  "actualWindowsEvidence": "engineering/installed-013-evidence.json",
+  "reviewedSources": [
+    "Source/Plugin/Editor.h",
+    "Source/Plugin/Editor.cpp",
+    "Source/Plugin/Processor.h",
+    "Source/Plugin/Processor.cpp",
+    "Source/Plugin/CMakeLists.txt",
+    "Source/Model/Session.cpp",
+    "Source/Persistence/Progression.cpp",
+    "Packaging/Windows/Common.iss",
+    "Packaging/Windows/TransactionEvents.iss"
+  ],
+  "scope01": "PASS: actual seven-pad canvas/Settings/About observed in installed Live; complete widget registration has key, four sounds, gain, repeat, timeline, editing, export and explicit data save/load. No vocal/audio import/analysis/waveform, BPM entry or suggestions/withdrawn panels. Tempo is read-only host status. VST3 instrument is sole shipped format.",
+  "scope02": "PASS: source widget/gesture/command registration and actual canvas/Settings have no Clear Timeline, loop toggle/region, snap-off, ripple reorder, lock, MIDI input mapping/import, arp/strum/humanise, transpose, extra voicing or velocity controls. Accepted editing/clipboard/keyboard gestures retained. Incoming MIDI is ignored.",
+  "scope03": "PASS: actual genuine installed payload consists of instrument, metadata and legally required notices; application owns helper/uninstaller/receipt. No bundled factory progression, README/manual, additional standalone or background agent/service. Host minimal state never restores document; file chooser reads progression only on explicit Load. Single Skin; no theme switcher; JUCE usage reporting/browser/curl disabled; source registers no telemetry, online update or session recovery. Installer recovery journal concerns binaries only.",
+  "nativeExportRetention": {
+    "date": "2026-09-18",
+    "version": "0.1.3",
+    "sourceCommit": "178b6dcb087ff5203e858f1890ea5cef8f83d143",
+    "actualRetainedExports": [
+      {
+        "sha256": "a9891ff9979f49b4e295b1086b0914c3d494ae273de15b7885087ceeb715ba2f",
+        "matches": 1,
+        "bytes": 103,
+        "filename": "chords.mid"
+      },
+      {
+        "sha256": "e96a9c84ef0fd6095c2fa2ac82559732d3568a76a2f05a9827870f47001d8535",
+        "matches": 1,
+        "bytes": 4250,
+        "filename": "chords.mid"
+      }
+    ],
+    "validSessionAndExportUUIDDirectories": true,
+    "differentPrivateDirectories": true,
+    "filesReadableAfterNativeLiveImport": true,
+    "scope": "Read-only retention and private directory verification of two actual native installed Live12.4.5 exports; not evidence of trailing/empty clip extent or concurrent GUI drags"
+  },
+  "midi09": "PASS: actual internal block body moves alter internal positions; actual dedicated export handle native drags create Session clips and leave source documents intact. Native code canMoveFiles=false, actual independent file reads after host import prove retained exact copies.",
+  "midi07Partial": "Whole128-block export with only block1 selected, filenamechords.mid, no prompt, two distinct UUID directories and retained exact files observed. Concurrent native GUI drags not executed; complete scenario remains NOT RUN.",
+  "scopeLimit": "These scoped exclusions/copy observations do not pass full GUI/audio/scaling, clip extent, all clipboard/transport or stable release gates."
+}
