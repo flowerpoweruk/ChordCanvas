@@ -9,3 +9,7 @@ JUCE is used through its AGPLv3 framework route. Pin and inspect the chosen revi
 The four audition engines are original native synthesis source. No proprietary samples or font files are copied into the product. Segoe UI is resolved as a Windows system font.
 
 Compiler runtimes and JUCE's transitive dependencies require separate notice review in the manifest. Licence-route approval does not imply that the VST3, installers, assets or release have passed acceptance.
+
+Microsoft toolchain gate discovered during actual notice review: the [2026 Build Tools terms](https://visualstudio.microsoft.com/license-terms/vs2026-ga-diagnostic-buildtools/) require a valid Visual Studio licence for development of this project's own source; their standalone exception covers third-party open-source dependencies. Installation authorisation does not establish that licence. Further Microsoft project builds are paused pending the owner's edition/licence confirmation. Build scripts now require explicit confirmation of that existing entitlement. No Microsoft-built binaries have been distributed. The independent LLVM-MinGW core build remains available.
+
+`Scripts/prepare-notices.ps1` generates pinned JUCE/VST3/HarfBuzz/SheenBidi/LunaSVG/PlutoVG/libpng/zlib notices and the IJG acknowledgement into the packaging staging directory. It preserves upstream licence text and emits input/hash receipts. This preparation is not complete installer/runtime distribution clearance; that gate remains open until actual package contents and toolchain rights are verified.

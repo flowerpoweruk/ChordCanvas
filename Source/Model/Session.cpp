@@ -50,6 +50,7 @@ void Session::releasePad(int d,bool keyboard) {
 }
 void Session::pressBlock(uint64_t id) { if(!document.find(id))return;previewBlock=id;previewPad=-1;latched=false;++previewSerial;send(); }
 void Session::releaseMomentary() { if(latched)return;previewPad=-1;previewBlock=0;heldKeys={};send(); }
+void Session::cancelPreview() { previewPad=-1;previewBlock=0;latched=false;heldKeys={};send(); }
 void Session::loseFocus() { heldKeys={};if(!latched)releaseMomentary(); }
 void Session::setRepeats(bool enabled) { repeats=enabled;if(!enabled && latched){latched=false;previewPad=-1;}send(); }
 void Session::setRepeatRate(int ticks) { if(ticks!=480 && ticks!=960 && ticks!=1920 && ticks!=3840 && ticks!=7680)return;repeatTicks=ticks;send(); }

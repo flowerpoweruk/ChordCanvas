@@ -128,10 +128,10 @@ void LogService::run() noexcept {
         const char* level=record.event.ends_with(".error") ? "error" : record.event.starts_with("log.") || record.event=="session.previous_unclean" ? "warning" : "info";
         return "{\"schema\":1,\"utc\":"+jsonQuote(utc())+",\"mono_ms\":"+std::to_string(elapsed)+",\"seq\":"+std::to_string(++seq)+",\"session\":"+jsonQuote(session)+",\"instance\":"+std::to_string(record.instance)+",\"level\":"+jsonQuote(level)+",\"thread_role\":"+jsonQuote(role)+",\"event\":"+jsonQuote(record.event)+",\"details\":"+record.details+"}\n";
     };
-    auto emit=[&](const std::string& text) {
+    auto emit=[&](const std::string& text,bool forceCompact=false) {
         recent.push_back(text);recentBytes+=text.size();while(recent.size()>1 && recentBytes>std::min<size_t>(cap/2,512*1024)){recentBytes-=recent.front().size();recent.pop_front();++windowDiscarded;}
         if(file.h==INVALID_HANDLE_VALUE)return;
-        if(total+text.size()>cap) {
+        if(total+text.size()>cap || forceCompact) {
             // Replay retained records in their original sequence order. A snapshot
             // outside the recent window predates it; one inside must not be duplicated.
             std::string compact=header;
@@ -175,6 +175,10 @@ void LogService::run() noexcept {
         }
         std::deque<Record> work;{std::lock_guard guard(mutex);work.swap(pending);}for(auto& record:work){auto text=line(record);if(record.event=="state.snapshot")snapshot=text;emit(text);}
         AudioLogEvent event;while(audio.pop(event))emit(line({event.instance,"audio.transition","{\"kind\":"+std::to_string(event.kind)+",\"revision\":"+std::to_string(event.revision)+",\"owner\":"+std::to_string(event.owner)+",\"tick\":"+std::to_string(event.tick)+",\"value\":"+std::to_string(event.value)+"}"},"audio-summary"));
+        auto finalLoss=dropped.load();if(finalLoss!=lostSeen)emit(line({0,"log.events_dropped","{\"count\":"+std::to_string(finalLoss-lostSeen)+"}"},"worker"));
+        // Reserve room before assigning the terminal record's sequence. A
+        // compaction marker must never follow the orderly session.end record.
+        if(file.h!=INVALID_HANDLE_VALUE && total+1024>cap)emit(line({0,"session.closing","{}"},"worker"),true);
         emit(line({0,"session.end","{\"termination\":\"orderly\"}"},"worker"));if(file.h!=INVALID_HANDLE_VALUE)FlushFileBuffers(file.h);
     }catch(...){status(false,"Diagnostic storage unavailable; no host fault attribution");}
 }

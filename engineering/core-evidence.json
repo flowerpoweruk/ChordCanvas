@@ -1,27 +1,32 @@
 {
   "scope": "Development core/integration executables; not installed VST3 or release packages",
   "version": "0.1.0-development",
-  "source": "1a35c74dc8b866376ebec3b13fa8db39ad46f828+dirty",
+  "source": "1d29a0a26741c78583c151dda54772a3bad4c5e1+dirty",
   "date": "2026-09-18",
   "environment": {
     "windows": "Windows 11 Home 10.0.26200 x64",
     "live": "Ableton Live 12 Suite 12.4.3",
     "compiler": "LLVM-MinGW 20260908 UCRT x86_64 / Clang 23.1.1",
     "cmake": "4.4.3",
-    "juce": "not downloaded; licence route pending",
+    "juce": "JUCE 9.0.2 downloaded, approved AGPLv3; core build does not link JUCE",
     "sdk": "10.0.26100.0 available; not used by the MinGW core build"
   },
   "testCommands": [
     "Scripts/build-core.ps1",
-    "Scripts/verify-logs.py build/core/log-tests-22312",
+    "Scripts/verify-logs.py build/core/log-tests-3896",
     "Scripts/verify-midi.py build/core",
-    "Scripts/verify-theory.py build/core/theory_probe.exe"
+    "Scripts/verify-theory.py build/core/theory_probe.exe Tests/Fixtures/music21-scales.json"
   ],
   "ctest": {
     "status": "PASS",
-    "coreSeconds": 14.0,
-    "diagnosticsSeconds": 1.77,
-    "totalSeconds": 15.83
+    "coreSeconds": 10.34,
+    "diagnosticsSeconds": 1.94,
+    "exportCacheSeconds": 0.07,
+    "packageVersionSeconds": 0.02,
+    "payloadSeconds": 0.17,
+    "transactionSeconds": 0.58,
+    "totalSeconds": 13.19,
+    "tests": 6
   },
   "coreOutput": [
     "Theory: 30870 combinations; MIDI 36..125",
@@ -31,8 +36,12 @@
     "Sound 1: RMS 0.0174645, peak 0.155925",
     "Sound 2: RMS 0.0279154, peak 0.0924241",
     "Sound 3: RMS 0.0326126, peak 0.10709",
-    "PASS: 790078 assertions",
-    "PASS: five-session rotation, active-session preservation, bounded compaction/queues, storage failure and four-producer audio ring"
+    "PASS: 792591 assertions",
+    "PASS: five-session rotation, active-session preservation, bounded compaction/queues, storage failure and four-producer audio ring",
+    "PASS: exclusive drag leases, exact bytes, 24-hour grace, stale cleanup, bounded admission and safe failure",
+    "PASS: numeric release SemVer ordering, bounds and explicit prerelease refusal",
+    "PASS: SHA256, complete owned file tree, numeric version, malformed paths, corruption and AMD64 PE validation",
+    "PASS: fresh install, absent update, four real rollback boundaries, file lock, numeric update, same version, repair, downgrade and user-file preservation"
   ],
   "diagnosticParser": {
     "status": "PASS",
@@ -79,16 +88,38 @@
   "testExecutables": [
     {
       "file": "core_tests.exe",
-      "sha256": "569ef0530ac8f57ec40040e761b6038d12af487d2ebc0ed94d9d55bdde42702f"
+      "sha256": "e861c1eafb8c102c75a33c5cd3fe674a2d232c8f5a8e91ac0448efa329510ae7"
     },
     {
       "file": "log_tests.exe",
-      "sha256": "b14e5789ff2cfe24cd1da2689504f0ce282e31a8710b49144f8dac062ddb1ebd"
+      "sha256": "2862b6061f2bdbfc57ee86820e680def3c76ac734efafebd17bbe95a4b240557"
     },
     {
       "file": "theory_probe.exe",
-      "sha256": "7640239087d71bf42519d0df3f7a268e2da72b70af5796ddf8a23c9370d2a372"
+      "sha256": "9ca975950af07ab3701d351582d78541cc34447cb3b702738e001eccea6a4a7b"
+    },
+    {
+      "file": "export_cache_tests.exe",
+      "sha256": "5956c3696a7492a5af843a2d8272d2df85f55547adb6d13b7c1c866193533b59"
+    },
+    {
+      "file": "package_version_tests.exe",
+      "sha256": "4ac9cc2f5b339bbe0f59b8a3b17c775b41ff599c175cb8711c48dbae353727d3"
+    },
+    {
+      "file": "payload_tests.exe",
+      "sha256": "69feea82432e7b45cacb79a4d973c5cc5dc7fcbd153c34342712361d5ae3634b"
+    },
+    {
+      "file": "transaction_tests.exe",
+      "sha256": "6872cb97e4d7956ff7f6b63136b0d9e4e4174cec8ac9b4f7297b09ef26a337a1"
     }
   ],
-  "architectureInspection": "llvm-readobj --file-headers core_tests.exe: COFF-x86-64, IMAGE_FILE_MACHINE_AMD64, 64-bit"
+  "architectureInspection": "llvm-readobj --file-headers core_tests.exe: COFF-x86-64, IMAGE_FILE_MACHINE_AMD64, 64-bit",
+  "followupDiagnostics": {
+    "seconds": 2.03,
+    "reason": "Strengthened regression to require a terminal end record, not only ordering",
+    "syntheticDirectory": "build/core/log-tests-3896",
+    "status": "PASS"
+  }
 }

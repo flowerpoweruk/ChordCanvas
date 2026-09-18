@@ -1,45 +1,51 @@
 [
   {
     "id": "ENV-01",
-    "status": "NOT RUN",
+    "status": "PASS",
     "version": "0.1.0-development",
-    "evidence": "engineering/core-evidence.json",
-    "source": "1a35c74dc8b866376ebec3b13fa8db39ad46f828+dirty",
+    "evidence": "engineering/vst3-build-evidence.json",
+    "source": "1d29a0a26741c78583c151dda54772a3bad4c5e1+dirty",
     "date": "2026-09-18",
     "environment": {
-      "windows": "Windows 11 Home 10.0.26200 x64",
+      "windows": "Windows 11 Home 10.0.26200.9168 x64",
       "live": "Ableton Live 12 Suite 12.4.3",
-      "compiler": "LLVM-MinGW 20260908 UCRT x86_64 / Clang 23.1.1",
+      "visualStudio": "Build Tools 2026 18.10.1 / 18.10.12210.168",
+      "compiler": "MSVC 19.51.36257.0, x64, static Release runtime",
+      "sdk": "10.0.26100.0",
       "cmake": "4.4.3",
-      "juce": "not downloaded; licence route pending",
-      "sdk": "10.0.26100.0 available; not used by the MinGW core build"
+      "juce": "9.0.2",
+      "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+      "vst3Sdk": "3.8.0, MIT"
     },
     "expected": "Discover and record actual Windows architecture/build, Live 12 build, JUCE revision, compiler, SDK and CMake version. Verify x64 output rather than inferring it from the machine name.",
     "requiredLayers": "W, R",
-    "procedure": "Not yet executed as complete product acceptance",
-    "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
+    "procedure": "Inspect actual Windows/Live/toolchain/dependency versions and generated DLL architecture",
+    "observed": "Actual pinned JUCE VST3 built with recorded Microsoft compiler/SDK; DLL inspected as AMD64 PE32+. Toolchain licence verification separately pending.",
     "defect": null
   },
   {
     "id": "ENV-02",
-    "status": "NOT RUN",
+    "status": "FAIL",
     "version": "0.1.0-development",
-    "evidence": "engineering/core-evidence.json",
-    "source": "1a35c74dc8b866376ebec3b13fa8db39ad46f828+dirty",
+    "evidence": "engineering/vst3-build-evidence.json",
+    "source": "1d29a0a26741c78583c151dda54772a3bad4c5e1+dirty",
     "date": "2026-09-18",
     "environment": {
-      "windows": "Windows 11 Home 10.0.26200 x64",
+      "windows": "Windows 11 Home 10.0.26200.9168 x64",
       "live": "Ableton Live 12 Suite 12.4.3",
-      "compiler": "LLVM-MinGW 20260908 UCRT x86_64 / Clang 23.1.1",
+      "visualStudio": "Build Tools 2026 18.10.1 / 18.10.12210.168",
+      "compiler": "MSVC 19.51.36257.0, x64, static Release runtime",
+      "sdk": "10.0.26100.0",
       "cmake": "4.4.3",
-      "juce": "not downloaded; licence route pending",
-      "sdk": "10.0.26100.0 available; not used by the MinGW core build"
+      "juce": "9.0.2",
+      "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+      "vst3Sdk": "3.8.0, MIT"
     },
     "expected": "A minimal ChordCanvas VST3 instrument scans, appears and opens in the installed Live 12. Its audio reaches the track/master through ordinary host routing. No Max for Live component or external sound-bank download is needed.",
     "requiredLayers": "H",
-    "procedure": "Not yet executed as complete product acceptance",
-    "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
-    "defect": null
+    "procedure": "Enable the authorised development custom VST3 scan; load the actual compiled instrument in Live",
+    "observed": "Scanned and appeared, but load rejected: instrument has no valid event input bus. Corrected source awaits rebuild and host retry.",
+    "defect": "No valid event input bus; later rebuild blocked by Live DLL lock and toolchain licensing gate"
   },
   {
     "id": "ENV-03",

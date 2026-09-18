@@ -1,0 +1,60 @@
+{
+  "date": "2026-09-18",
+  "version": "0.1.0-development",
+  "source": "1d29a0a26741c78583c151dda54772a3bad4c5e1+dirty",
+  "scope": "First Microsoft development VST3 build and actual failed Live load; no installed product or release package acceptance",
+  "environment": {
+    "windows": "Windows 11 Home 10.0.26200.9168 x64",
+    "live": "Ableton Live 12 Suite 12.4.3",
+    "visualStudio": "Build Tools 2026 18.10.1 / 18.10.12210.168",
+    "compiler": "MSVC 19.51.36257.0, x64, static Release runtime",
+    "sdk": "10.0.26100.0",
+    "cmake": "4.4.3",
+    "juce": "9.0.2",
+    "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
+    "vst3Sdk": "3.8.0, MIT"
+  },
+  "firstBuild": {
+    "command": "Scripts/build-plugin.ps1",
+    "exitCode": 0,
+    "ctest": {
+      "status": "PASS",
+      "tests": 6,
+      "coreSeconds": 20.17,
+      "diagnosticsSeconds": 1.85,
+      "exportCacheSeconds": 0.17,
+      "packageVersionSeconds": 0.09,
+      "payloadSeconds": 0.69,
+      "transactionSeconds": 3.87,
+      "totalSeconds": 27.70,
+      "coreAssertions": 789531
+    },
+    "binarySha256": "f41e1987a81c2b2422b32f7941c43644a00f66ae4296e0caa938b42efedab17d",
+    "numericFileVersion": "0.1.0.0",
+    "architecture": "llvm-readobj: COFF-x86-64 / IMAGE_FILE_MACHINE_AMD64 / 64-bit",
+    "componentCid": "ABCDEF019182FAEB4368437643633031",
+    "controllerCid": "ABCDEF011234ABCD4368437643633031",
+    "imports": "Inspected Windows OS DLL imports only; no dynamically linked VC runtime DLL observed. Clean-machine acceptance NOT RUN.",
+    "independentChecks": "music21 10.5.0: 30870 voicings/42 scales PASS; mido 1.3.3: three fixtures EOT 30720 PASS; strict diagnostic parser: 12 synthetic files PASS."
+  },
+  "liveAttempt": {
+    "status": "FAIL",
+    "scan": "ChordCanvas was scanned and appeared as a VST3 instrument in Live's browser",
+    "load": "This VST3 plug-in could not be opened",
+    "loaderDiagnosis": "Processor loaded, then rejected: instrument category but no valid event input bus; no valid input bus found",
+    "testPreference": "VST3 custom scanning enabled for the development output; originally off. System scanning originally off. Restore/review after testing.",
+    "privateEvidence": "Actual native UI inspected and only ChordCanvas loader lines reviewed privately. No raw Live log, screenshot or project is public."
+  },
+  "correctionsAwaitingVerification": [
+    "Declare the event input bus required by Live; ignore incoming MIDI without adding controller mapping or live MIDI output",
+    "Generate numeric Windows file version 0.1.0.1 from the release metadata build number",
+    "Preserve narrow-block body targets and increase minimum height when optional voicing controls are visible"
+  ],
+  "subsequentBuilds": {
+    "eventBusBuild": "FAIL at link: LNK1104, Live retains the original DLL lock; no host force-closure attempted",
+    "versionBuild": "FAIL at the same locked DLL; generated resource correctly contains 0,1,0,1, but no corrected linked DLL exists",
+    "separateBuild": "Stopped after discovering the Microsoft toolchain licence gate; no corrected VST3 load PASS claimed"
+  },
+  "licensingGate": "Project/JUCE AGPLv3 explicitly authorised. Build Tools 2026 terms require a valid Visual Studio licence to develop this project's own C++ source; standalone exemption covers third-party open-source dependencies. Owner licence verification pending; further Microsoft project builds paused. No Microsoft-built binaries distributed.",
+  "packages": "Setup.exe and Updater.exe unfinished; no release or accepted installation/update claimed"
+}

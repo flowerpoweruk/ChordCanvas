@@ -40,6 +40,7 @@ public:
     void releasePad(int degree,bool keyboard=false);
     void pressBlock(uint64_t id);
     void releaseMomentary();
+    void cancelPreview();
     void loseFocus();
     void setRepeats(bool enabled);
     void setRepeatRate(int ticks);

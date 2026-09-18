@@ -34,6 +34,8 @@ int main(int argc,char** argv) {
     auto boundedRoot=root/L"bounded";
     {LogService service(boundedRoot,16384);waitReady(service);service.post(1,"state.snapshot","{\"revision\":7}");for(int i=0;i<1500;++i)service.post(1,"synthetic.action","{\"padding\":"+jsonQuote(std::string(160,'x'))+"}");std::this_thread::sleep_for(std::chrono::milliseconds(250));require(service.status().dropped>0,"bounded message queue reports loss");for(int i=0;i<2000;++i)service.audioEvent({1,1,7,1,i,3});}
     files=logs(boundedRoot);require(files.size()==1,"one bounded session file");require(std::filesystem::file_size(files[0])<=16384,"storage cap");auto text=contents(files[0]);require(text.find("history_truncated")!=std::string::npos && text.find("state.snapshot")!=std::string::npos,"compaction preserves snapshot with explicit loss marker");
+    auto terminal=text.rfind("\"event\":\"session.end\"");
+    require(terminal!=std::string::npos && terminal>text.rfind("\"event\":\"log.history_truncated\""),"terminal session end exists and follows all compaction markers");
     auto deny=root/L"not-a-folder";{std::ofstream file(deny);file<<"synthetic owned test sentinel";}
     {LogService denied(deny);std::this_thread::sleep_for(std::chrono::milliseconds(100));require(!denied.status().available,"unwritable storage stays safe");}
     // Exercise actual model operations and an actual owned file-I/O failure.

@@ -115,6 +115,7 @@ void session() {
     s.pressPad(0,true);process();check(s.activePad()==0 && e.status().overrideActive,"keyboard hold");auto count=e.articulations();s.pressPad(0,true);process();check(e.articulations()==count,"suppress OS repeats");
     s.pressPad(1,true);s.releasePad(0,true);process();check(s.activePad()==1,"older key release preserves newest owner");s.loseFocus();process();check(!e.status().overrideActive,"focus releases momentary");
     s.setRepeats(true);s.pressPad(0);process();s.releasePad(0);check(s.repeatLatched(),"mouse up retains repeat");s.loseFocus();check(s.repeatLatched(),"focus retains latch");
+    s.cancelPreview();process();check(!s.repeatLatched() && s.activePad()==-1 && !e.status().overrideActive,"gesture/lifecycle cancellation releases latched preview");s.pressPad(0);process();
     auto ownerBefore=e.articulations();s.pressPad(0);s.pressPad(0);process();check(e.articulations()>ownerBefore,"coalesced stop-start rearticulates");
     s.edit([&](auto& d){return d.add(s.pads[0],0);});auto block=s.document.state().blocks[0];s.changeKey({3,0,Mode::minor});check(s.document.state().blocks[0]==block && s.pads[0].origin==s.key,"key changes preserve block snapshot");
     s.play();process();check(!s.repeatLatched() && e.status().running && !e.status().overrideActive,"local play clears preview latch");

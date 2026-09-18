@@ -31,7 +31,7 @@ void Engine::release() noexcept { for(auto& v:voices) if(v.active) v.held=false;
 void Engine::trigger(NoteSet notes,uint64_t owner) noexcept {
     uint64_t previousSource=source;
     release();sounding=notes;source=owner;
-    if(diagnostics){if(previousSource)diagnostics->audioEvent({2,diagnosticInstance,frame.revision,previousSource,static_cast<int>(tick),0});if(notes.count)diagnostics->audioEvent({1,diagnosticInstance,frame.revision,owner,static_cast<int>(tick),notes.count});}
+    if(auto* sink=diagnostics.load(std::memory_order_acquire)){auto instance=diagnosticInstance.load(std::memory_order_relaxed);if(previousSource)sink->audioEvent({2,instance,frame.revision,previousSource,static_cast<int>(tick),0});if(notes.count)sink->audioEvent({1,instance,frame.revision,owner,static_cast<int>(tick),notes.count});}
     if(notes.count) ++articulationCount;
     for(int i=0;i<notes.count && i<4;++i) {
         if(notes.notes[i]<0 || notes.notes[i]>127) continue;
@@ -69,7 +69,7 @@ float Engine::sample(Voice& v) noexcept {
 }
 void Engine::process(float* left,float* right,int count,HostClock host,bool bypass) noexcept {
     if(count<=0)return;
-    if(bypass){AudioFrame discarded;input.consume(discarded);reset();std::fill_n(left,count,0);std::fill_n(right,count,0);uiRunning=false;uiOverride=false;uiBlock=0;return;}
+    if(bypass){AudioFrame discarded;input.consume(discarded);reset();std::fill_n(left,count,0.0f);std::fill_n(right,count,0.0f);uiRunning=false;uiOverride=false;uiBlock=0;return;}
     if(std::isfinite(host.bpm) && host.bpm>0 && host.bpm<1000){bpm=host.bpm;knownTempo=true;}
     meterValid=host.numerator==4 && host.denominator==4;
     AudioFrame latest;

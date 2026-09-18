@@ -3,7 +3,7 @@
   "buildNumber": 1,
   "channel": "development",
   "date": "2026-09-18",
-  "changes": ["Initial theory, timeline command and MIDI export implementation under development."],
+  "changes": ["Chord palette, editable timeline and four original preview sounds.", "Fresh live sessions, manual progression files and bounded local diagnostics.", "VST3 editor and native MIDI drag under development; acceptance and packaging incomplete."],
   "installerId": "{EE56A5B5-24E6-4F83-B3AF-1C73BCD93594}",
   "manufacturerCode": "ChCv",
   "pluginCode": "Cc01",
