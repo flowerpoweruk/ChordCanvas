@@ -1,8 +1,8 @@
 # ChordCanvas interaction and visual system
 
-Engineering design baseline; rendered review has not yet run.
+Engineering design baseline with the first actual native/Live rendering review; complete GUI acceptance remains open.
 
-18 September development review: the existing native VST3 fails during editor creation in the separate native view host, before it can render. Source inspection found resize limits triggering layout before pad construction; initialization order corrected in source. Corrected compilation/rendering remains pending. Actual exit/debugger observations and their limits are recorded in `editor-creation-evidence.json`; there is no invented first-open screenshot or GUI pass.
+18 September development review: the initial editor-creation crash was reproduced and corrected by constructing children before applying resize limits. A subsequent clean native build creates/attaches the view and actually opens in Live 12.4.3. Its rendered review found mojibake in minus controls: JUCE's ASCII `const char*` constructor was being given UTF-8. Typed UTF-8 symbols and explicit MSVC `/utf-8` now compile and render correctly in the separate native view host; Settings' middle dot is also correct in accessibility text. Buttons use 14-pixel typography with visible keyboard focus on toggles/dial. The actual default-size review shows the transport labels fit. This first review does not establish the remaining DPI, dense/narrow-block, gesture or installed-product acceptance.
 
 The composition occupies one ink workspace, with seven coloured vertical strips joining the pad faces to their lower voicing controls. The horizontal timeline uses the same degree accents on rectangular blocks. The first view gives musical surfaces priority over the product wordmark and secondary actions. Settings replaces the composition view within the editor, with persistent transport status and a stop route.
 

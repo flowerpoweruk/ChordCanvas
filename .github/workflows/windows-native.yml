@@ -13,13 +13,15 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Verify hosted Visual Studio and pinned CMake
         shell: pwsh
+        env:
+          CC_REPO_READ_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = 'Stop'
           if ($env:GITHUB_ACTIONS -ne 'true' -or $env:RUNNER_ENVIRONMENT -ne 'github-hosted') { throw 'Requires the standard GitHub hosted runner' }
-          $ccRepo = Invoke-RestMethod "https://api.github.com/repos/$env:GITHUB_REPOSITORY"
+          $ccRepo = Invoke-RestMethod "https://api.github.com/repos/$env:GITHUB_REPOSITORY" -Headers @{ Authorization = "Bearer $env:CC_REPO_READ_TOKEN"; 'User-Agent' = 'ChordCanvas-native-build' }
           if (!$ccRepo.private -and $ccRepo.visibility -eq 'public') { Write-Output 'Standard public-repository hosted build; no paid runner' } else { throw 'This workflow is restricted to the authorised public repository' }
           $ccVswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'
-          $ccVs = & $ccVswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -format json | ConvertFrom-Json
+          $ccVs = & $ccVswhere -latest -products Microsoft.VisualStudio.Product.Enterprise -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -format json | ConvertFrom-Json
           if ($LASTEXITCODE -or !$ccVs -or $ccVs[0].productId -ne 'Microsoft.VisualStudio.Product.Enterprise') { throw 'Expected the Visual Studio Enterprise supplied by the hosted image' }
           $ccVs | Select-Object productId,installationVersion,isComplete,isPrerelease | ConvertTo-Json
           $ccTools = Join-Path $env:RUNNER_TEMP 'ChordCanvasTools'

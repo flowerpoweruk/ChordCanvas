@@ -40,5 +40,14 @@
   "correctedPluginCompilation": "NOT RUN; pending valid Microsoft Community acquisition/installation authority and UAC",
   "correctedPluginRetest": "NOT RUN",
   "renderedDesignReview": "NOT RUN; creation failure prevented screenshots and gesture review",
-  "abletonAcceptance": "NOT RUN against corrected binary; prior actual Live event-input-bus load failure remains open"
+  "abletonAcceptance": "NOT RUN against corrected binary; prior actual Live event-input-bus load failure remains open",
+  "latestActualRetest": {
+    "date": "2026-09-18",
+    "evidence": "engineering/native-review-evidence.json",
+    "cleanNativeBuild": "PASS, 13/13 tests, source a492b65cddae7b50f654171b6c61b0d5d32511c2",
+    "nativeProcessing": "PASS, real bus/lifecycle and fresh MIDI-ignore checks",
+    "editorCreationAttachment": "PASS",
+    "actualLiveLoad": "PASS, development bundle, 12.4.3",
+    "installedRelease": "NOT RUN"
+  }
 }

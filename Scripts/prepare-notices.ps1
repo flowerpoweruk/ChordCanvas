@@ -42,6 +42,10 @@ PreSonus Software Ltd. Provided AS IS; not part of an official third-party SDK.
 Microsoft C/C++ runtime is linked in Release mode; no developer tools or debug
 runtime files are included. Windows operating-system libraries and Segoe UI
 remain supplied by Windows; no font file is copied or redistributed.
+Microsoft compiler-provided standard runtime code retains Microsoft's rights;
+the ChordCanvas AGPL grant does not relicense Microsoft system libraries.
+Runtime linkage: https://learn.microsoft.com/en-us/cpp/c-runtime-library/crt-library-features
+Toolchain terms: https://visualstudio.microsoft.com/license-terms/vs2026-ga-community/
 All four preview sounds use original synthesis; no third-party sound samples.
 '@
 [IO.File]::WriteAllText((Join-Path $ccDestination 'NOTICE.txt'),$ccNotice+"`n",[Text.UTF8Encoding]::new($false))

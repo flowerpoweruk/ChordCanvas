@@ -64,5 +64,14 @@
     "evidence": "engineering/editor-creation-evidence.json",
     "correctedCompilation": "NOT RUN",
     "correctedRetest": "NOT RUN"
+  },
+  "latestActualRetest": {
+    "date": "2026-09-18",
+    "evidence": "engineering/native-review-evidence.json",
+    "cleanNativeBuild": "PASS, 13/13 tests, source a492b65cddae7b50f654171b6c61b0d5d32511c2",
+    "nativeProcessing": "PASS, real bus/lifecycle and fresh MIDI-ignore checks",
+    "editorCreationAttachment": "PASS",
+    "actualLiveLoad": "PASS, development bundle, 12.4.3",
+    "installedRelease": "NOT RUN"
   }
 }

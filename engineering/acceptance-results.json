@@ -25,27 +25,27 @@
   },
   {
     "id": "ENV-02",
-    "status": "FAIL",
+    "status": "PASS",
     "version": "0.1.0-development",
-    "evidence": "engineering/vst3-build-evidence.json",
-    "source": "1d29a0a26741c78583c151dda54772a3bad4c5e1+dirty",
+    "evidence": "engineering/native-review-evidence.json",
+    "source": "a492b65cddae7b50f654171b6c61b0d5d32511c2",
     "date": "2026-09-18",
     "environment": {
       "windows": "Windows 11 Home 10.0.26200.9168 x64",
       "live": "Ableton Live 12 Suite 12.4.3",
-      "visualStudio": "Build Tools 2026 18.10.1 / 18.10.12210.168",
       "compiler": "MSVC 19.51.36257.0, x64, static Release runtime",
       "sdk": "10.0.26100.0",
       "cmake": "4.4.3",
       "juce": "9.0.2",
       "juceRevision": "72782788ce18c2d4d760b28e0921d6ffc6431102",
-      "vst3Sdk": "3.8.0, MIT"
+      "vst3Sdk": "3.8.0, MIT",
+      "visualStudio": "Community 2026 18.10.12210.168"
     },
     "expected": "A minimal ChordCanvas VST3 instrument scans, appears and opens in the installed Live 12. Its audio reaches the track/master through ordinary host routing. No Max for Live component or external sound-bank download is needed.",
     "requiredLayers": "H",
-    "procedure": "Enable the authorised development custom VST3 scan; load the actual compiled instrument in Live",
-    "observed": "Scanned and appeared, but load rejected: instrument has no valid event input bus. Corrected source awaits rebuild and host retry.",
-    "defect": "No valid event input bus; later rebuild blocked by Live DLL lock and toolchain licensing gate"
+    "procedure": "Scan separate clean development Release bundle; load actual VST3 in Live; double-click C pad while host stopped",
+    "observed": "Actual editor opened at 120 BPM, exactly one C block inserted and pad audio visibly reached track/Main meters. Installed release tests remain open.",
+    "defect": null
   },
   {
     "id": "ENV-03",
@@ -2002,10 +2002,10 @@
   },
   {
     "id": "STATE-03",
-    "status": "NOT RUN",
+    "status": "PASS",
     "version": "0.1.0-development",
-    "evidence": "engineering/core-evidence.json",
-    "source": "1a35c74dc8b866376ebec3b13fa8db39ad46f828+dirty",
+    "evidence": "engineering/native-review-evidence.json",
+    "source": "a492b65cddae7b50f654171b6c61b0d5d32511c2",
     "date": "2026-09-18",
     "environment": {
       "windows": "Windows 11 Home 10.0.26200 x64",
@@ -2013,12 +2013,13 @@
       "compiler": "LLVM-MinGW 20260908 UCRT x86_64 / Clang 23.1.1",
       "cmake": "4.4.3",
       "juce": "not downloaded; licence route pending",
-      "sdk": "10.0.26100.0 available; not used by the MinGW core build"
+      "sdk": "10.0.26100.0 available; not used by the MinGW core build",
+      "visualStudio": "Community 2026 18.10.12210.168"
     },
     "expected": "Close and reopen only the editor in the same live processor. Current timeline, controls and playback remain; editor construction does not reset the session.",
     "requiredLayers": "U, H",
-    "procedure": "Not yet executed as complete product acceptance",
-    "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
+    "procedure": "Close and reopen only Live plug-in editor",
+    "observed": "Same processor retained its C block and eight-bar timeline; no owner Set closed.",
     "defect": null
   },
   {

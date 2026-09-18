@@ -22,5 +22,14 @@
   },
   "correctedBinary": "NOT RUN; source event-bus correction remains uncompiled",
   "processingLifecycleAndMidiIgnore": "NOT RUN; old binary refuses bus precondition before processing",
-  "limits": "No claim of actual Live loading, audible output, pad/timeline interaction, full MIDI drag extent, clean-machine or shipping acceptance"
+  "limits": "No claim of actual Live loading, audible output, pad/timeline interaction, full MIDI drag extent, clean-machine or shipping acceptance",
+  "latestActualRetest": {
+    "date": "2026-09-18",
+    "evidence": "engineering/native-review-evidence.json",
+    "cleanNativeBuild": "PASS, 13/13 tests, source a492b65cddae7b50f654171b6c61b0d5d32511c2",
+    "nativeProcessing": "PASS, real bus/lifecycle and fresh MIDI-ignore checks",
+    "editorCreationAttachment": "PASS",
+    "actualLiveLoad": "PASS, development bundle, 12.4.3",
+    "installedRelease": "NOT RUN"
+  }
 }

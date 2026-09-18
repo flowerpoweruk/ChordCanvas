@@ -42,6 +42,24 @@ for line in rows:
     pitches, names = oracles[(letter, accidental, mode)]
     assert actual_names == names, (fields[:8], actual_names, names)
     base = int(pitches[degree].midi)
+    root_letter, root_accidental = names[degree]
+    if abs(root_accidental) <= 1:
+        root_label = letters[root_letter] + {0: '', 1: '\u266f', -1: '\u266d'}[root_accidental]
+    else:
+        # Independent explicit enharmonic table for the documented display policy.
+        sharp_names = ('C', 'C\u266f', 'D', 'D\u266f', 'E', 'F', 'F\u266f', 'G', 'G\u266f', 'A', 'A\u266f', 'B')
+        flat_names = ('C', 'D\u266d', 'D', 'E\u266d', 'E', 'F', 'G\u266d', 'G', 'A\u266d', 'A', 'B\u266d', 'B')
+        root_label = (flat_names if accidental < 0 else sharp_names)[base % 12]
+    third = int(pitches[degree+2].midi) - base
+    fifth = int(pitches[degree+4].midi) - base
+    seventh_interval = int(pitches[degree+6].midi) - base
+    if sus:
+        quality = (('maj7' if seventh_interval == 11 else '7') if seventh else '') + ('sus2' if sus == 1 else 'sus4')
+    elif seventh:
+        quality = ('maj7' if seventh_interval == 11 else '7') if third == 4 else ('m7\u266d5' if fifth == 6 else 'm7')
+    else:
+        quality = '' if third == 4 else ('dim' if fifth == 6 else 'm')
+    assert fields[10] == root_label + quality, (fields[:8], fields[10], root_label + quality)
     expected = [int(pitches[degree+n].midi) for n in (0,2,4)]
     if sus:
         expected = [base+n for n in sus_intervals[sus]]
@@ -57,4 +75,4 @@ target = Path(sys.argv[2]) if len(sys.argv) > 2 else None
 if target:
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps({'provenance': 'music21 '+__version__+' MajorScale/MinorScale, explicit normalized register; no production generator used', 'fixtures': fixtures}, indent=2)+'\n', encoding='utf-8')
-print(json.dumps({'status': 'PASS', 'oracle': 'music21 '+__version__, 'combinations': count, 'writtenScales': len(oracles)}, indent=2))
+print(json.dumps({'status': 'PASS', 'oracle': 'music21 '+__version__, 'combinations': count, 'writtenScales': len(oracles), 'unicodeChordLabels': count}, indent=2))

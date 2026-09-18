@@ -15,7 +15,7 @@ void payload(const std::filesystem::path& root,const std::filesystem::path& exe,
 }
 const std::vector<std::wstring> names={L"DisplayName",L"DisplayVersion",L"QuietUninstallString"};
 std::string property(const RegistryImage& image,const std::wstring& name){
-    for(auto& value:image.values)if(value.name==name){check(value.type==REG_SZ && value.bytes.size()%2==0,"typed synthetic registry string");std::wstring wide(value.bytes.size()/2,L'\0');std::memcpy(wide.data(),value.bytes.data(),value.bytes.size());wide.pop_back();return std::string(wide.begin(),wide.end());}
+    for(auto& value:image.values)if(value.name==name){check(value.type==REG_SZ && value.bytes.size()%2==0,"typed synthetic registry string");std::wstring wide(value.bytes.size()/2,L'\0');std::memcpy(wide.data(),value.bytes.data(),value.bytes.size());wide.pop_back();std::string ascii;for(auto character:wide){check(character>=0 && character<=127,"synthetic ASCII registry property");ascii.push_back(static_cast<char>(character));}return ascii;}
     return {};
 }
 void metadata(const std::wstring& path,const std::string& version){

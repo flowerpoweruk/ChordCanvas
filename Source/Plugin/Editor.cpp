@@ -30,7 +30,7 @@ public:
         setColour(juce::TextEditor::outlineColourId,ui::line);setColour(juce::TextEditor::focusedOutlineColourId,ui::text);
         setColour(juce::Slider::textBoxTextColourId,ui::text);setColour(juce::Slider::textBoxBackgroundColourId,ui::ink);
     }
-    juce::Font getTextButtonFont(juce::TextButton&,int) override { return ui::font(12); }
+    juce::Font getTextButtonFont(juce::TextButton&,int) override { return ui::font(14); }
     juce::Font getComboBoxFont(juce::ComboBox&) override { return ui::font(14); }
     juce::Font getPopupMenuFont() override { return ui::font(14); }
     void drawButtonBackground(juce::Graphics& g,juce::Button& b,const juce::Colour&,bool hover,bool down) override {
@@ -44,14 +44,16 @@ public:
     }
     void drawToggleButton(juce::Graphics& g,juce::ToggleButton& b,bool hover,bool down) override {
         g.setColour(hover || down ? ui::raised : ui::surface);g.fillRect(b.getLocalBounds());
-        g.setColour(ui::line);g.drawRect(4,5,18,18);if(b.getToggleState()){g.setColour(ui::text);g.fillRect(8,9,10,10);}
+        g.setColour(b.hasKeyboardFocus(false) ? ui::text : ui::line);g.drawRect(4,5,18,18);if(b.getToggleState()){g.setColour(ui::text);g.fillRect(8,9,10,10);}
+        if(b.hasKeyboardFocus(false)){g.setColour(ui::text);g.drawRect(b.getLocalBounds().reduced(1));}
         ui::textAt(g,b.getButtonText(),b.getLocalBounds().withTrimmedLeft(30),14);
     }
-    void drawRotarySlider(juce::Graphics& g,int x,int y,int w,int h,float pos,float a,float z,juce::Slider&) override {
+    void drawRotarySlider(juce::Graphics& g,int x,int y,int w,int h,float pos,float a,float z,juce::Slider& slider) override {
         auto centre=juce::Point<float>(x+w*.5f,y+h*.5f);float radius=std::min(w,h)*.5f-4;
         juce::Path track;track.addCentredArc(centre.x,centre.y,radius,radius,0,a,z,true);g.setColour(ui::line);g.strokePath(track,juce::PathStrokeType(2));
         juce::Path arc;arc.addCentredArc(centre.x,centre.y,radius,radius,0,a,a+pos*(z-a),true);g.setColour(ui::text);g.strokePath(arc,juce::PathStrokeType(2));
         auto angle=a+pos*(z-a);g.drawLine(centre.x+std::sin(angle)*radius*.48f,centre.y-std::cos(angle)*radius*.48f,centre.x+std::sin(angle)*radius*.84f,centre.y-std::cos(angle)*radius*.84f,2);
+        if(slider.hasKeyboardFocus(false)){g.setColour(ui::text);g.drawRect(x,y,w,h);}
     }
     void drawScrollbar(juce::Graphics& g,juce::ScrollBar&,int x,int y,int w,int h,bool vertical,int thumbStart,int thumbSize,bool hover,bool) override {
         g.setColour(ui::surface);g.fillRect(x,y,w,h);g.setColour(hover ? ui::text : ui::line);
@@ -86,7 +88,7 @@ public:
     void paint(juce::Graphics& g) override { static const char* names[] {"Root","1st inv","2nd inv","3rd inv"};ui::textAt(g,names[get().inversion],{28,0,getWidth()-56,24},12); }
 private:
     Editor& editor;std::function<Chord()> get;std::function<void(Chord)> set;
-    juce::TextButton previous {"−"},next {"+"},seventh {"7th"},sus2 {"Sus2"},sus4 {"Sus4"};
+    juce::TextButton previous {u8"\u2212"},next {"+"},seventh {"7th"},sus2 {"Sus2"},sus4 {"Sus4"};
     std::array<juce::TextButton,5> octaves;
 };
 class Pad final : public juce::Component {
@@ -275,7 +277,7 @@ Editor::Editor(Processor& p) : AudioProcessorEditor(p),processor(p),skin(std::ma
     canvas->viewChanged=[this]{scrollbar.setRangeLimits(0,hardEnd*canvas->scale);scrollbar.setCurrentRange(canvas->pan,canvas->getWidth(),juce::dontSendNotification);};
     scrollbar.addListener(this);
     closePopover.onClick=[this]{popover(0);};about.setFont(ui::font(14));about.setColour(juce::Label::textColourId,ui::text);
-    auto metadata=juce::JSON::parse(chordCanvasRelease);juce::String changes="ChordCanvas "+metadata["version"].toString()+" · AGPLv3\n\n";
+    auto metadata=juce::JSON::parse(chordCanvasRelease);juce::String changes="ChordCanvas "+metadata["version"].toString()+juce::String(u8" \u00b7 AGPLv3\n\n");
     auto currentChanges=metadata["changes"];if(auto* list=currentChanges.getArray())for(auto& change:*list)changes+=change.toString()+"\n";about.setText(changes,juce::dontSendNotification);
     for(auto* l:{&status,&logging,&popoverTitle}){l->setFont(ui::font(12));l->setColour(juce::Label::textColourId,ui::secondary);}
     // JUCE setResizeLimits constrains the initial zero-size bounds immediately,

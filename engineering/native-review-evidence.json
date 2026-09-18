@@ -1,0 +1,44 @@
+{
+  "date": "2026-09-18",
+  "source": "a492b65cddae7b50f654171b6c61b0d5d32511c2+dirty",
+  "scope": "Actual development native build and first rendered review; no installed or stable release acceptance",
+  "cleanBaseline": {
+    "source": "a492b65cddae7b50f654171b6c61b0d5d32511c2",
+    "command": "Scripts/build-plugin.ps1 -BuildDirectory build/plugin-next -VisualStudioLicenseConfirmed",
+    "exitCode": 0,
+    "tests": "13/13 PASS",
+    "seconds": 47.22,
+    "pluginSha256": "f9d367811707023d8c48e2222f30758e061b76d51e813c937dbf22ae4af1af8d",
+    "processingProbe": "PASS, exit 0",
+    "editorAttachment": "PASS",
+    "live": "Live 12.4.3 scanned/loaded actual VST3 and rendered editor at stopped 120 BPM; pad audition visibly drives track and Main meters",
+    "editorReopen": "Closed/reopened only editor; one placed C block and eight-bar document retained"
+  },
+  "unicodeCorrection": {
+    "command": "Scripts/build-plugin.ps1 -BuildDirectory build/plugin-reviewed -VisualStudioLicenseConfirmed",
+    "exitCode": 0,
+    "tests": "13/13 PASS",
+    "seconds": 48.15,
+    "pluginSha256": "38ed003e2b20ce665869c845347902d736ebce858e70e81aa060a6549729ee23",
+    "helperSha256": "fd7541d2984a0bf86050d026162b330a39653885ad67530fc1ca942d2c0fbb56",
+    "processingProbe": "PASS, exit 0",
+    "coreStandalone": "PASS, 792659 assertions",
+    "theoryOracle": "music21 10.5.0: 30870 notes/Unicode chord labels and 42 written scales PASS",
+    "rendering": "Native development HWND view actually attached, 2080x1280 physical pixels. Minus controls and Settings middle dot correct in rendered/accessibility review. Settings review actually performed; no audio device opened by this harness",
+    "defectsFixed": "JUCE ASCII const-char UTF-8 misuse; explicit MSVC /utf-8; button typography 14; toggle/dial keyboard-focus border",
+    "remainingWarning": "One C4244 in synthetic ParticipantTests ASCII conversion, corrected and recompiled with no warning; focused participant 1/1 PASS, 4.59 s",
+    "initialRetestCommandFailure": "cmake -E chdir ctest failed because ctest was not on PATH; rerun using explicit verified ctest path PASS"
+  },
+  "nativeDrag": {
+    "status": "NOT RUN to successful import",
+    "observed": "Actual native handle generated 53-byte whole eight-bar chords.mid, three C notes, end_tick 30720, SHA256 8f6f344118da32d2d6bcaccee559b5d3a28b88232b49b881caabe9bfd93bac8b; native completion event truthfully reports host_import_confirmed false. Automated short drag ended without an inspected imported clip",
+    "limits": "No destination import PASS or clip extent claim. Earlier actual browser import trailing/empty failures remain in live-import-evidence.json"
+  },
+  "openGates": [
+    "Actual installed product packages/elevation/offline update/uninstall",
+    "Full Live MIDI extent and empty clip import",
+    "Live saving disabled; save/reopen tests blocked",
+    "Complete GUI gestures and all mandated DPI scales",
+    "Clean-machine runtime and stable release provenance"
+  ]
+}

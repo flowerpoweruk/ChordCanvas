@@ -31,7 +31,7 @@ private:
     juce::Slider volume;
     juce::TextEditor length;
     juce::TextButton repeats {"Repeats"},settings {"Settings"},play {"Play"},stop {"Stop"},start {"Return to Start"},sync {"Sync"};
-    juce::TextButton select {"Select"},razor {"Razor"},undo {"Undo"},redo {"Redo"},minus {"−"},plus {"+"},zoomMinus {"−"},zoomPlus {"+"},fit {"Fit"};
+    juce::TextButton select {"Select"},razor {"Razor"},undo {"Undo"},redo {"Redo"},minus {u8"\u2212"},plus {"+"},zoomMinus {u8"\u2212"},zoomPlus {"+"},fit {"Fit"};
     juce::TextButton save {"Save Progression"},load {"Load Progression"},editSelected {"Edit Selected Chord"},logs {"Open Logs Folder"},back {"Back to Canvas"},closePopover {"Close"};
     juce::ToggleButton seventh {"Seventh controls"},sus2 {"Sus2 controls"},sus4 {"Sus4 controls"};
     juce::Label status,about,logging,popoverTitle;

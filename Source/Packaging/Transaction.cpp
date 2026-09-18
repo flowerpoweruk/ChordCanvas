@@ -172,7 +172,7 @@ std::unique_ptr<BundleTransaction> BundleTransaction::begin(const std::filesyste
     }
     uintmax_t bytes=0;for(auto& file:payload.files)bytes+=std::filesystem::file_size(source/file.relative);
     if(std::filesystem::space(state.parent).available<bytes+16*1024*1024)throw std::runtime_error("Insufficient installation space");
-    auto token=identifier();state.journal.token=std::string(token.begin(),token.end());state.journal.incoming=payload.receiptHash;state.journal.previous=existed ? previous.receiptHash : "-";
+    auto token=identifier();state.journal.token.clear();for(auto c:token)state.journal.token.push_back(static_cast<char>(c));state.journal.incoming=payload.receiptHash;state.journal.previous=existed ? previous.receiptHash : "-";
     auto stage=state.journal.stage(state.parent),backup=state.journal.backup(state.parent);
     if(std::filesystem::exists(stage) || std::filesystem::exists(backup))throw std::runtime_error("Staging identity collision");
     if(state.participant){state.journal.participant=state.participant->stage(state.journal.token);if(!hashValid(state.journal.participant))throw std::runtime_error("Invalid installation metadata recovery digest");}
