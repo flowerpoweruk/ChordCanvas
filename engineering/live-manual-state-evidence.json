@@ -60,5 +60,22 @@
     ],
     "userInput": "Load, then one Undo button click",
     "observed": "Current F Minor/Guitar retained; original C/G origins intact; all three prior blocks restored exactly by one Undo."
+  },
+  "invalidLoads": {
+    "cases": [
+      "corrupt JSON",
+      "1048577-byte oversized file",
+      "unsupported schema 99",
+      "invalid octave 99 / note-generating voicing",
+      "overlapping intervals",
+      "endpoint 122881 beyond 32 bars"
+    ],
+    "actualErrors": 6,
+    "eachErrorShownAndDismissed": true,
+    "everyPostErrorSnapshotExact": true,
+    "revision": 4,
+    "currentKey": "F Minor",
+    "currentSound": "Guitar",
+    "latestVersionHostRetest": "NOT RUN"
   }
 }

@@ -2093,23 +2093,20 @@
   },
   {
     "id": "STATE-07",
-    "status": "NOT RUN",
-    "version": "0.1.0-development",
-    "evidence": "engineering/core-evidence.json",
-    "source": "1a35c74dc8b866376ebec3b13fa8db39ad46f828+dirty",
+    "status": "PASS",
+    "version": "0.1.0-installed-cached-image",
+    "evidence": "engineering/live-manual-state-evidence.json",
+    "source": "6ba737c53deb257bdb07bd97878f4e4ea0388f76",
     "date": "2026-09-18",
     "environment": {
-      "windows": "Windows 11 Home 10.0.26200 x64",
+      "windows": "Windows 11 Home 10.0.26200.9168 x64",
       "live": "Ableton Live 12 Suite 12.4.3",
-      "compiler": "LLVM-MinGW 20260908 UCRT x86_64 / Clang 23.1.1",
-      "cmake": "4.4.3",
-      "juce": "not downloaded; licence route pending",
-      "sdk": "10.0.26100.0 available; not used by the MinGW core build"
+      "juce": "9.0.2"
     },
     "expected": "Corrupt/oversized/unsupported-schema/invalid-note/overlapping/out-of-range saved data is rejected atomically with a simple error. No partial load, arbitrary file execution or silent repair that changes music.",
     "requiredLayers": "C, I, U",
-    "procedure": "Not yet executed as complete product acceptance",
-    "observed": "Not run; implemented core checks do not substitute for required GUI/host/package evidence",
+    "procedure": "Actual Live native Load of six owned invalid files; inspect/dismiss each concise error; independently parse operation.error and following snapshot; compare every field and revision against prior state; deterministic core invalid-load scenarios",
+    "observed": "All six rejected with operation.error; every following snapshot remains revision 4 with exact prior progression. Current F Minor/Guitar remains. No latest 0.1.3 host pass inferred.",
     "defect": null
   },
   {
